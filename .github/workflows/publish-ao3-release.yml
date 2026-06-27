@@ -1,0 +1,49 @@
+name: Publish AO3 Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      source_run_id:
+        description: 'GitHub Actions run ID that produced the ao3-browser-apks artifact'
+        required: true
+      tag_name:
+        description: 'Release tag name'
+        required: true
+      release_name:
+        description: 'Release title'
+        required: true
+
+permissions:
+  actions: read
+  contents: write
+
+jobs:
+  publish-release:
+    name: Publish AO3 Browser APKs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download APK artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ao3-browser-apks
+          run-id: ${{ inputs.source_run_id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: ao3-browser-apks
+
+      - name: List APKs
+        run: find ao3-browser-apks -type f -maxdepth 2 -print -exec ls -lh {} \;
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ inputs.tag_name }}
+          name: ${{ inputs.release_name }}
+          target_commitish: ao3-browser-customization
+          body: |
+            AO3 Browser custom build.
+
+            Includes:
+            - AO3-focused browser behavior
+            - DoH enabled with the configured Cloudflare Gateway endpoint
+            - Built-in AO3 Chinese userscript extension
+          files: ao3-browser-apks/*.apk
