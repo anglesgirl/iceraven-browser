@@ -1,0 +1,53 @@
+name: Build AO3 APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - ao3-browser-customization
+
+jobs:
+  build-apk:
+    name: Build AO3 Browser APK
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: 'true'
+          fetch-depth: 0
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: 17
+          distribution: temurin
+
+      - name: Install Android SDK with pieces Gradle skips
+        run: ./automation/iceraven/install-sdk.sh
+
+      - name: Create version name
+        run: echo "VERSION_NAME=$(git describe --tags HEAD 2>/dev/null || git rev-parse --short HEAD)" >> "$GITHUB_ENV"
+
+      - name: Patch Android Components
+        run: ./automation/iceraven/patch_android_components.sh
+
+      - name: Build forkRelease APKs
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Assemble forkRelease
+        env:
+          GRADLE_OPTS: -Dorg.gradle.jvmargs="-XX:MaxMetaspaceSize=4g -Xms1g -Xmx7g -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/dev/stderr"
+        run: ./gradlew app:assembleForkRelease -PversionName=${{ env.VERSION_NAME }} --stacktrace --no-daemon
+
+      - name: List APK outputs
+        run: ls -alh gradle/build/app/outputs/apk/forkRelease/ app/build/outputs/apk/forkRelease/ || true
+
+      - name: Upload APK artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ao3-browser-apks
+          path: |
+            gradle/build/app/outputs/apk/forkRelease/*.apk
+            app/build/outputs/apk/forkRelease/*.apk
+          if-no-files-found: error
