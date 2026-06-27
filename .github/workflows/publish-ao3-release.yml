@@ -31,7 +31,7 @@ jobs:
           path: ao3-browser-apks
 
       - name: List APKs
-        run: find ao3-browser-apks -type f -maxdepth 2 -print -exec ls -lh {} \;
+        run: find ao3-browser-apks -type f -print -exec ls -lh {} \;
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
@@ -45,5 +45,5 @@ jobs:
             Includes:
             - AO3-focused browser behavior
             - DoH enabled with the configured Cloudflare Gateway endpoint
-            - Built-in AO3 Chinese userscript extension
-          files: ao3-browser-apks/*.apk
+            - Tampermonkey userscript manager for AO3 Chinese userscript installation
+          files: ao3-browser-apks/**/*.apk
