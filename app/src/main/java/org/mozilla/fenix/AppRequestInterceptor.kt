@@ -45,8 +45,7 @@ class AppRequestInterceptor(
         isSubframeRequest: Boolean,
     ): RequestInterceptor.InterceptionResponse? {
         if (interceptAboutHomeRequest(uri)) {
-            // Let the original request proceed.
-            return null
+            return RequestInterceptor.InterceptionResponse.Url(AO3_HOME_URL)
         }
 
         if (shouldRedirectToAo3Home(uri, isDirectNavigation, isSubframeRequest)) {
@@ -102,22 +101,13 @@ class AppRequestInterceptor(
     }
 
     /**
-     * Intercepts [uri] request to [ABOUT_HOME_URL] and navigates to the homepage.
+     * Intercepts [uri] request to [ABOUT_HOME_URL] and redirects to AO3.
      *
      * @param uri The URI of the request.
      * @return True if the [uri] request was intercepted and false otherwise.
      */
     private fun interceptAboutHomeRequest(uri: String): Boolean {
-        if (uri != ABOUT_HOME_URL) {
-            return false
-        }
-
-        val currentDestination = navController?.get()?.currentDestination?.id
-        if (!listOf(R.id.homeFragment, R.id.onboardingFragment).contains(currentDestination)) {
-            navController?.get()?.navigate(NavGraphDirections.actionGlobalHome())
-        }
-
-        return true
+        return uri == ABOUT_HOME_URL
     }
 
     private fun shouldRedirectToAo3Home(

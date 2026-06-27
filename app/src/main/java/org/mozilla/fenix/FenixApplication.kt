@@ -9,7 +9,6 @@ import android.app.ActivityManager
 import android.app.Application
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Build
 import android.os.Build.VERSION.SDK_INT
 import android.os.StrictMode
@@ -142,7 +141,6 @@ import org.mozilla.fenix.theme.ThemeProvider
 import org.mozilla.fenix.utils.Settings
 import org.mozilla.fenix.utils.isLargeScreenSize
 import org.mozilla.fenix.wallpapers.Wallpaper
-import java.io.File
 import java.util.Date
 import java.util.concurrent.TimeUnit
 import kotlin.math.roundToLong
@@ -150,9 +148,9 @@ import mozilla.components.support.AppServicesInitializer.Config as AppServicesCo
 
 private const val RAM_THRESHOLD_MEGABYTES = 1024
 private const val BYTES_TO_MEGABYTES_CONVERSION = 1024.0 * 1024.0
-private const val AO3_CHINESE_EXTENSION_ID = "ao3-chinese@iceraven-browser"
-private const val AO3_CHINESE_EXTENSION_ASSET = "extensions/ao3-chinese.xpi"
-private const val AO3_CHINESE_EXTENSION_FILE = "ao3-chinese.xpi"
+private const val TAMPERMONKEY_EXTENSION_ID = "firefox@tampermonkey.net"
+private const val AO3_CHINESE_USERSCRIPT_URL = "https://raw.githubusercontent.com/V-Lipset/ao3-chinese/main/main.user.js"
+private const val AO3_CHINESE_USERSCRIPT_INSTALLER_OPENED = "ao3_chinese_userscript_installer_opened"
 
 /**
  * The main application class for Fenix. Records data to measure initialization performance.
@@ -874,7 +872,7 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
                     components.useCases.tabsUseCases.selectTab(sessionId)
                 },
                 onExtensionsLoaded = { extensions ->
-                    installAo3ChineseExtensionIfNeeded(extensions)
+                    installTampermonkeyForAo3IfNeeded(extensions)
                     components.addonUpdater.registerForFutureUpdates(extensions)
                     subscribeForNewAddonsIfNeeded(components.supportedAddonsChecker, extensions)
 
@@ -894,32 +892,56 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
         }
     }
 
-    private fun installAo3ChineseExtensionIfNeeded(installedExtensions: List<WebExtension>) {
-        if (installedExtensions.any { it.id == AO3_CHINESE_EXTENSION_ID }) {
+    private fun installTampermonkeyForAo3IfNeeded(installedExtensions: List<WebExtension>) {
+        if (installedExtensions.any { it.id == TAMPERMONKEY_EXTENSION_ID }) {
+            openAo3ChineseUserscriptInstallerOnce()
             return
         }
 
         applicationScope.launch(IO) {
             try {
-                val extensionFile = File(cacheDir, AO3_CHINESE_EXTENSION_FILE)
-                assets.open(AO3_CHINESE_EXTENSION_ASSET).use { input ->
-                    extensionFile.outputStream().use { output ->
-                        input.copyTo(output)
-                    }
+                val tampermonkey = components.addonsProvider.getAddonByID(
+                    TAMPERMONKEY_EXTENSION_ID,
+                    null,
+                    null,
+                )
+
+                if (tampermonkey == null) {
+                    logger.error("Failed to find Tampermonkey on AMO")
+                    return@launch
                 }
 
                 withContext(Dispatchers.Main) {
-                    components.core.engine.installWebExtension(
-                        Uri.fromFile(extensionFile).toString(),
-                        InstallationMethod.FROM_FILE,
-                    ) {
-                        logger.debug("Installed built-in AO3 Chinese extension")
-                    }
+                    components.addonManager.installAddon(
+                        url = tampermonkey.downloadUrl,
+                        installationMethod = InstallationMethod.MANAGER,
+                        onSuccess = {
+                            logger.debug("Installed Tampermonkey for AO3 Chinese userscript")
+                            openAo3ChineseUserscriptInstallerOnce()
+                        },
+                        onError = { throwable ->
+                            logger.error("Failed to install Tampermonkey for AO3 Chinese userscript", throwable)
+                        },
+                    )
                 }
             } catch (e: Exception) {
-                logger.error("Failed to install built-in AO3 Chinese extension", e)
+                logger.error("Failed to install Tampermonkey for AO3 Chinese userscript", e)
             }
         }
+    }
+
+    private fun openAo3ChineseUserscriptInstallerOnce() {
+        val preferences = getSharedPreferences(Settings.FENIX_PREFERENCES, MODE_PRIVATE)
+        if (preferences.getBoolean(AO3_CHINESE_USERSCRIPT_INSTALLER_OPENED, false)) {
+            return
+        }
+
+        preferences.edit().putBoolean(AO3_CHINESE_USERSCRIPT_INSTALLER_OPENED, true).apply()
+        components.useCases.tabsUseCases.addTab(
+            url = AO3_CHINESE_USERSCRIPT_URL,
+            selectTab = true,
+            private = false,
+        )
     }
 
     @VisibleForTesting
