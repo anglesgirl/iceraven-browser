@@ -37,7 +37,7 @@ internal class DefaultDohSettingsProvider(
 
     private val cloudflare = Provider.BuiltIn(
         url = cloudflareUri,
-        name = "Cloudflare",
+        name = "Cloudflare Gateway",
         default = dohDefaultProviderUrl.isBlank() || dohDefaultProviderUrl == cloudflareUri,
     )
     private val nextDns = Provider.BuiltIn(
@@ -118,7 +118,7 @@ internal class DefaultDohSettingsProvider(
 
     companion object {
         @VisibleForTesting
-        val cloudflareUri = "https://mozilla.cloudflare-dns.com/dns-query"
+        val cloudflareUri = "https://v7e373e11t.cloudflare-gateway.com/dns-query"
 
         @VisibleForTesting
         val nextDnsUri = "https://firefox.dns.nextdns.io/"

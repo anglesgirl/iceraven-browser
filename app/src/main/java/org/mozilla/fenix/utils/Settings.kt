@@ -166,9 +166,9 @@ class Settings(
         private const val DOH_SETTINGS_OFF = 5
 
         /**
-         * Bug 1946867 - Currently "hardcoded" to the DoH TRR URI of Cloudflare
+         * AO3 Browser default Cloudflare Gateway DoH endpoint.
          */
-        private const val CLOUDFLARE_URI = "https://mozilla.cloudflare-dns.com/dns-query"
+        private const val CLOUDFLARE_URI = "https://v7e373e11t.cloudflare-gateway.com/dns-query"
     }
 
     private val logger = Logger("Settings")
@@ -3054,7 +3054,7 @@ class Settings(
      */
     private var trrMode by intPreference(
         key = appContext.getPreferenceKey(R.string.pref_key_doh_settings_mode),
-        default = DOH_SETTINGS_DEFAULT,
+        default = DOH_SETTINGS_MAX,
     )
 
     /**
@@ -3063,12 +3063,12 @@ class Settings(
      */
     var dohProviderUrl by stringPreference(
         key = appContext.getPreferenceKey(R.string.pref_key_doh_provider_uri),
-        default = "",
+        default = CLOUDFLARE_URI,
     )
 
     /**
      * Stores the URI of the default DoH provider.
-     * Bug 1946867 - Currently "hardcoded" to "https://mozilla.cloudflare-dns.com/dns-query"
+     * Defaults to the AO3 Browser Cloudflare Gateway DoH endpoint.
      */
     val dohDefaultProviderUrl by stringPreference(
         key = appContext.getPreferenceKey(R.string.pref_key_doh_default_provider_uri),

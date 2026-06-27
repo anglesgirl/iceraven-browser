@@ -8,7 +8,6 @@ import mozilla.components.browser.state.search.SearchEngine
 import mozilla.components.browser.state.state.SessionState
 import mozilla.components.concept.base.profiler.Profiler
 import mozilla.components.concept.engine.EngineSession
-import mozilla.components.concept.engine.utils.ABOUT_HOME_URL
 import mozilla.components.concept.storage.HistoryMetadataKey
 import mozilla.components.feature.search.SearchUseCases
 import mozilla.components.feature.session.SessionUseCases
@@ -35,6 +34,8 @@ class FenixBrowserUseCases(
     private val homepageTitle: String,
     private val profiler: Profiler?,
 ) {
+    private val ao3HomeUrl = "https://archiveofourown.org/"
+
     /**
      * Loads a URL or performs a search depending on the value of [searchTermOrURL].
      *
@@ -118,21 +119,21 @@ class FenixBrowserUseCases(
     }
 
     /**
-     * Adds a new homepage ("about:home") tab.
+     * Adds a new AO3 homepage tab.
      *
      * @param private Whether or not the new homepage tab should be private.
      * @return The ID of the created tab.
      */
     fun addNewHomepageTab(private: Boolean = appStore.state.mode.isPrivate): String {
         return tabsUseCases.addTab.invoke(
-            url = ABOUT_HOME_URL,
+            url = ao3HomeUrl,
             title = homepageTitle,
             private = private,
         )
     }
 
     /**
-     * Adds a new homepage ("about:home") tab to the provided tab group.
+     * Adds a new AO3 homepage tab to the provided tab group.
      *
      * @param group The ID of the group.
      */
@@ -147,9 +148,9 @@ class FenixBrowserUseCases(
     }
 
     /**
-     * Loads the homepage ("about:home").
+     * Loads the AO3 homepage.
      */
     fun navigateToHomepage() {
-        loadUrlUseCase.invoke(url = ABOUT_HOME_URL)
+        loadUrlUseCase.invoke(url = ao3HomeUrl)
     }
 }

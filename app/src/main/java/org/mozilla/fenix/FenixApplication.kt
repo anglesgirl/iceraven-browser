@@ -9,6 +9,7 @@ import android.app.ActivityManager
 import android.app.Application
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Build.VERSION.SDK_INT
 import android.os.StrictMode
@@ -46,6 +47,7 @@ import mozilla.components.browser.state.state.selectedOrDefaultPrivateSearchEngi
 import mozilla.components.browser.state.store.BrowserStore
 import mozilla.components.browser.storage.sync.GlobalPlacesDependencyProvider
 import mozilla.components.concept.base.crash.Breadcrumb
+import mozilla.components.concept.engine.webextension.InstallationMethod
 import mozilla.components.concept.engine.webextension.WebExtension
 import mozilla.components.concept.engine.webextension.isUnsupported
 import mozilla.components.concept.push.PushProcessor
@@ -140,6 +142,7 @@ import org.mozilla.fenix.theme.ThemeProvider
 import org.mozilla.fenix.utils.Settings
 import org.mozilla.fenix.utils.isLargeScreenSize
 import org.mozilla.fenix.wallpapers.Wallpaper
+import java.io.File
 import java.util.Date
 import java.util.concurrent.TimeUnit
 import kotlin.math.roundToLong
@@ -147,6 +150,9 @@ import mozilla.components.support.AppServicesInitializer.Config as AppServicesCo
 
 private const val RAM_THRESHOLD_MEGABYTES = 1024
 private const val BYTES_TO_MEGABYTES_CONVERSION = 1024.0 * 1024.0
+private const val AO3_CHINESE_EXTENSION_ID = "ao3-chinese@iceraven-browser"
+private const val AO3_CHINESE_EXTENSION_ASSET = "extensions/ao3-chinese.xpi"
+private const val AO3_CHINESE_EXTENSION_FILE = "ao3-chinese.xpi"
 
 /**
  * The main application class for Fenix. Records data to measure initialization performance.
@@ -868,6 +874,7 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
                     components.useCases.tabsUseCases.selectTab(sessionId)
                 },
                 onExtensionsLoaded = { extensions ->
+                    installAo3ChineseExtensionIfNeeded(extensions)
                     components.addonUpdater.registerForFutureUpdates(extensions)
                     subscribeForNewAddonsIfNeeded(components.supportedAddonsChecker, extensions)
 
@@ -884,6 +891,34 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
             )
         } catch (e: UnsupportedOperationException) {
             logger.error("Failed to initialize web extension support", e)
+        }
+    }
+
+    private fun installAo3ChineseExtensionIfNeeded(installedExtensions: List<WebExtension>) {
+        if (installedExtensions.any { it.id == AO3_CHINESE_EXTENSION_ID }) {
+            return
+        }
+
+        applicationScope.launch(IO) {
+            try {
+                val extensionFile = File(cacheDir, AO3_CHINESE_EXTENSION_FILE)
+                assets.open(AO3_CHINESE_EXTENSION_ASSET).use { input ->
+                    extensionFile.outputStream().use { output ->
+                        input.copyTo(output)
+                    }
+                }
+
+                withContext(Dispatchers.Main) {
+                    components.core.engine.installWebExtension(
+                        Uri.fromFile(extensionFile).toString(),
+                        InstallationMethod.FROM_FILE,
+                    ) {
+                        logger.debug("Installed built-in AO3 Chinese extension")
+                    }
+                }
+            } catch (e: Exception) {
+                logger.error("Failed to install built-in AO3 Chinese extension", e)
+            }
         }
     }
 

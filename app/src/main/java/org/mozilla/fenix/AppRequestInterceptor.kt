@@ -6,6 +6,7 @@ package org.mozilla.fenix
 
 import android.content.Context
 import android.net.ConnectivityManager
+import android.net.Uri
 import androidx.annotation.VisibleForTesting
 import androidx.core.content.getSystemService
 import androidx.navigation.NavController
@@ -46,6 +47,10 @@ class AppRequestInterceptor(
         if (interceptAboutHomeRequest(uri)) {
             // Let the original request proceed.
             return null
+        }
+
+        if (shouldRedirectToAo3Home(uri, isDirectNavigation, isSubframeRequest)) {
+            return RequestInterceptor.InterceptionResponse.Url(AO3_HOME_URL)
         }
 
         val services = context.components.services
@@ -113,6 +118,25 @@ class AppRequestInterceptor(
         }
 
         return true
+    }
+
+    private fun shouldRedirectToAo3Home(
+        uri: String,
+        isDirectNavigation: Boolean,
+        isSubframeRequest: Boolean,
+    ): Boolean {
+        if (!isDirectNavigation || isSubframeRequest) {
+            return false
+        }
+
+        val parsedUri = Uri.parse(uri)
+        val scheme = parsedUri.scheme ?: return false
+        if (scheme != "http" && scheme != "https") {
+            return false
+        }
+
+        val host = parsedUri.host?.lowercase() ?: return false
+        return host !in AO3_ALLOWED_HOSTS
     }
 
     /**
@@ -204,5 +228,12 @@ class AppRequestInterceptor(
     companion object {
         internal const val LOW_AND_MEDIUM_RISK_ERROR_PAGES = "low_and_medium_risk_error_pages.html"
         internal const val HIGH_RISK_ERROR_PAGES = "high_risk_error_pages.html"
+        internal const val AO3_HOME_URL = "https://archiveofourown.org/"
+        private val AO3_ALLOWED_HOSTS = setOf(
+            "archiveofourown.org",
+            "www.archiveofourown.org",
+            "archiveofourown.gay",
+            "www.archiveofourown.gay",
+        )
     }
 }
