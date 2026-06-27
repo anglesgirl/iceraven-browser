@@ -5,7 +5,6 @@
 package org.mozilla.fenix.utils
 
 import android.accessibilityservice.AccessibilityServiceInfo.CAPABILITY_CAN_PERFORM_GESTURES
-import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
@@ -671,7 +670,7 @@ class Settings(
      */
     var isTermsOfUsePromptEnabled by booleanPreference(
         key = appContext.getPreferenceKey(R.string.pref_key_terms_prompt_enabled),
-        default = { FxNimbus.features.termsOfUsePrompt.value().enabled },
+        default = false,
     )
 
     /**
@@ -1522,17 +1521,17 @@ class Settings(
 
     var shouldShowSignInButton by booleanPreference(
         appContext.getPreferenceKey(R.string.pref_key_show_sign_in_button),
-        default = true,
+        default = false,
     )
 
     var shouldUseDefaultHomepage by booleanPreference(
         appContext.getPreferenceKey(R.string.pref_key_default_homepage),
-        default = true,
+        default = false,
     )
 
     var customHomepageUrl by stringPreference(
         appContext.getPreferenceKey(R.string.pref_key_custom_homepage_url),
-        default = "https://duckduckgo.com",
+        default = "https://archiveofourown.org/",
     )
 
     /**
@@ -2284,7 +2283,7 @@ class Settings(
     /**
      * Indicates if the onboarding feature is enabled.
      */
-    var onboardingFeatureEnabled = FeatureFlags.onboardingFeatureEnabled
+    var onboardingFeatureEnabled = false
 
     /**
      * The completion timestamp of the initial onboarding flow.
@@ -2477,7 +2476,7 @@ class Settings(
      */
     var enableHomepageAsNewTab by booleanPreference(
         key = appContext.getPreferenceKey(R.string.pref_key_enable_homepage_as_new_tab),
-        default = { FxNimbus.features.homepageAsNewTab.value().enabled },
+        default = true,
     )
 
     /**
@@ -2945,25 +2944,7 @@ class Settings(
      */
     fun shouldShowSetAsDefaultPrompt(
         nimbusFeature: DefaultBrowserPrompt = FxNimbus.features.defaultBrowserPrompt.value(),
-    ): Boolean {
-        if (!nimbusFeature.enabled) return false
-
-        val now = System.currentTimeMillis()
-
-        val daysOk = nimbusFeature.daysBetweenPrompts?.let { intervalDays ->
-            (now - lastSetAsDefaultPromptShownTimeInMillis) > intervalDays * ONE_DAY_MS
-        } ?: true
-
-        val maxOk = nimbusFeature.maxPromptsShown?.let { max ->
-            numberOfSetAsDefaultPromptShownTimes < max
-        } ?: true
-
-        val coldStartsOk = nimbusFeature.coldStartsBetweenPrompts?.let { minColdStarts ->
-            coldStartsBetweenSetAsDefaultPrompts >= minColdStarts
-        } ?: true
-
-        return daysOk && maxOk && coldStartsOk
-    }
+    ): Boolean = nimbusFeature.enabled && false
 
     /**
      * Updates the relevant settings when the "Set as Default Browser" prompt is shown.
@@ -3161,10 +3142,7 @@ class Settings(
      */
     var showSetupChecklist by booleanPreference(
         key = appContext.getPreferenceKey(R.string.pref_key_setup_checklist_complete),
-        default = {
-            FxNimbus.features.setupChecklist.value().enabled &&
-                    canShowAddSearchWidgetPrompt(AppWidgetManager.getInstance(appContext))
-        },
+        default = false,
     )
 
     /**

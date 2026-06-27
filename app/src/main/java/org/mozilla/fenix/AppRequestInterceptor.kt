@@ -224,6 +224,12 @@ class AppRequestInterceptor(
             "www.archiveofourown.org",
             "archiveofourown.gay",
             "www.archiveofourown.gay",
+            "addons.mozilla.org",
+            "raw.githubusercontent.com",
+            "github.com",
+            "cdn.jsdelivr.net",
+            "tampermonkey.net",
+            "www.tampermonkey.net",
         )
     }
 }

@@ -150,7 +150,8 @@ private const val RAM_THRESHOLD_MEGABYTES = 1024
 private const val BYTES_TO_MEGABYTES_CONVERSION = 1024.0 * 1024.0
 private const val TAMPERMONKEY_EXTENSION_ID = "firefox@tampermonkey.net"
 private const val AO3_CHINESE_USERSCRIPT_URL = "https://raw.githubusercontent.com/V-Lipset/ao3-chinese/main/main.user.js"
-private const val AO3_CHINESE_USERSCRIPT_INSTALLER_OPENED = "ao3_chinese_userscript_installer_opened"
+private const val AO3_CHINESE_USERSCRIPT_INSTALLER_OPENED = "ao3_chinese_userscript_installer_opened_v2"
+private const val AO3_HOME_URL = "https://archiveofourown.org/"
 
 /**
  * The main application class for Fenix. Records data to measure initialization performance.
@@ -419,10 +420,14 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
         val store = components.core.store
         val sessionStorage = components.core.sessionStorage
 
-        components.useCases.tabsUseCases.restore(sessionStorage, settings().getTabTimeout())
+        components.useCases.tabsUseCases.addTab(
+            url = AO3_HOME_URL,
+            selectTab = true,
+            private = false,
+        )
 
-        // Now that we have restored our previous state (if there's one) let's setup auto saving the state while
-        // the app is used.
+        // AO3 Browser always starts from AO3 instead of restoring previously opened tabs.
+        // Set up auto saving after the initial AO3 tab is created.
         sessionStorage.autoSave(store)
             .periodicallyInForeground(interval = 30, unit = TimeUnit.SECONDS)
             .whenGoingToBackground()
