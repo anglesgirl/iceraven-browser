@@ -538,7 +538,7 @@ private fun DohScreenDefaultProviderPreview(
     FirefoxTheme(theme) {
         val provider = Provider.BuiltIn(
             url = "https://mozilla.cloudflare-dns.com/dns-query",
-            name = "Cloudflare",
+            name = "雅💓涵提供",
             default = true,
         )
         DohSettingsScreen(

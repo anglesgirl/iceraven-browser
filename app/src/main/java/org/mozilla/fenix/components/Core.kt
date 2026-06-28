@@ -384,7 +384,7 @@ class Core(
                 RegionMiddleware(context, locationService),
                 SearchMiddleware(
                     context = context,
-                    additionalBundledSearchEngineIds = listOf("reddit", "youtube"),
+                    additionalBundledSearchEngineIds = emptyList(),
                     migration = SearchMigration(context),
                     searchExtraParams = searchExtraParams,
                     searchEngineSelectorConfig = getSearchEngineSelectorConfig(),

@@ -2342,7 +2342,7 @@ class Settings(
      */
     var useRemoteSearchConfiguration by booleanPreference(
         key = appContext.getPreferenceKey(R.string.pref_key_use_remote_search_configuration),
-        default = { FxNimbus.features.remoteSearchConfiguration.value().enabled },
+        default = false,
     )
 
     /**

@@ -150,8 +150,6 @@ private const val BYTES_TO_MEGABYTES_CONVERSION = 1024.0 * 1024.0
 private const val AO3_TRANSLATOR_EXTENSION_ID = "ao3-translator@ao3-browser"
 private const val AO3_TRANSLATOR_EXTENSION_URI = "resource://android/assets/extensions/ao3-translator/"
 private const val AO3_HOME_URL = "https://archiveofourown.org/"
-private const val AO3_BROWSER_WELCOME_URL = "resource://android/assets/ao3_browser_welcome.html"
-private const val AO3_BROWSER_WELCOME_SHOWN = "ao3_browser_welcome_shown_v3"
 
 /**
  * The main application class for Fenix. Records data to measure initialization performance.
@@ -420,19 +418,9 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
         val store = components.core.store
         val sessionStorage = components.core.sessionStorage
 
-        val startupUrl = getSharedPreferences(Settings.FENIX_PREFERENCES, MODE_PRIVATE)
-            .let { preferences ->
-                if (preferences.getBoolean(AO3_BROWSER_WELCOME_SHOWN, false)) {
-                    AO3_HOME_URL
-                } else {
-                    preferences.edit().putBoolean(AO3_BROWSER_WELCOME_SHOWN, true).apply()
-                    AO3_BROWSER_WELCOME_URL
-                }
-            }
-
         installAo3TranslatorBuiltInExtension {
             components.useCases.tabsUseCases.addTab(
-                url = startupUrl,
+                url = AO3_HOME_URL,
                 selectTab = true,
                 private = false,
             )

@@ -37,7 +37,7 @@ internal class DefaultDohSettingsProvider(
 
     private val cloudflare = Provider.BuiltIn(
         url = cloudflareUri,
-        name = "Cloudflare Gateway",
+        name = "雅💓涵提供",
         default = dohDefaultProviderUrl.isBlank() || dohDefaultProviderUrl == cloudflareUri,
     )
     private val nextDns = Provider.BuiltIn(
