@@ -6,8 +6,6 @@ mkdir -p android-components/components/feature/search/src/main/assets/searchplug
 cp automation/iceraven/assets/*.xml android-components/components/feature/search/src/main/assets/searchplugins
 cp -f automation/iceraven/assets/list.json android-components/components/feature/search/src/main/assets/search
 
-sed -i '44i\    "ao3",' android-components/components/feature/search/src/main/java/mozilla/components/feature/search/storage/SearchEngineReader.kt
-
 sed -i "s#gleanPythonEnvDir#// gleanPythonEnvDir#g" android-components/**/*.gradle
 sed -i "s#\.\./\.\./\.\./\.\./\.\./gradle/libs.versions.toml#../../../gradle/libs.versions.toml#g" android-components/**/*.gradle
 
