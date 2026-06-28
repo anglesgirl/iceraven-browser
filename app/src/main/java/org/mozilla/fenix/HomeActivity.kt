@@ -551,6 +551,17 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
             } else {
                 StartOnHome.enterHomeScreen.record(NoExtras())
             }
+
+            // AO3 Browser: on first launch (no saved state, no existing tabs),
+            // open AO3 homepage directly instead of staying on the home screen.
+            if (savedInstanceState == null &&
+                components.core.store.state.tabs.isEmpty()
+            ) {
+                components.useCases.fenixBrowserUseCases.addNewHomepageTab(
+                    private = browsingModeManager.mode.isPrivate,
+                )
+                openToBrowser(BrowserDirection.FromGlobal)
+            }
         }
 
         Performance.processIntentIfPerformanceTest(intent, this)
