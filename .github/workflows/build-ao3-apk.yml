@@ -49,14 +49,12 @@ jobs:
           AO3_RELEASE_KEYSTORE_BASE64: ${{ secrets.AO3_RELEASE_KEYSTORE_BASE64 }}
           AO3_RELEASE_KEYSTORE_PASSWORD: ${{ secrets.AO3_RELEASE_KEYSTORE_PASSWORD }}
           AO3_RELEASE_KEY_ALIAS: ${{ secrets.AO3_RELEASE_KEY_ALIAS }}
-          AO3_RELEASE_KEY_PASSWORD: ${{ secrets.AO3_RELEASE_KEY_PASSWORD }}
         run: |
           set -euo pipefail
           mkdir -p signed-apks
           if [ -z "${AO3_RELEASE_KEYSTORE_BASE64:-}" ] || \
              [ -z "${AO3_RELEASE_KEYSTORE_PASSWORD:-}" ] || \
-             [ -z "${AO3_RELEASE_KEY_ALIAS:-}" ] || \
-             [ -z "${AO3_RELEASE_KEY_PASSWORD:-}" ]; then
+             [ -z "${AO3_RELEASE_KEY_ALIAS:-}" ]; then
             echo "AO3 release signing secrets are not configured." >&2
             exit 1
           fi
@@ -77,7 +75,7 @@ jobs:
               --ks ao3-browser-release.jks \
               --ks-pass "pass:$AO3_RELEASE_KEYSTORE_PASSWORD" \
               --ks-key-alias "$AO3_RELEASE_KEY_ALIAS" \
-              --key-pass "pass:$AO3_RELEASE_KEY_PASSWORD" \
+              --key-pass "pass:$AO3_RELEASE_KEYSTORE_PASSWORD" \
               --out "$signed" \
               "$aligned"
             "$APKSIGNER" verify --verbose "$signed"
