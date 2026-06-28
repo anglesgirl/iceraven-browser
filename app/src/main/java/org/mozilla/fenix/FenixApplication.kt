@@ -150,7 +150,7 @@ private const val BYTES_TO_MEGABYTES_CONVERSION = 1024.0 * 1024.0
 private const val AO3_TRANSLATOR_EXTENSION_ID = "ao3-translator@ao3-browser"
 private const val AO3_TRANSLATOR_EXTENSION_URI = "resource://android/assets/extensions/ao3-translator/"
 private const val AO3_HOME_URL = "https://archiveofourown.org/"
-private const val AO3_BROWSER_WELCOME_URL = "file:///android_asset/ao3_browser_welcome.html"
+private const val AO3_BROWSER_WELCOME_URL = "resource://android/assets/ao3_browser_welcome.html"
 private const val AO3_BROWSER_WELCOME_SHOWN = "ao3_browser_welcome_shown_v3"
 
 /**
