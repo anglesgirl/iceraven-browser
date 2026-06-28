@@ -228,8 +228,6 @@ class AppRequestInterceptor(
             "raw.githubusercontent.com",
             "github.com",
             "cdn.jsdelivr.net",
-            "tampermonkey.net",
-            "www.tampermonkey.net",
         )
     }
 }

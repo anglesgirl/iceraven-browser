@@ -46,7 +46,6 @@ import mozilla.components.browser.state.state.selectedOrDefaultPrivateSearchEngi
 import mozilla.components.browser.state.store.BrowserStore
 import mozilla.components.browser.storage.sync.GlobalPlacesDependencyProvider
 import mozilla.components.concept.base.crash.Breadcrumb
-import mozilla.components.concept.engine.webextension.InstallationMethod
 import mozilla.components.concept.engine.webextension.WebExtension
 import mozilla.components.concept.engine.webextension.isUnsupported
 import mozilla.components.concept.push.PushProcessor
@@ -148,7 +147,8 @@ import mozilla.components.support.AppServicesInitializer.Config as AppServicesCo
 
 private const val RAM_THRESHOLD_MEGABYTES = 1024
 private const val BYTES_TO_MEGABYTES_CONVERSION = 1024.0 * 1024.0
-private const val TAMPERMONKEY_EXTENSION_ID = "firefox@tampermonkey.net"
+private const val AO3_TRANSLATOR_EXTENSION_ID = "ao3-translator@ao3-browser"
+private const val AO3_TRANSLATOR_EXTENSION_URI = "resource://android/assets/extensions/ao3-translator/"
 private const val AO3_HOME_URL = "https://archiveofourown.org/"
 private const val AO3_BROWSER_WELCOME_URL = "file:///android_asset/ao3_browser_welcome.html"
 private const val AO3_BROWSER_WELCOME_SHOWN = "ao3_browser_welcome_shown_v3"
@@ -887,7 +887,7 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
                     components.useCases.tabsUseCases.selectTab(sessionId)
                 },
                 onExtensionsLoaded = { extensions ->
-                    installTampermonkeyForAo3IfNeeded(extensions)
+                    installAo3TranslatorBuiltInExtension()
                     components.addonUpdater.registerForFutureUpdates(extensions)
                     subscribeForNewAddonsIfNeeded(components.supportedAddonsChecker, extensions)
 
@@ -907,40 +907,13 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
         }
     }
 
-    private fun installTampermonkeyForAo3IfNeeded(installedExtensions: List<WebExtension>) {
-        if (installedExtensions.any { it.id == TAMPERMONKEY_EXTENSION_ID }) {
-            return
-        }
-
-        applicationScope.launch(IO) {
-            try {
-                val tampermonkey = components.addonsProvider.getAddonByID(
-                    TAMPERMONKEY_EXTENSION_ID,
-                    null,
-                    null,
-                )
-
-                if (tampermonkey == null) {
-                    logger.error("Failed to find Tampermonkey on AMO")
-                    return@launch
-                }
-
-                withContext(Dispatchers.Main) {
-                    components.addonManager.installAddon(
-                        url = tampermonkey.downloadUrl,
-                        installationMethod = InstallationMethod.MANAGER,
-                        onSuccess = {
-                            logger.debug("Installed Tampermonkey for AO3 Chinese userscript")
-                        },
-                        onError = { throwable ->
-                            logger.error("Failed to install Tampermonkey for AO3 Chinese userscript", throwable)
-                        },
-                    )
-                }
-            } catch (e: Exception) {
-                logger.error("Failed to install Tampermonkey for AO3 Chinese userscript", e)
-            }
-        }
+    private fun installAo3TranslatorBuiltInExtension() {
+        components.core.geckoRuntime.webExtensionController
+            .ensureBuiltIn(AO3_TRANSLATOR_EXTENSION_URI, AO3_TRANSLATOR_EXTENSION_ID)
+            .accept(
+                { logger.debug("AO3 Translator built-in extension is ready") },
+                { throwable -> logger.error("Failed to install AO3 Translator built-in extension", throwable) },
+            )
     }
 
     @VisibleForTesting
