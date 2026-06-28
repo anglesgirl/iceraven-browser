@@ -430,11 +430,13 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
                 }
             }
 
-        components.useCases.tabsUseCases.addTab(
-            url = startupUrl,
-            selectTab = true,
-            private = false,
-        )
+        installAo3TranslatorBuiltInExtension {
+            components.useCases.tabsUseCases.addTab(
+                url = startupUrl,
+                selectTab = true,
+                private = false,
+            )
+        }
 
         // AO3 Browser always starts from AO3 instead of restoring previously opened tabs.
         // Set up auto saving after the initial AO3 tab is created.
@@ -887,7 +889,6 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
                     components.useCases.tabsUseCases.selectTab(sessionId)
                 },
                 onExtensionsLoaded = { extensions ->
-                    installAo3TranslatorBuiltInExtension()
                     components.addonUpdater.registerForFutureUpdates(extensions)
                     subscribeForNewAddonsIfNeeded(components.supportedAddonsChecker, extensions)
 
@@ -907,12 +908,26 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
         }
     }
 
-    private fun installAo3TranslatorBuiltInExtension() {
+    private fun installAo3TranslatorBuiltInExtension(onComplete: (() -> Unit)? = null) {
         components.core.geckoRuntime.webExtensionController
             .ensureBuiltIn(AO3_TRANSLATOR_EXTENSION_URI, AO3_TRANSLATOR_EXTENSION_ID)
             .accept(
-                { logger.debug("AO3 Translator built-in extension is ready") },
-                { throwable -> logger.error("Failed to install AO3 Translator built-in extension", throwable) },
+                {
+                    logger.debug("AO3 Translator built-in extension is ready")
+                    onComplete?.let { callback ->
+                        applicationScope.launch(Dispatchers.Main) {
+                            callback()
+                        }
+                    }
+                },
+                { throwable ->
+                    logger.error("Failed to install AO3 Translator built-in extension", throwable)
+                    onComplete?.let { callback ->
+                        applicationScope.launch(Dispatchers.Main) {
+                            callback()
+                        }
+                    }
+                },
             )
     }
 

@@ -123,3 +123,17 @@
     version: '1.0.0',
   };
 })();
+
+var GM_getValue = window.GM_getValue;
+var GM_setValue = window.GM_setValue;
+var GM_deleteValue = window.GM_deleteValue;
+var GM_addValueChangeListener = window.GM_addValueChangeListener;
+var GM_removeValueChangeListener = window.GM_removeValueChangeListener;
+var GM_addStyle = window.GM_addStyle;
+var GM_getResourceURL = window.GM_getResourceURL;
+var GM_registerMenuCommand = window.GM_registerMenuCommand;
+var GM_unregisterMenuCommand = window.GM_unregisterMenuCommand;
+var GM_notification = window.GM_notification;
+var GM_download = window.GM_download;
+var GM_xmlhttpRequest = window.GM_xmlhttpRequest;
+var GM_info = window.GM_info;
