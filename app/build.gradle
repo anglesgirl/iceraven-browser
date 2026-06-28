@@ -266,24 +266,6 @@ android {
         }
     }
 
-    // Force AO3 search engine assets into the APK every build
-    task copyAo3SearchAssets(type: Copy) {
-        from rootProject.file('automation/iceraven/assets/google-b-m.xml')
-        into file('src/main/assets/searchplugins')
-        rename { 'google-b-m.xml' }
-    }
-    task copyAo3SearchListJson(type: Copy) {
-        from rootProject.file('automation/iceraven/assets/list.json')
-        into file('src/main/assets/search')
-        rename { 'list.json' }
-    }
-    tasks.whenTaskAdded { task ->
-        if (task.name == 'preBuild' || task.name.startsWith('pre') && task.name.endsWith('Build')) {
-            task.dependsOn copyAo3SearchAssets
-            task.dependsOn copyAo3SearchListJson
-        }
-    }
-
     splits {
         abi {
             enable = !isAppBundle
