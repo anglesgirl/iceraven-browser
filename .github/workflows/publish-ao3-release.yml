@@ -45,6 +45,6 @@ jobs:
             Includes:
             - AO3-focused browser behavior
             - DoH enabled with the configured Cloudflare Gateway endpoint
-            - First-run local setup guide for Tampermonkey and AO3 Chinese
-            - Tampermonkey userscript manager for AO3 Chinese userscript installation
+            - First-run local setup guide for AO3 Chinese
+            - Built-in AO3 Chinese translation extension without Tampermonkey
           files: ao3-browser-apks/**/*.apk
