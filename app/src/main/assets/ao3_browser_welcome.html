@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AO3 Browser 使用提示</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #17151f;
+      --card: #24212f;
+      --text: #f7f3ff;
+      --muted: #c7bdd6;
+      --primary: #7c4dff;
+      --primary-2: #a78bfa;
+      --border: rgba(255,255,255,.16);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top left, #32245b 0, #17151f 42%, #111018 100%);
+      color: var(--text);
+      line-height: 1.55;
+    }
+    main {
+      width: min(760px, 100%);
+      margin: 0 auto;
+      padding: 32px 18px 44px;
+    }
+    .hero {
+      padding: 28px 20px;
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      background: linear-gradient(145deg, rgba(124,77,255,.24), rgba(36,33,47,.92));
+      box-shadow: 0 24px 70px rgba(0,0,0,.28);
+    }
+    h1 {
+      margin: 0 0 10px;
+      font-size: 28px;
+      line-height: 1.18;
+    }
+    h2 {
+      margin: 28px 0 12px;
+      font-size: 20px;
+    }
+    p { margin: 10px 0; color: var(--muted); }
+    .button {
+      display: block;
+      width: 100%;
+      margin: 12px 0;
+      padding: 15px 16px;
+      border-radius: 16px;
+      text-align: center;
+      text-decoration: none;
+      color: white;
+      background: linear-gradient(135deg, var(--primary), var(--primary-2));
+      font-weight: 700;
+    }
+    .button.secondary {
+      color: var(--text);
+      background: rgba(255,255,255,.08);
+      border: 1px solid var(--border);
+    }
+    .card {
+      margin-top: 16px;
+      padding: 18px;
+      border-radius: 20px;
+      background: rgba(36,33,47,.88);
+      border: 1px solid var(--border);
+    }
+    ol {
+      margin: 10px 0 0;
+      padding-left: 22px;
+      color: var(--muted);
+    }
+    li { margin: 8px 0; }
+    strong { color: var(--text); }
+    code {
+      padding: 2px 6px;
+      border-radius: 8px;
+      background: rgba(255,255,255,.1);
+      color: var(--text);
+    }
+    .note {
+      font-size: 14px;
+      color: #d8cfff;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero">
+      <h1>欢迎使用 AO3 Browser</h1>
+      <p>这个浏览器已为 AO3 做好基础设置。首次使用只需要完成下面两步，就能启用中文界面和翻译功能。</p>
+    </section>
+
+    <section class="card">
+      <h2>第一步：安装 Tampermonkey</h2>
+      <p>AO3 中文脚本需要通过 Tampermonkey 运行。浏览器会尝试自动安装它；如果没有出现安装确认，请点下面的按钮手动检查。</p>
+      <a class="button" href="https://addons.mozilla.org/android/addon/tampermonkey/">安装或检查 Tampermonkey</a>
+      <p class="note">如果出现扩展权限确认，请选择允许或安装。</p>
+    </section>
+
+    <section class="card">
+      <h2>第二步：安装 AO3 中文脚本</h2>
+      <p>安装好 Tampermonkey 后，点下面按钮打开 AO3 中文脚本。进入 Tampermonkey 页面后，请点页面上的 <strong>安装</strong>。</p>
+      <a class="button" href="https://raw.githubusercontent.com/V-Lipset/ao3-chinese/main/main.user.js">安装 AO3 中文脚本</a>
+      <a class="button secondary" href="https://cdn.jsdelivr.net/gh/V-Lipset/ao3-chinese@main/main.user.js">备用安装地址</a>
+      <p class="note">如果看到的是代码文本，说明 Tampermonkey 还没有接管这个页面。请先确认 Tampermonkey 已安装并启用，然后回到本页重新点击安装脚本。</p>
+    </section>
+
+    <section class="card">
+      <h2>开始使用</h2>
+      <ol>
+        <li>安装 Tampermonkey。</li>
+        <li>安装 AO3 中文脚本。</li>
+        <li>打开 AO3，或刷新 AO3 页面。</li>
+      </ol>
+      <a class="button" href="https://archiveofourown.org/">打开 AO3</a>
+      <p class="note">以后打开浏览器会直接进入 AO3，不再显示原来的 Iceraven 首页。</p>
+    </section>
+  </main>
+</body>
+</html>

@@ -149,9 +149,9 @@ import mozilla.components.support.AppServicesInitializer.Config as AppServicesCo
 private const val RAM_THRESHOLD_MEGABYTES = 1024
 private const val BYTES_TO_MEGABYTES_CONVERSION = 1024.0 * 1024.0
 private const val TAMPERMONKEY_EXTENSION_ID = "firefox@tampermonkey.net"
-private const val AO3_CHINESE_USERSCRIPT_URL = "https://raw.githubusercontent.com/V-Lipset/ao3-chinese/main/main.user.js"
-private const val AO3_CHINESE_USERSCRIPT_INSTALLER_OPENED = "ao3_chinese_userscript_installer_opened_v2"
 private const val AO3_HOME_URL = "https://archiveofourown.org/"
+private const val AO3_BROWSER_WELCOME_URL = "file:///android_asset/ao3_browser_welcome.html"
+private const val AO3_BROWSER_WELCOME_SHOWN = "ao3_browser_welcome_shown_v3"
 
 /**
  * The main application class for Fenix. Records data to measure initialization performance.
@@ -420,8 +420,18 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
         val store = components.core.store
         val sessionStorage = components.core.sessionStorage
 
+        val startupUrl = getSharedPreferences(Settings.FENIX_PREFERENCES, MODE_PRIVATE)
+            .let { preferences ->
+                if (preferences.getBoolean(AO3_BROWSER_WELCOME_SHOWN, false)) {
+                    AO3_HOME_URL
+                } else {
+                    preferences.edit().putBoolean(AO3_BROWSER_WELCOME_SHOWN, true).apply()
+                    AO3_BROWSER_WELCOME_URL
+                }
+            }
+
         components.useCases.tabsUseCases.addTab(
-            url = AO3_HOME_URL,
+            url = startupUrl,
             selectTab = true,
             private = false,
         )
@@ -899,7 +909,6 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
 
     private fun installTampermonkeyForAo3IfNeeded(installedExtensions: List<WebExtension>) {
         if (installedExtensions.any { it.id == TAMPERMONKEY_EXTENSION_ID }) {
-            openAo3ChineseUserscriptInstallerOnce()
             return
         }
 
@@ -922,7 +931,6 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
                         installationMethod = InstallationMethod.MANAGER,
                         onSuccess = {
                             logger.debug("Installed Tampermonkey for AO3 Chinese userscript")
-                            openAo3ChineseUserscriptInstallerOnce()
                         },
                         onError = { throwable ->
                             logger.error("Failed to install Tampermonkey for AO3 Chinese userscript", throwable)
@@ -933,20 +941,6 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
                 logger.error("Failed to install Tampermonkey for AO3 Chinese userscript", e)
             }
         }
-    }
-
-    private fun openAo3ChineseUserscriptInstallerOnce() {
-        val preferences = getSharedPreferences(Settings.FENIX_PREFERENCES, MODE_PRIVATE)
-        if (preferences.getBoolean(AO3_CHINESE_USERSCRIPT_INSTALLER_OPENED, false)) {
-            return
-        }
-
-        preferences.edit().putBoolean(AO3_CHINESE_USERSCRIPT_INSTALLER_OPENED, true).apply()
-        components.useCases.tabsUseCases.addTab(
-            url = AO3_CHINESE_USERSCRIPT_URL,
-            selectTab = true,
-            private = false,
-        )
     }
 
     @VisibleForTesting
