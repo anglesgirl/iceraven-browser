@@ -1,0 +1,13 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<SearchPlugin xmlns="http://www.mozilla.org/2006/browser/search/">
+    <ShortName>AO3</ShortName>
+    <InputEncoding>UTF-8</InputEncoding>
+    <Image width="16" height="16">data:image/svg+xml,&lt;svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'&gt;&lt;rect width='64' height='64' rx='14' fill='%23990000'/&gt;&lt;text x='32' y='39' text-anchor='middle' font-family='Arial,sans-serif' font-size='20' font-weight='700' fill='white'&gt;AO3&lt;/text&gt;&lt;/svg&gt;</Image>
+    <Url type="text/html" method="GET" template="https://archiveofourown.org/works/search">
+        <Param name="work_search[query]" value="{searchTerms}"/>
+    </Url>
+    <SearchForm>https://archiveofourown.org/works/search</SearchForm>
+</SearchPlugin>

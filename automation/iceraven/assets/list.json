@@ -1,8 +1,12 @@
 {
   "default": {
-    "searchDefault": "",
-    "searchOrder": [],
-    "visibleDefaultEngines": []
+    "searchDefault": "AO3",
+    "searchOrder": [
+      "AO3"
+    ],
+    "visibleDefaultEngines": [
+      "ao3"
+    ]
   },
   "regionOverrides": {},
   "locales": {}
