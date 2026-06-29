@@ -254,13 +254,9 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
             val durationMillis = TimeUnit.NANOSECONDS.toMillis(stop - start)
             PerfStartup.applicationOnCreate.accumulateSamples(listOf(durationMillis))
 
-            // Initialize Firebase Analytics for app usage tracking
-            try {
-                val firebaseAnalytics = com.google.firebase.analytics.FirebaseAnalytics.getInstance(this)
-                firebaseAnalytics.logEvent(com.google.firebase.analytics.FirebaseAnalytics.Event.APP_OPEN, null)
-            } catch (e: Exception) {
-                android.util.Log.w("FenixApplication", "Firebase Analytics init failed", e)
-            }
+            // Initialize Google Analytics tracking (Measurement Protocol, no SDK needed)
+            org.mozilla.fenix.utils.AnalyticsTracker.init(this)
+            org.mozilla.fenix.utils.AnalyticsTracker.trackEvent("app_open")
         }
     }
 

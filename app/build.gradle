@@ -31,7 +31,6 @@ apply plugin: 'jacoco'
 apply plugin: 'androidx.navigation.safeargs.kotlin'
 apply plugin: 'kotlinx-serialization'
 apply plugin: 'com.google.devtools.ksp'
-apply plugin: 'com.google.gms.google-services'
 
 // The OSS-licenses plugin is only needed for shipping builds, so skip it during
 // `mach lint` (which always passes `-Pandroid-lint`) to avoid unnecessary overhead.
@@ -725,10 +724,6 @@ dependencies {
     implementation libs.sentry
     implementation libs.androidx.documentfile
     implementation libs.zxing
-    implementation platform(libs.firebase.bom)
-    implementation(libs.firebase.analytics) {
-        exclude group: 'com.google.firebase', module: 'firebase-common'
-    }
 
     implementation libs.androidx.room.runtime
     ksp libs.androidx.room.compiler

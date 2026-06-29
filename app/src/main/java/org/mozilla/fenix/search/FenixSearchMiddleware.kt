@@ -358,17 +358,15 @@ class FenixSearchMiddleware(
                     nimbusComponents.events,
                 )
 
-                // Track search event with Firebase Analytics
-                try {
-                    val firebaseAnalytics = com.google.firebase.analytics.FirebaseAnalytics.getInstance(fragment.requireContext())
-                    val bundle = android.os.Bundle()
-                    bundle.putString("search_engine", searchEngine.name)
-                    bundle.putString("search_source", searchAccessPoint.name)
-                    bundle.putString("search_terms_length", searchTerms.length.toString())
-                    firebaseAnalytics.logEvent("ao3_search", bundle)
-                } catch (e: Exception) {
-                    android.util.Log.w("FenixSearchMiddleware", "Firebase Analytics event failed", e)
-                }
+                // Track search event with Google Analytics
+                org.mozilla.fenix.utils.AnalyticsTracker.trackEvent(
+                    eventName = "ao3_search",
+                    params = mapOf(
+                        "search_engine" to searchEngine.name,
+                        "search_source" to searchAccessPoint.name,
+                        "search_terms_length" to searchTerms.length.toString(),
+                    ),
+                )
             }
 
             browserStore.dispatch(AwesomeBarAction.EngagementFinished(abandoned = false))
