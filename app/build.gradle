@@ -725,11 +725,12 @@ dependencies {
     implementation libs.sentry
     implementation libs.androidx.documentfile
     implementation libs.zxing
-    // Firebase Analytics - exclude transitive deps that conflict with android-components
-    implementation(libs.firebase.analytics) {
-        exclude group: 'com.google.android.gms', module: 'play-services-ads-identifier'
-        exclude group: 'com.google.firebase', module: 'firebase-common'
-    }
+    // Firebase Analytics - BOM aligns all Firebase/Play-Services transitive versions.
+    // Conflicting local stub classes (AdvertisingIdClient, RandomUtil) were removed so
+    // the SDK's real implementations are used, letting analytics and push share one
+    // firebase-common dependency instead of duplicate copies.
+    implementation platform(libs.firebase.bom)
+    implementation libs.firebase.analytics
 
     implementation libs.androidx.room.runtime
     ksp libs.androidx.room.compiler

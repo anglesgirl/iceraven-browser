@@ -54,7 +54,7 @@ work = "2.11.2"
 
 # Google other
 accompanist = "0.37.3"
-firebase-analytics = "22.4.0"
+firebase-bom = "33.7.0"
 firebase-messaging = "25.0.2"
 installreferrer = "2.2"
 ksp = "2.3.8"
@@ -225,7 +225,8 @@ androidx-compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling
 # Google other
 accompanist-drawablepainter = { module = "com.google.accompanist:accompanist-drawablepainter", version.ref = "accompanist" }
 firebase-messaging = { module = "com.google.firebase:firebase-messaging", version.ref = "firebase-messaging" }
-firebase-analytics = { module = "com.google.firebase:firebase-analytics", version.ref = "firebase-analytics" }
+firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
+firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase-bom" }
 google-material = { module = "com.google.android.material:material", version.ref = "material" }
 installreferrer = { module = "com.android.installreferrer:installreferrer", version.ref = "installreferrer" }
 ksp-symbol-processing-aa = { module = "com.google.devtools.ksp:symbol-processing-aa", version.ref = "ksp" }
