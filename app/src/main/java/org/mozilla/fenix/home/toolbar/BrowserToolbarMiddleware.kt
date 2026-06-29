@@ -290,13 +290,8 @@ class BrowserToolbarMiddleware(
     }
 
     private fun buildStartPageActions(selectedSearchEngine: SearchEngine?): List<Action> {
-        return listOfNotNull(
-            BrowserToolbarSearchMiddleware.buildSearchSelector(
-                selectedSearchEngine = selectedSearchEngine,
-                searchEngineShortcuts = browserStore.state.search.searchEngineShortcuts,
-                resources = uiContext.resources,
-            ),
-        )
+        // AO3 Browser: hide the search engine selector icon in the address bar
+        return emptyList()
     }
 
     private fun buildEndBrowserActions(): List<Action> {

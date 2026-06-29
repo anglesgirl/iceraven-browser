@@ -543,14 +543,12 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
                 navigateToHome(navHost.navController)
             }
 
-            // AO3 Browser: on first launch (no saved state, no existing tabs),
-            // open AO3 homepage directly instead of staying on the home screen.
+            // AO3 Browser: FenixApplication.restoreBrowserState() already creates
+            // an AO3 homepage tab on first launch. Here we just navigate to it.
             if (savedInstanceState == null &&
-                components.core.store.state.tabs.isEmpty()
+                components.core.store.state.tabs.isNotEmpty()
             ) {
-                components.useCases.fenixBrowserUseCases.addNewHomepageTab(
-                    private = browsingModeManager.mode.isPrivate,
-                )
+                // Tab already created by restoreBrowserState, navigate to browser
                 openToBrowser(BrowserDirection.FromGlobal)
             } else if (shouldNavigateToBrowserOnColdStart(savedInstanceState)) {
                 if (!shouldStartOnHome()) {

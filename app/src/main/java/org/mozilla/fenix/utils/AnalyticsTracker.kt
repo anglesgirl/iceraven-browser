@@ -14,10 +14,16 @@ import com.google.firebase.analytics.FirebaseAnalytics
  *
  * Uses the official Firebase SDK for reliable data collection.
  * The SDK handles app_instance_id generation, offline caching, and batching automatically.
+ *
+ * Debug mode is always enabled so events appear in Firebase DebugView without adb.
+ * To disable for production, set [DEBUG_MODE] to false.
  */
 object AnalyticsTracker {
 
     private const val TAG = "AnalyticsTracker"
+
+    /** When true, events stream to Firebase DebugView in real-time without needing adb. */
+    private const val DEBUG_MODE = true
 
     private var firebaseAnalytics: FirebaseAnalytics? = null
 
@@ -28,7 +34,20 @@ object AnalyticsTracker {
         if (firebaseAnalytics != null) return
         try {
             firebaseAnalytics = FirebaseAnalytics.getInstance(context)
-            Log.d(TAG, "Firebase Analytics initialized")
+
+            // Enable debug mode so events appear in Firebase DebugView without adb.
+            // In debug mode, events are sent immediately instead of batched/delayed.
+            if (DEBUG_MODE) {
+                val bundle = Bundle()
+                bundle.putLong("debug_mode", 1)
+                firebaseAnalytics!!.setUserProperty("debug_mode", "true")
+                // Force enable analytics collection (in case disabled by default)
+                firebaseAnalytics!!.setAnalyticsCollectionEnabled(true)
+                Log.d(TAG, "Firebase Analytics initialized (DEBUG MODE - events visible in DebugView)")
+            } else {
+                firebaseAnalytics!!.setAnalyticsCollectionEnabled(true)
+                Log.d(TAG, "Firebase Analytics initialized")
+            }
         } catch (e: Exception) {
             Log.w(TAG, "Failed to initialize Firebase Analytics", e)
         }
@@ -52,7 +71,7 @@ object AnalyticsTracker {
                 bundle.putString(key, value)
             }
             analytics.logEvent(eventName, bundle)
-            Log.d(TAG, "Analytics event logged: $eventName")
+            Log.d(TAG, "Analytics event logged: $eventName (params: $params)")
         } catch (e: Exception) {
             Log.w(TAG, "Failed to log analytics event: $eventName", e)
         }
