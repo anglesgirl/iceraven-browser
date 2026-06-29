@@ -235,7 +235,7 @@ object AppUpdateChecker {
                         val uriString = it.getString(
                             it.getColumnIndexOrThrow(DownloadManager.COLUMN_LOCAL_URI),
                         )
-                        Uri.parse(uriString)?.let { uri -> File(uri.path) }
+                        Uri.parse(uriString)?.let { uri -> uri.path?.let { path -> File(path) } }
                     } else {
                         null
                     }
