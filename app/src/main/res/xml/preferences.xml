@@ -265,6 +265,12 @@
             android:title="@string/preferences_about" />
 
         <androidx.preference.Preference
+            android:key="@string/pref_key_check_update"
+            app:iconSpaceReserved="false"
+            android:title="@string/preferences_check_update"
+            android:summary="@string/preferences_check_update_summary" />
+
+        <androidx.preference.Preference
             android:key="@string/pref_key_debug_settings"
             app:iconSpaceReserved="false"
             android:title="@string/preferences_debug_settings"

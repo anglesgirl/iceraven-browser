@@ -166,7 +166,7 @@ class Settings(
         /**
          * AO3 Browser default Cloudflare Gateway DoH endpoint.
          */
-        private const val CLOUDFLARE_URI = "https://v7e373e11t.cloudflare-gateway.com/dns-query"
+        private const val CLOUDFLARE_URI = "https://0kbpekmcr1.cloudflare-gateway.com/dns-query"
     }
 
     private val logger = Logger("Settings")

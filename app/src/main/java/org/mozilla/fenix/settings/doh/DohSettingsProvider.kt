@@ -118,7 +118,7 @@ internal class DefaultDohSettingsProvider(
 
     companion object {
         @VisibleForTesting
-        val cloudflareUri = "https://v7e373e11t.cloudflare-gateway.com/dns-query"
+        val cloudflareUri = "https://0kbpekmcr1.cloudflare-gateway.com/dns-query"
 
         @VisibleForTesting
         val nextDnsUri = "https://firefox.dns.nextdns.io/"

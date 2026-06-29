@@ -257,6 +257,76 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
             // Initialize Google Analytics tracking (Measurement Protocol, no SDK needed)
             org.mozilla.fenix.utils.AnalyticsTracker.init(this)
             org.mozilla.fenix.utils.AnalyticsTracker.trackEvent("app_open")
+
+            // AO3 Browser: Check for app updates on startup (background, silent)
+            checkForAppUpdate()
+        }
+    }
+
+    /**
+     * AO3 Browser: Check for updates in background on app startup.
+     * Shows a notification if a new version is available.
+     */
+    @OptIn(DelicateCoroutinesApi::class)
+    private fun checkForAppUpdate() {
+        GlobalScope.launch(Dispatchers.IO) {
+            try {
+                val packageInfo = packageManager.getPackageInfo(packageName, 0)
+                val currentVersion = packageInfo.versionName ?: return@launch
+
+                val updateInfo = org.mozilla.fenix.utils.AppUpdateChecker.checkForUpdate(
+                    client = components.core.client,
+                    currentVersion = currentVersion,
+                )
+
+                if (updateInfo != null) {
+                    android.util.Log.d("AppUpdateChecker", "Update available: ${updateInfo.tagName}")
+                    // Show notification
+                    showUpdateNotification(updateInfo)
+                }
+            } catch (e: Exception) {
+                android.util.Log.w("AppUpdateChecker", "Startup update check failed", e)
+            }
+        }
+    }
+
+    private fun showUpdateNotification(updateInfo: org.mozilla.fenix.utils.AppUpdateChecker.UpdateInfo) {
+        try {
+            val channelId = "ao3_browser_updates"
+            val notificationManager = getSystemService(android.content.Context.NOTIFICATION_SERVICE)
+                as android.app.NotificationManager
+
+            // Create notification channel (required for Android O+)
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                val channel = android.app.NotificationChannel(
+                    channelId,
+                    "AO3 Browser Updates",
+                    android.app.NotificationManager.IMPORTANCE_DEFAULT,
+                )
+                notificationManager.createNotificationChannel(channel)
+            }
+
+            val intent = android.content.Intent(android.content.Intent.ACTION_VIEW).apply {
+                data = android.net.Uri.parse(updateInfo.htmlUrl)
+            }
+            val pendingIntent = android.app.PendingIntent.getActivity(
+                this,
+                0,
+                intent,
+                android.app.PendingIntent.FLAG_IMMUTABLE or android.app.PendingIntent.FLAG_UPDATE_CURRENT,
+            )
+
+            val notification = androidx.core.app.NotificationCompat.Builder(this, channelId)
+                .setSmallIcon(org.mozilla.fenix.R.drawable.mozac_ic_search_24)
+                .setContentTitle(getString(org.mozilla.fenix.R.string.update_notification_title))
+                .setContentText(getString(org.mozilla.fenix.R.string.update_notification_text, updateInfo.tagName))
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true)
+                .build()
+
+            notificationManager.notify(1001, notification)
+        } catch (e: Exception) {
+            android.util.Log.w("AppUpdateChecker", "Failed to show update notification", e)
         }
     }
 

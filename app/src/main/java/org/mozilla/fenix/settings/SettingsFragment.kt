@@ -82,6 +82,9 @@ import org.mozilla.fenix.settings.account.AccountUiView
 import org.mozilla.fenix.snackbar.FenixSnackbarDelegate
 import org.mozilla.fenix.snackbar.SnackbarBinding
 import org.mozilla.fenix.utils.Settings
+import org.mozilla.fenix.utils.AppUpdateChecker
+import org.mozilla.fenix.utils.AppUpdateDialog
+import mozilla.components.support.utils.ext.packageManagerCompatHelper
 import java.lang.ref.WeakReference
 import kotlin.system.exitProcess
 import mozilla.components.ui.icons.R as iconsR
@@ -549,6 +552,11 @@ class SettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFragment 
                 SettingsFragmentDirections.actionSettingsFragmentToAboutFragment()
             }
 
+            resources.getString(R.string.pref_key_check_update) -> {
+                handleCheckForUpdate()
+                null
+            }
+
             // Only displayed when secret settings are enabled
             resources.getString(R.string.pref_key_debug_settings) -> {
                 SettingsFragmentDirections.actionSettingsFragmentToSecretSettingsFragment()
@@ -692,6 +700,67 @@ class SettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFragment 
             R.string.pref_key_sync_debug,
         ).forEach { key ->
             findPreference<Preference>(getPreferenceKey(key))?.isVisible = false
+        }
+    }
+
+    /**
+     * AO3 Browser: Check for app updates via GitHub Releases.
+     * Shows a progress dialog while checking, then either an update dialog or a "up to date" toast.
+     */
+    private fun handleCheckForUpdate() {
+        val context = requireContext()
+
+        // Show checking dialog
+        val checkingDialog = MaterialAlertDialogBuilder(context)
+            .setMessage(R.string.update_checking)
+            .setCancelable(false)
+            .create()
+        checkingDialog.show()
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            try {
+                val packageInfo = context.packageManagerCompatHelper.getPackageInfoCompat(context.packageName, 0)
+                val currentVersion = packageInfo.versionName ?: ""
+
+                val updateInfo = AppUpdateChecker.checkForUpdate(
+                    client = requireComponents.core.client,
+                    currentVersion = currentVersion,
+                )
+
+                checkingDialog.dismiss()
+
+                if (updateInfo != null) {
+                    // Show update available dialog
+                    AppUpdateDialog(
+                        context = context,
+                        updateInfo = updateInfo,
+                        onDownloadClick = { useCnMirror ->
+                            // Start download using system DownloadManager
+                            val downloadId = AppUpdateChecker.downloadApk(context, updateInfo, useCnMirror)
+                            if (downloadId != -1L) {
+                                Toast.makeText(context, R.string.update_downloading, Toast.LENGTH_SHORT).show()
+                                // Register receiver to auto-install when download completes
+                                AppUpdateChecker.registerDownloadReceiver(context, downloadId) { file ->
+                                    if (file != null && file.exists()) {
+                                        Toast.makeText(context, R.string.update_download_complete, Toast.LENGTH_LONG).show()
+                                        AppUpdateChecker.installApk(context, file)
+                                    } else {
+                                        Toast.makeText(context, R.string.update_check_failed, Toast.LENGTH_SHORT).show()
+                                    }
+                                }
+                            } else {
+                                Toast.makeText(context, R.string.update_check_failed, Toast.LENGTH_SHORT).show()
+                            }
+                        },
+                        onDismiss = {},
+                    ).show()
+                } else {
+                    Toast.makeText(context, R.string.update_up_to_date, Toast.LENGTH_SHORT).show()
+                }
+            } catch (e: Exception) {
+                checkingDialog.dismiss()
+                Toast.makeText(context, R.string.update_check_failed, Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
