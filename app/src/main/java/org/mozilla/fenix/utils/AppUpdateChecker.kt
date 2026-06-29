@@ -78,7 +78,7 @@ object AppUpdateChecker {
             )
 
             val response = client.fetch(request)
-            if (!response.isSuccessful) {
+            if (!response.isSuccess) {
                 Log.w(TAG, "GitHub API returned status: ${response.status}")
                 return@withContext null
             }

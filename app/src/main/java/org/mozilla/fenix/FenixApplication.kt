@@ -317,7 +317,7 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
             )
 
             val notification = androidx.core.app.NotificationCompat.Builder(this, channelId)
-                .setSmallIcon(org.mozilla.fenix.R.drawable.mozac_ic_search_24)
+                .setSmallIcon(android.R.drawable.stat_sys_download_done)
                 .setContentTitle(getString(org.mozilla.fenix.R.string.update_notification_title))
                 .setContentText(getString(org.mozilla.fenix.R.string.update_notification_text, updateInfo.tagName))
                 .setContentIntent(pendingIntent)
