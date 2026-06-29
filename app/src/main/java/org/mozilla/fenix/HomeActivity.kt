@@ -543,15 +543,6 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
                 navigateToHome(navHost.navController)
             }
 
-            if (shouldNavigateToBrowserOnColdStart(savedInstanceState)) {
-                if (!shouldStartOnHome()) {
-                    navigateToBrowserOnColdStart()
-                }
-                maybeShowSetAsDefaultBrowserPrompt()
-            } else {
-                StartOnHome.enterHomeScreen.record(NoExtras())
-            }
-
             // AO3 Browser: on first launch (no saved state, no existing tabs),
             // open AO3 homepage directly instead of staying on the home screen.
             if (savedInstanceState == null &&
@@ -561,6 +552,13 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
                     private = browsingModeManager.mode.isPrivate,
                 )
                 openToBrowser(BrowserDirection.FromGlobal)
+            } else if (shouldNavigateToBrowserOnColdStart(savedInstanceState)) {
+                if (!shouldStartOnHome()) {
+                    navigateToBrowserOnColdStart()
+                }
+                maybeShowSetAsDefaultBrowserPrompt()
+            } else {
+                StartOnHome.enterHomeScreen.record(NoExtras())
             }
         }
 

@@ -48,6 +48,14 @@ class AppRequestInterceptor(
             return RequestInterceptor.InterceptionResponse.Url(AO3_HOME_URL)
         }
 
+        // Redirect AO3 mirror URLs to official archiveofourown.org (preserve path)
+        if (isDirectNavigation && !isSubframeRequest) {
+            val redirectedUrl = org.mozilla.fenix.utils.Ao3UrlRedirector.redirect(uri)
+            if (redirectedUrl != uri) {
+                return RequestInterceptor.InterceptionResponse.Url(redirectedUrl)
+            }
+        }
+
         if (shouldRedirectToAo3Home(uri, isDirectNavigation, isSubframeRequest)) {
             return RequestInterceptor.InterceptionResponse.Url(AO3_HOME_URL)
         }
@@ -222,8 +230,16 @@ class AppRequestInterceptor(
         private val AO3_ALLOWED_HOSTS = setOf(
             "archiveofourown.org",
             "www.archiveofourown.org",
+            "archiveofourown.com",
+            "www.archiveofourown.com",
+            "archiveofourown.net",
+            "www.archiveofourown.net",
             "archiveofourown.gay",
             "www.archiveofourown.gay",
+            "ao3.org",
+            "www.ao3.org",
+            "archive.transformativeworks.org",
+            "insecure.archiveofourown.org",
             "addons.mozilla.org",
             "raw.githubusercontent.com",
             "github.com",

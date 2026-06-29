@@ -569,14 +569,76 @@
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
 
+            <!-- AO3 official domains -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <category android:name="mozilla.components.pwa.category.SHORTCUT" />
                 <data android:scheme="http" />
                 <data android:scheme="https" />
+                <data android:host="archiveofourown.org" />
+                <data android:host="www.archiveofourown.org" />
+                <data android:host="archiveofourown.com" />
+                <data android:host="www.archiveofourown.com" />
+                <data android:host="archiveofourown.net" />
+                <data android:host="www.archiveofourown.net" />
+                <data android:host="archiveofourown.gay" />
+                <data android:host="www.archiveofourown.gay" />
+                <data android:host="ao3.org" />
+                <data android:host="www.ao3.org" />
+                <data android:host="archive.transformativeworks.org" />
+                <data android:host="insecure.archiveofourown.org" />
+            </intent-filter>
+
+            <!-- AO3 mirror domains - will be redirected to official site -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="http" />
+                <data android:scheme="https" />
+                <data android:host="ao3.cubeart.club" />
+                <data android:host="www.ao3.cubeart.club" />
+                <data android:host="xiaozhan.icu" />
+                <data android:host="www.xiaozhan.icu" />
+                <data android:host="nightalk.xyz" />
+                <data android:host="www.nightalk.xyz" />
+                <data android:host="nightalk.top" />
+                <data android:host="www.nightalk.top" />
+                <data android:host="nightalk.cc" />
+                <data android:host="www.nightalk.cc" />
+                <data android:host="1.ao3-cn.top" />
+                <data android:host="ao3-cn.top" />
+                <data android:host="www.ao3-cn.top" />
+                <data android:host="ao3.pw" />
+                <data android:host="www.ao3.pw" />
+                <data android:host="www.aothree.club" />
+                <data android:host="aothree.club" />
+                <data android:host="ao3mirror.com" />
+                <data android:host="www.ao3mirror.com" />
+                <data android:host="ao3mirror.site" />
+                <data android:host="www.ao3mirror.site" />
+                <data android:host="archiveofourown.mirror.net" />
+                <data android:host="www.archiveofourown.mirror.net" />
+                <data android:host="s.ao3l.live" />
+                <data android:host="l.ao3l.live" />
+                <data android:host="www.ao3l.live" />
+                <data android:host="ao3l.live" />
+                <data android:host="l.ao4.live" />
+                <data android:host="www.ao4.live" />
+                <data android:host="ao4.live" />
+                <data android:host="ao3.akiba.ga" />
+                <data android:host="www.ao3.akiba.ga" />
+                <data android:host="ao3-v.akiba.ga" />
+                <data android:host="www.ao3-v.akiba.ga" />
+                <data android:host="ao3.site" />
+                <data android:host="www.ao3.site" />
+                <data android:host="ao3go.ao3.site" />
+                <data android:host="login-no.ao3.site" />
+                <data android:host="lyzw.xyz" />
+                <data android:host="www.lyzw.xyz" />
+                <data android:host="siterate.org" />
+                <data android:host="www.siterate.org" />
             </intent-filter>
 
             <!--Exposed specific deep links for third-party apps to open wallpaper settings.-->
@@ -586,19 +648,6 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:scheme="${deepLinkScheme}"
                     android:host="settings_wallpapers"/>
-            </intent-filter>
-
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.BROWSABLE" />
-                <category android:name="android.intent.category.DEFAULT" />
-
-                <data android:scheme="http" />
-                <data android:scheme="https" />
-                <data android:mimeType="text/html" />
-                <data android:mimeType="text/plain" />
-                <data android:mimeType="application/xhtml+xml" />
             </intent-filter>
 
             <intent-filter>
