@@ -357,6 +357,18 @@ class FenixSearchMiddleware(
                     searchAccessPoint,
                     nimbusComponents.events,
                 )
+
+                // Track search event with Firebase Analytics
+                try {
+                    val firebaseAnalytics = com.google.firebase.analytics.FirebaseAnalytics.getInstance(fragment.requireContext())
+                    val bundle = android.os.Bundle()
+                    bundle.putString("search_engine", searchEngine.name)
+                    bundle.putString("search_source", searchAccessPoint.source)
+                    bundle.putString("search_terms_length", searchTerms.length.toString())
+                    firebaseAnalytics.logEvent("ao3_search", bundle)
+                } catch (e: Exception) {
+                    android.util.Log.w("FenixSearchMiddleware", "Firebase Analytics event failed", e)
+                }
             }
 
             browserStore.dispatch(AwesomeBarAction.EngagementFinished(abandoned = false))

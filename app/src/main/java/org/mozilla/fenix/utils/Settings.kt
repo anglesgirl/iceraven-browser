@@ -608,12 +608,12 @@ class Settings(
 
     var isTelemetryEnabled by booleanPreference(
         appContext.getPreferenceKey(R.string.pref_key_telemetry),
-        default = true,
+        default = false,
     )
 
     var isMarketingTelemetryEnabled by booleanPreference(
         appContext.getPreferenceKey(R.string.pref_key_marketing_telemetry),
-        default = true,
+        default = false,
     )
 
     var hasMadeMarketingTelemetrySelection by booleanPreference(
