@@ -50,7 +50,7 @@ internal class DataStoreBackedTranslationsEnabledSettings(
     private val isEnabledKey = booleanPreferencesKey("is_enabled_key")
 
     override val isEnabled: Flow<Boolean> = dataStore.data.map { preferences ->
-        preferences[isEnabledKey] ?: true
+        preferences[isEnabledKey] ?: false
     }
 
     override suspend fun setEnabled(isEnabled: Boolean) {

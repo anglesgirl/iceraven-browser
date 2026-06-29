@@ -189,8 +189,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFragment 
 
         findPreference<Preference>(
             getPreferenceKey(R.string.pref_key_translation),
-        )?.isVisible = FxNimbus.features.translations.value().globalSettingsEnabled &&
-            components.core.store.state.translationEngine.isEngineSupported == true
+        )?.isVisible = false
 
         findPreference<Preference>(
             getPreferenceKey(R.string.pref_key_page_summaries),

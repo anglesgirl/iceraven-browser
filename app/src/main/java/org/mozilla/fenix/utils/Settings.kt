@@ -608,12 +608,12 @@ class Settings(
 
     var isTelemetryEnabled by booleanPreference(
         appContext.getPreferenceKey(R.string.pref_key_telemetry),
-        default = false,
+        default = true,
     )
 
     var isMarketingTelemetryEnabled by booleanPreference(
         appContext.getPreferenceKey(R.string.pref_key_marketing_telemetry),
-        default = false,
+        default = true,
     )
 
     var hasMadeMarketingTelemetrySelection by booleanPreference(
@@ -985,7 +985,7 @@ class Settings(
      */
     var showFirstTimeTranslation: Boolean by booleanPreference(
         appContext.getPreferenceKey(R.string.pref_key_show_first_time_translation),
-        default = true,
+        default = false,
     )
 
     /**
@@ -993,7 +993,7 @@ class Settings(
      */
     var offerTranslation: Boolean by booleanPreference(
         appContext.getPreferenceKey(R.string.pref_key_translations_offer),
-        default = true,
+        default = false,
     )
 
     /**
