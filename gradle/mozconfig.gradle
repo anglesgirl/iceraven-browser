@@ -19,6 +19,22 @@ gradle.ext.mozconfig.topobjdir = System.getProperty("user.dir")
 gradle.startParameter.offline = false
 
 gradle.ext.configureMavenRepositories = { handler ->
+    // AO3 Browser: add mirror repositories as fallback for when Maven Central
+    // returns 403 Forbidden (intermittent upstream outages).
+    // Aliyun mirror is added first so Gradle tries it before the primary repos.
+    def mirrors = [
+        "https://maven.aliyun.com/repository/public",
+        "https://maven.aliyun.com/repository/gradle-plugin",
+        "https://maven.aliyun.com/repository/google",
+    ]
+    mirrors.each { repository ->
+        handler.maven {
+            url = repository
+            if (gradle.mozconfig.substs.ALLOW_INSECURE_GRADLE_REPOSITORIES) {
+                allowInsecureProtocol = true
+            }
+        }
+    }
     gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
         handler.maven {
             url = repository
