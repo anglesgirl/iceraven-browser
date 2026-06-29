@@ -20,47 +20,41 @@ import kotlin.concurrent.thread
  * No SDK dependency required - sends HTTP POST requests directly to Google Analytics.
  * This avoids dependency conflicts with Mozilla android-components.
  *
- * Setup:
- * 1. Go to Firebase Console > Analytics > Data Streams
- * 2. Select your Android app
- * 3. Copy the Measurement ID (G-XXXXXXXXXX)
- * 4. Go to Measurement Protocol API Secrets > Create a new secret
- * 5. Fill in MEASUREMENT_ID and API_SECRET below
+ * For app data streams (Firebase), use firebase_app_id instead of measurement_id.
+ * Reference: https://developers.google.cn/analytics/devguides/collection/protocol/ga4/sending-events
  */
 object AnalyticsTracker {
 
     private const val TAG = "AnalyticsTracker"
 
-    // TODO: Fill in your Measurement ID from Firebase Console
-    // Firebase Console > Analytics > Data Streams > [your app] > Measurement ID
-    private const val MEASUREMENT_ID = "G-PLACEHOLDER"
+    // Firebase App ID from google-services.json
+    private const val FIREBASE_APP_ID = "1:853194114797:android:44903d99ebaff5024baee4"
 
-    // TODO: Fill in your API Secret from Firebase Console
-    // Firebase Console > Analytics > Data Streams > [your app] > Measurement Protocol API Secrets
-    private const val API_SECRET = "PLACEHOLDER"
+    // API Secret from Google Analytics > Data Streams > Measurement Protocol API secrets
+    private const val API_SECRET = "DmEqfUM1RPWmXS581HVfdA"
 
     private const val ENDPOINT =
         "https://www.google-analytics.com/mp/collect"
 
-    // Persistent client ID - generated once per install
+    // Persistent app instance ID - generated once per install
     private const val PREFS_NAME = "analytics_prefs"
-    private const val CLIENT_ID_KEY = "client_id"
+    private const val INSTANCE_ID_KEY = "app_instance_id"
 
-    private var clientId: String? = null
+    private var appInstanceId: String? = null
 
     /**
      * Initialize the tracker. Call this from Application.onCreate().
-     * Generates or retrieves a persistent client ID.
+     * Generates or retrieves a persistent app instance ID.
      */
     fun init(context: Context) {
-        if (clientId != null) return
+        if (appInstanceId != null) return
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        clientId = prefs.getString(CLIENT_ID_KEY, null) ?: run {
+        appInstanceId = prefs.getString(INSTANCE_ID_KEY, null) ?: run {
             val id = UUID.randomUUID().toString()
-            prefs.edit().putString(CLIENT_ID_KEY, id).apply()
+            prefs.edit().putString(INSTANCE_ID_KEY, id).apply()
             id
         }
-        Log.d(TAG, "AnalyticsTracker initialized with client ID: $clientId")
+        Log.d(TAG, "AnalyticsTracker initialized with app instance ID: $appInstanceId")
     }
 
     /**
@@ -70,27 +64,23 @@ object AnalyticsTracker {
      * @param params Optional event parameters as key-value pairs
      */
     fun trackEvent(eventName: String, params: Map<String, String> = emptyMap()) {
-        if (MEASUREMENT_ID == "G-PLACEHOLDER" || API_SECRET == "PLACEHOLDER") {
-            Log.w(TAG, "AnalyticsTracker not configured - skipping event: $eventName")
-            return
-        }
-
-        val cid = clientId ?: run {
+        val instanceId = appInstanceId ?: run {
             Log.w(TAG, "AnalyticsTracker not initialized - skipping event: $eventName")
             return
         }
 
         thread(name = "analytics-$eventName", start = true) {
             try {
-                sendEvent(cid, eventName, params)
+                sendEvent(instanceId, eventName, params)
             } catch (e: Exception) {
                 Log.w(TAG, "Failed to send analytics event: $eventName", e)
             }
         }
     }
 
-    private fun sendEvent(clientId: String, eventName: String, params: Map<String, String>) {
-        val url = URL("$ENDPOINT?measurement_id=$MEASUREMENT_ID&api_secret=$API_SECRET")
+    private fun sendEvent(appInstanceId: String, eventName: String, params: Map<String, String>) {
+        // For app data streams, use firebase_app_id instead of measurement_id
+        val url = URL("$ENDPOINT?firebase_app_id=$FIREBASE_APP_ID&api_secret=$API_SECRET")
 
         val jsonParams = JSONObject()
         for ((key, value) in params) {
@@ -102,8 +92,9 @@ object AnalyticsTracker {
             put("params", jsonParams)
         }
 
+        // For app data streams, use app_instance_id instead of client_id
         val requestBody = JSONObject().apply {
-            put("client_id", clientId)
+            put("app_instance_id", appInstanceId)
             put("events", JSONArray().put(event))
         }
 
