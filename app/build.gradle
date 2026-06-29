@@ -725,9 +725,10 @@ dependencies {
     implementation libs.sentry
     implementation libs.androidx.documentfile
     implementation libs.zxing
-    // Firebase Analytics - exclude play-services-ads-identifier to avoid conflict with existing dependency
+    // Firebase Analytics - exclude transitive deps that conflict with android-components
     implementation(libs.firebase.analytics) {
         exclude group: 'com.google.android.gms', module: 'play-services-ads-identifier'
+        exclude group: 'com.google.firebase', module: 'firebase-common'
     }
 
     implementation libs.androidx.room.runtime
