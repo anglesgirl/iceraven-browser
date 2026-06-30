@@ -6,7 +6,6 @@ package org.mozilla.fenix
 
 import android.content.Context
 import android.net.ConnectivityManager
-import android.net.Uri
 import androidx.annotation.VisibleForTesting
 import androidx.core.content.getSystemService
 import androidx.navigation.NavController
@@ -56,9 +55,8 @@ class AppRequestInterceptor(
             }
         }
 
-        if (shouldRedirectToAo3Home(uri, isDirectNavigation, isSubframeRequest)) {
-            return RequestInterceptor.InterceptionResponse.Url(AO3_HOME_URL)
-        }
+        // AO3 Browser: non-AO3 request interception disabled to avoid blocking
+        // translation services and images embedded in articles.
 
         val services = context.components.services
         return listOf(
@@ -116,25 +114,6 @@ class AppRequestInterceptor(
      */
     private fun interceptAboutHomeRequest(uri: String): Boolean {
         return uri == ABOUT_HOME_URL
-    }
-
-    private fun shouldRedirectToAo3Home(
-        uri: String,
-        isDirectNavigation: Boolean,
-        isSubframeRequest: Boolean,
-    ): Boolean {
-        if (!isDirectNavigation || isSubframeRequest) {
-            return false
-        }
-
-        val parsedUri = Uri.parse(uri)
-        val scheme = parsedUri.scheme ?: return false
-        if (scheme != "http" && scheme != "https") {
-            return false
-        }
-
-        val host = parsedUri.host?.lowercase() ?: return false
-        return host !in AO3_ALLOWED_HOSTS
     }
 
     /**
@@ -227,23 +206,5 @@ class AppRequestInterceptor(
         internal const val LOW_AND_MEDIUM_RISK_ERROR_PAGES = "low_and_medium_risk_error_pages.html"
         internal const val HIGH_RISK_ERROR_PAGES = "high_risk_error_pages.html"
         internal const val AO3_HOME_URL = "https://archiveofourown.org/"
-        private val AO3_ALLOWED_HOSTS = setOf(
-            "archiveofourown.org",
-            "www.archiveofourown.org",
-            "archiveofourown.com",
-            "www.archiveofourown.com",
-            "archiveofourown.net",
-            "www.archiveofourown.net",
-            "archiveofourown.gay",
-            "www.archiveofourown.gay",
-            "ao3.org",
-            "www.ao3.org",
-            "archive.transformativeworks.org",
-            "insecure.archiveofourown.org",
-            "addons.mozilla.org",
-            "raw.githubusercontent.com",
-            "github.com",
-            "cdn.jsdelivr.net",
-        )
     }
 }

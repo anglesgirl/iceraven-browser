@@ -701,67 +701,51 @@ class SettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFragment 
         ).forEach { key ->
             findPreference<Preference>(getPreferenceKey(key))?.isVisible = false
         }
+
+        // AO3 Browser: Only show "Check for updates" when a new version is available
+        val updatePref = findPreference<Preference>(getPreferenceKey(R.string.pref_key_check_update))
+        if (updatePref != null) {
+            val pending = AppUpdateChecker.pendingUpdate
+            updatePref.isVisible = pending != null
+            if (pending != null) {
+                updatePref.title = getString(R.string.preferences_check_update)
+                updatePref.summary = getString(R.string.update_available_title, pending.tagName)
+            }
+        }
     }
 
     /**
-     * AO3 Browser: Check for app updates via GitHub Releases.
-     * Shows a progress dialog while checking, then either an update dialog or a "up to date" toast.
+     * AO3 Browser: Show update dialog if a new version was found by the
+     * background startup check. The "Check for updates" preference is only
+     * visible when [AppUpdateChecker.pendingUpdate] is non-null.
      */
     private fun handleCheckForUpdate() {
         val context = requireContext()
+        val updateInfo = AppUpdateChecker.pendingUpdate ?: return
 
-        // Show checking dialog
-        val checkingDialog = MaterialAlertDialogBuilder(context)
-            .setMessage(R.string.update_checking)
-            .setCancelable(false)
-            .create()
-        checkingDialog.show()
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            try {
-                val packageInfo = context.packageManagerCompatHelper.getPackageInfoCompat(context.packageName, 0)
-                val currentVersion = packageInfo.versionName ?: ""
-
-                val updateInfo = AppUpdateChecker.checkForUpdate(
-                    client = requireComponents.core.client,
-                    currentVersion = currentVersion,
-                )
-
-                checkingDialog.dismiss()
-
-                if (updateInfo != null) {
-                    // Show update available dialog
-                    AppUpdateDialog(
-                        context = context,
-                        updateInfo = updateInfo,
-                        onDownloadClick = { useCnMirror ->
-                            // Start download using system DownloadManager
-                            val downloadId = AppUpdateChecker.downloadApk(context, updateInfo, useCnMirror)
-                            if (downloadId != -1L) {
-                                Toast.makeText(context, R.string.update_downloading, Toast.LENGTH_SHORT).show()
-                                // Register receiver to auto-install when download completes
-                                AppUpdateChecker.registerDownloadReceiver(context, downloadId) { file ->
-                                    if (file != null && file.exists()) {
-                                        Toast.makeText(context, R.string.update_download_complete, Toast.LENGTH_LONG).show()
-                                        AppUpdateChecker.installApk(context, file)
-                                    } else {
-                                        Toast.makeText(context, R.string.update_check_failed, Toast.LENGTH_SHORT).show()
-                                    }
-                                }
-                            } else {
-                                Toast.makeText(context, R.string.update_check_failed, Toast.LENGTH_SHORT).show()
-                            }
-                        },
-                        onDismiss = {},
-                    ).show()
+        AppUpdateDialog(
+            context = context,
+            updateInfo = updateInfo,
+            onDownloadClick = { useCnMirror ->
+                val downloadId = AppUpdateChecker.downloadApk(context, updateInfo, useCnMirror)
+                if (downloadId != -1L) {
+                    Toast.makeText(context, R.string.update_downloading, Toast.LENGTH_SHORT).show()
+                    AppUpdateChecker.registerDownloadReceiver(context, downloadId) { file ->
+                        if (file != null && file.exists()) {
+                            Toast.makeText(context, R.string.update_download_complete, Toast.LENGTH_LONG).show()
+                            AppUpdateChecker.installApk(context, file)
+                        } else {
+                            Toast.makeText(context, R.string.update_check_failed, Toast.LENGTH_SHORT).show()
+                        }
+                    }
                 } else {
-                    Toast.makeText(context, R.string.update_up_to_date, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, R.string.update_check_failed, Toast.LENGTH_SHORT).show()
                 }
-            } catch (e: Exception) {
-                checkingDialog.dismiss()
-                Toast.makeText(context, R.string.update_check_failed, Toast.LENGTH_SHORT).show()
-            }
-        }
+            },
+            onDismiss = {
+                // User dismissed; keep pendingUpdate so they can reopen from Settings
+            },
+        ).show()
     }
 
     private val setToDefaultPromptRequestLauncher: ActivityResultLauncher<Intent> =

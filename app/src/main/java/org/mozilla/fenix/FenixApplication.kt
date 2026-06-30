@@ -281,6 +281,8 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
 
                 if (updateInfo != null) {
                     android.util.Log.d("AppUpdateChecker", "Update available: ${updateInfo.tagName}")
+                    // Store for Settings page to show "new version" entry
+                    org.mozilla.fenix.utils.AppUpdateChecker.pendingUpdate = updateInfo
                     // Show notification
                     showUpdateNotification(updateInfo)
                 }

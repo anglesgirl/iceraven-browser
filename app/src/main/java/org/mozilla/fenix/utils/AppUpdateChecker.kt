@@ -41,6 +41,14 @@ object AppUpdateChecker {
     /** Timeout for HTTP request in milliseconds */
     private const val REQUEST_TIMEOUT_MS = 15000L
 
+    /**
+     * Holds the latest update info found by the background startup check.
+     * When non-null, the Settings page shows a "new version available" entry.
+     * Cleared when the user dismisses or downloads the update.
+     */
+    @Volatile
+    var pendingUpdate: UpdateInfo? = null
+
     /** Prefix for China mirror to accelerate GitHub downloads */
     private const val CN_MIRROR_PREFIX = "https://gh-proxy.com/"
 

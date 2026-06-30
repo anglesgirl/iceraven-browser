@@ -4,6 +4,8 @@
 
 package org.mozilla.fenix.components.usecases
 
+import android.content.Context
+import android.widget.Toast
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 import mozilla.components.browser.state.search.SearchEngine
@@ -16,6 +18,7 @@ import mozilla.components.feature.tabs.TabsUseCases
 import mozilla.components.support.ktx.kotlin.isUrl
 import mozilla.components.support.ktx.kotlin.toNormalizedUrl
 import org.mozilla.fenix.components.AppStore
+import org.mozilla.fenix.utils.Ao3UrlRedirector
 
 /**
  * Use cases for handling loading a URL and performing a search.
@@ -35,6 +38,7 @@ class FenixBrowserUseCases(
     private val searchUseCases: SearchUseCases,
     private val homepageTitle: String,
     private val profiler: Profiler?,
+    private val context: Context,
 ) {
     private val ao3HomeUrl = "https://archiveofourown.org/"
     private val ao3SearchUrlPrefix = "https://archiveofourown.org/works/search?work_search%5Bquery%5D="
@@ -66,9 +70,22 @@ class FenixBrowserUseCases(
         val startTime = profiler?.getProfilerTime()
 
         if (!forceSearch && searchTermOrURL.isUrl()) {
+            // AO3 Browser: only allow AO3 URLs from the address bar.
+            // Translation add-ons and article images use a different code path
+            // (tabsUseCases.addTab directly) and are not affected by this check.
+            if (!Ao3UrlRedirector.isAo3Url(searchTermOrURL)) {
+                Toast.makeText(
+                    context,
+                    org.mozilla.fenix.R.string.url_blocked_ao3_only,
+                    Toast.LENGTH_SHORT,
+                ).show()
+                return
+            }
+
+            val finalUrl = Ao3UrlRedirector.redirect(searchTermOrURL).toNormalizedUrl()
             if (newTab) {
                 tabsUseCases.addTab.invoke(
-                    url = searchTermOrURL.toNormalizedUrl(),
+                    url = finalUrl,
                     flags = flags,
                     private = private,
                     historyMetadata = historyMetadata,
@@ -76,7 +93,7 @@ class FenixBrowserUseCases(
                 )
             } else {
                 loadUrlUseCase.invoke(
-                    url = searchTermOrURL.toNormalizedUrl(),
+                    url = finalUrl,
                     flags = flags,
                     originalInput = searchTermOrURL,
                 )

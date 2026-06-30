@@ -844,6 +844,9 @@
     <!-- AO3 Browser: Check for updates -->
     <string name="preferences_check_update">Check for updates</string>
     <string name="preferences_check_update_summary">Check for new AO3 Browser versions</string>
+
+    <!-- AO3 Browser: URL blocked -->
+    <string name="url_blocked_ao3_only">This browser only supports AO3</string>
     <string name="update_available_title">Update available: %1$s</string>
     <string name="update_download_cn">Download (CN Mirror)</string>
     <string name="update_download_github">Download (GitHub)</string>
