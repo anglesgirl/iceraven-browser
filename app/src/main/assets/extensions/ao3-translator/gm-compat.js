@@ -96,18 +96,78 @@
     });
   };
 
+  // [FIX] GeckoView built-in extensions may not support browser.runtime.sendMessage
+  // between content scripts and background scripts reliably. Instead of forwarding
+  // GM_xmlhttpRequest to the background script, we perform the request directly in
+  // the content script using XMLHttpRequest. In Firefox content scripts, XHR uses
+  // the extension's host_permissions to bypass CORS (unlike fetch which uses the
+  // page origin). If direct XHR fails, fall back to background messaging.
+  function gmXhrDirect(options) {
+    return new Promise(function (resolve, reject) {
+      var xhr = new XMLHttpRequest();
+      xhr.open(options.method || 'GET', options.url, true);
+      if (options.headers) {
+        Object.keys(options.headers).forEach(function (k) {
+          try { xhr.setRequestHeader(k, options.headers[k]); } catch (e) {}
+        });
+      }
+      if (options.responseType === 'json') {
+        xhr.responseType = 'text';
+      } else if (options.responseType && ['arraybuffer', 'blob', 'document'].indexOf(options.responseType) >= 0) {
+        xhr.responseType = options.responseType;
+      }
+      if (options.timeout) xhr.timeout = options.timeout;
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState !== 4) return;
+        var text = xhr.responseType === 'arraybuffer' || xhr.responseType === 'blob' ? xhr.response : xhr.responseText;
+        var parsed = null;
+        if (options.responseType === 'json' && typeof text === 'string') {
+          try { parsed = JSON.parse(text); } catch (e) { parsed = null; }
+        }
+        resolve({
+          status: xhr.status,
+          statusText: xhr.statusText || '',
+          finalUrl: xhr.responseURL || options.url,
+          responseText: typeof text === 'string' ? text : '',
+          response: options.responseType === 'json' ? parsed : text,
+          responseHeaders: xhr.getAllResponseHeaders(),
+        });
+      };
+      xhr.ontimeout = function () { reject(new Error('timeout')); };
+      xhr.onerror = function () { reject(new Error('network error')); };
+      try {
+        xhr.send(options.data && options.method !== 'GET' && options.method !== 'HEAD' ? options.data : null);
+      } catch (e) {
+        reject(e);
+      }
+    });
+  }
+
+  function gmFetchViaBackground(options) {
+    return browser.runtime.sendMessage({ type: 'GM_XMLHTTPREQUEST', options: options });
+  }
+
   window.GM_xmlhttpRequest = function (options) {
     options = options || {};
-    browser.runtime.sendMessage({ type: 'GM_XMLHTTPREQUEST', options: options }).then(function (response) {
-      if (options.responseType === 'json' && response && typeof response.response === 'undefined') {
-        try { response.response = JSON.parse(response.responseText); } catch (e) { response.response = null; }
-      }
-      if (typeof options.onload === 'function') options.onload(response);
-    }).catch(function (error) {
-      if (error && String(error).toLowerCase().includes('abort') && typeof options.ontimeout === 'function') {
-        options.ontimeout(error);
+    gmXhrDirect(options).then(function (result) {
+      if (typeof options.onload === 'function') options.onload(result);
+    }).catch(function (directError) {
+      // Direct fetch failed; try background script as fallback
+      if (typeof browser !== 'undefined' && browser.runtime && browser.runtime.sendMessage) {
+        gmFetchViaBackground(options).then(function (response) {
+          if (options.responseType === 'json' && response && typeof response.response === 'undefined') {
+            try { response.response = JSON.parse(response.responseText); } catch (e) { response.response = null; }
+          }
+          if (typeof options.onload === 'function') options.onload(response);
+        }).catch(function (error) {
+          if (error && String(error).toLowerCase().includes('abort') && typeof options.ontimeout === 'function') {
+            options.ontimeout(error);
+          } else if (typeof options.onerror === 'function') {
+            options.onerror(error);
+          }
+        });
       } else if (typeof options.onerror === 'function') {
-        options.onerror(error);
+        options.onerror(directError);
       }
     });
   };
