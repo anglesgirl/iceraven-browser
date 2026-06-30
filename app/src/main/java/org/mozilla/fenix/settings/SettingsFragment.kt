@@ -5,6 +5,7 @@
 package org.mozilla.fenix.settings
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
@@ -702,27 +703,69 @@ class SettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFragment 
             findPreference<Preference>(getPreferenceKey(key))?.isVisible = false
         }
 
-        // AO3 Browser: Only show "Check for updates" when a new version is available
+        // AO3 Browser: Always show "Check for updates"; display new version if available
         val updatePref = findPreference<Preference>(getPreferenceKey(R.string.pref_key_check_update))
         if (updatePref != null) {
             val pending = AppUpdateChecker.pendingUpdate
-            updatePref.isVisible = pending != null
+            updatePref.isVisible = true
             if (pending != null) {
                 updatePref.title = getString(R.string.preferences_check_update)
                 updatePref.summary = getString(R.string.update_available_title, pending.tagName)
+            } else {
+                updatePref.title = getString(R.string.preferences_check_update)
+                updatePref.summary = null
             }
         }
     }
 
     /**
-     * AO3 Browser: Show update dialog if a new version was found by the
-     * background startup check. The "Check for updates" preference is only
-     * visible when [AppUpdateChecker.pendingUpdate] is non-null.
+     * AO3 Browser: Check for updates on demand. Shows update dialog if a new
+     * version is available, otherwise shows "already up to date" toast.
      */
     private fun handleCheckForUpdate() {
         val context = requireContext()
-        val updateInfo = AppUpdateChecker.pendingUpdate ?: return
 
+        // If we already have a pending update from startup check, show it directly
+        val pending = AppUpdateChecker.pendingUpdate
+        if (pending != null) {
+            showUpdateDialog(context, pending)
+            return
+        }
+
+        // Otherwise do a fresh check
+        viewLifecycleOwner.lifecycleScope.launch {
+            Toast.makeText(context, R.string.update_checking, Toast.LENGTH_SHORT).show()
+            try {
+                val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
+                val currentVersion = packageInfo.versionName ?: return@launch
+
+                val result = AppUpdateChecker.checkForUpdate(
+                    client = components.core.client,
+                    currentVersion = currentVersion,
+                )
+
+                when (result) {
+                    is AppUpdateChecker.CheckResult.UpdateAvailable -> {
+                        AppUpdateChecker.pendingUpdate = result.info
+                        // Refresh the preference to show the new version summary
+                        val updatePref = findPreference<Preference>(getPreferenceKey(R.string.pref_key_check_update))
+                        updatePref?.summary = getString(R.string.update_available_title, result.info.tagName)
+                        showUpdateDialog(context, result.info)
+                    }
+                    AppUpdateChecker.CheckResult.UpToDate -> {
+                        Toast.makeText(context, R.string.update_up_to_date, Toast.LENGTH_SHORT).show()
+                    }
+                    AppUpdateChecker.CheckResult.Error -> {
+                        Toast.makeText(context, R.string.update_check_failed, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            } catch (e: Exception) {
+                Toast.makeText(context, R.string.update_check_failed, Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun showUpdateDialog(context: Context, updateInfo: AppUpdateChecker.UpdateInfo) {
         AppUpdateDialog(
             context = context,
             updateInfo = updateInfo,

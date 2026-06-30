@@ -49,6 +49,15 @@ object AppUpdateChecker {
     @Volatile
     var pendingUpdate: UpdateInfo? = null
 
+    /**
+     * Result of an update check.
+     */
+    sealed class CheckResult {
+        data class UpdateAvailable(val info: UpdateInfo) : CheckResult()
+        object UpToDate : CheckResult()
+        object Error : CheckResult()
+    }
+
     /** Prefix for China mirror to accelerate GitHub downloads */
     private const val CN_MIRROR_PREFIX = "https://gh-proxy.com/"
 
@@ -67,13 +76,13 @@ object AppUpdateChecker {
      * Check for updates by querying the GitHub Releases API.
      *
      * @param client The [Client] used for HTTP requests (from components.core.client).
-     * @param currentVersion The current app version name (e.g. "ao3-browser-20260629-v3").
-     * @return [UpdateInfo] if a newer version is available, null otherwise.
+     * @param currentVersion The current app version name (e.g. "ao3-browser-20260630-1430").
+     * @return [CheckResult] indicating whether an update is available, the app is up to date, or the check failed.
      */
     suspend fun checkForUpdate(
         client: Client,
         currentVersion: String,
-    ): UpdateInfo? = withContext(Dispatchers.IO) {
+    ): CheckResult = withContext(Dispatchers.IO) {
         try {
             val request = Request(
                 url = GITHUB_API_URL,
@@ -89,7 +98,7 @@ object AppUpdateChecker {
             val response = client.fetch(request)
             if (!response.isSuccess) {
                 Log.w(TAG, "GitHub API returned status: ${response.status}")
-                return@withContext null
+                return@withContext CheckResult.Error
             }
 
             val bodyText = response.body.string()
@@ -99,20 +108,26 @@ object AppUpdateChecker {
             val tagName = json.optString("tag_name", "")
             if (tagName.isEmpty()) {
                 Log.w(TAG, "No tag_name in release response")
-                return@withContext null
+                return@withContext CheckResult.Error
             }
 
-            // Skip if same version
-            if (tagName == currentVersion || tagName <= currentVersion) {
+            // Compare versions: format is ao3-browser-YYYYMMDD-HHMM
+            // Since the date-time portion is zero-padded, string comparison works correctly.
+            if (tagName == currentVersion) {
                 Log.d(TAG, "Already up to date: $tagName")
-                return@withContext null
+                return@withContext CheckResult.UpToDate
+            }
+
+            if (tagName < currentVersion) {
+                Log.d(TAG, "Current version ($currentVersion) is newer than latest release ($tagName)")
+                return@withContext CheckResult.UpToDate
             }
 
             // Find the arm64-v8a APK (preferred) or first APK asset
             val assets = json.optJSONArray("assets")
             if (assets == null || assets.length() == 0) {
                 Log.w(TAG, "No assets in release")
-                return@withContext null
+                return@withContext CheckResult.Error
             }
 
             var preferredAsset: JSONObject? = null
@@ -132,7 +147,7 @@ object AppUpdateChecker {
 
             val asset = preferredAsset ?: fallbackAsset ?: run {
                 Log.w(TAG, "No APK asset found in release")
-                return@withContext null
+                return@withContext CheckResult.Error
             }
 
             val apkUrl = asset.optString("browser_download_url", "")
@@ -148,10 +163,10 @@ object AppUpdateChecker {
             )
 
             Log.d(TAG, "Update available: ${info.tagName} (${info.apkName}, ${info.apkSize / 1024 / 1024}MB)")
-            info
+            CheckResult.UpdateAvailable(info)
         } catch (e: Exception) {
             Log.w(TAG, "Failed to check for updates", e)
-            null
+            CheckResult.Error
         }
     }
 

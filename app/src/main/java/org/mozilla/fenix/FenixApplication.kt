@@ -274,17 +274,24 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
                 val packageInfo = packageManager.getPackageInfo(packageName, 0)
                 val currentVersion = packageInfo.versionName ?: return@launch
 
-                val updateInfo = org.mozilla.fenix.utils.AppUpdateChecker.checkForUpdate(
+                val result = org.mozilla.fenix.utils.AppUpdateChecker.checkForUpdate(
                     client = components.core.client,
                     currentVersion = currentVersion,
                 )
 
-                if (updateInfo != null) {
-                    android.util.Log.d("AppUpdateChecker", "Update available: ${updateInfo.tagName}")
-                    // Store for Settings page to show "new version" entry
-                    org.mozilla.fenix.utils.AppUpdateChecker.pendingUpdate = updateInfo
-                    // Show notification
-                    showUpdateNotification(updateInfo)
+                when (result) {
+                    is org.mozilla.fenix.utils.AppUpdateChecker.CheckResult.UpdateAvailable -> {
+                        android.util.Log.d("AppUpdateChecker", "Update available: ${result.info.tagName}")
+                        org.mozilla.fenix.utils.AppUpdateChecker.pendingUpdate = result.info
+                        showUpdateNotification(result.info)
+                    }
+                    org.mozilla.fenix.utils.AppUpdateChecker.CheckResult.UpToDate -> {
+                        android.util.Log.d("AppUpdateChecker", "Already up to date: $currentVersion")
+                        org.mozilla.fenix.utils.AppUpdateChecker.pendingUpdate = null
+                    }
+                    org.mozilla.fenix.utils.AppUpdateChecker.CheckResult.Error -> {
+                        android.util.Log.w("AppUpdateChecker", "Update check failed")
+                    }
                 }
             } catch (e: Exception) {
                 android.util.Log.w("AppUpdateChecker", "Startup update check failed", e)

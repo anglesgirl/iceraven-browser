@@ -27,7 +27,7 @@ jobs:
         run: ./automation/iceraven/install-sdk.sh
 
       - name: Create version name
-        run: echo "VERSION_NAME=$(git describe --tags HEAD 2>/dev/null || git rev-parse --short HEAD)" >> "$GITHUB_ENV"
+        run: echo "VERSION_NAME=ao3-browser-$(TZ=UTC date +%Y%m%d-%H%M)" >> "$GITHUB_ENV"
 
       - name: Patch Android Components
         run: ./automation/iceraven/patch_android_components.sh
