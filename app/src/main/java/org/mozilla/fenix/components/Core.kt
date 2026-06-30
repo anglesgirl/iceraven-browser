@@ -281,6 +281,7 @@ class Core(
             // AO3 Browser: install built-in AO3 Chinese Helper extension
             it.installBuiltInWebExtension(
                 url = "resource://android/assets/ao3-helper/",
+                id = "ao3-chinese-helper@ao3-browser.local",
                 onSuccess = { ext ->
                     Log.d("AO3Browser", "AO3 Chinese Helper installed: ${ext.id}")
                 },
