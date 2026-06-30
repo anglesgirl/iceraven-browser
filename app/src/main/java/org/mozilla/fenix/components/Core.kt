@@ -104,6 +104,7 @@ import mozilla.components.service.pocket.mars.api.MarsSpocsRequestConfig
 import mozilla.components.service.pocket.mars.api.NEW_TAB_SPOCS_PLACEMENT_KEY
 import mozilla.components.service.sync.autofill.AutofillCreditCardsAddressesStorage
 import mozilla.components.service.sync.logins.SyncableLoginsStorage
+import mozilla.components.support.base.log.Logger
 import mozilla.components.support.base.worker.Frequency
 import mozilla.components.support.ktx.android.content.appVersionName
 import mozilla.components.support.ktx.android.content.res.readJSONObject
@@ -442,6 +443,14 @@ class Core(
         ).apply {
             // Install the "icons" WebExtension to automatically load icons for every visited website.
             icons.install(engine, this)
+
+            // AO3 Browser: Install the built-in AO3 Chinese Helper extension (V-Lipset)
+            engine.installBuiltInWebExtension(
+                id = "ao3-chinese@ao3-browser.local",
+                url = "resource://android/assets/extensions/ao3-chinese/",
+                onSuccess = { Logger.info("AO3 Chinese extension installed") },
+                onError = { throwable -> Logger.error("Could not install AO3 Chinese extension", throwable) },
+            )
 
             CoroutineScope(Dispatchers.Main).launch {
                 val readJson = { context.assets.readJSONObject("search/search_telemetry_v2.json") }

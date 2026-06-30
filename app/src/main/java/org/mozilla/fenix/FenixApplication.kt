@@ -25,6 +25,8 @@ import androidx.emoji2.text.EmojiCompat
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.work.Configuration.Builder
 import androidx.work.Configuration.Provider
+import com.google.firebase.FirebaseApp
+import com.google.firebase.analytics.FirebaseAnalytics
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
@@ -207,6 +209,12 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
         // Capture A-C logs to Android logcat. Note that gecko maybe directly post to logcat
         // regardless of what we do here.
         Log.addSink(FenixLogSink(logsDebug = Config.channel.isDebug, AndroidLogSink()))
+
+        // AO3 Browser: Initialize Firebase Analytics
+        runCatching {
+            FirebaseApp.initializeApp(this)
+            FirebaseAnalytics.getInstance(this)
+        }.onFailure { Log.log(message = "Firebase Analytics init failed: ${it.message}") }
 
         // Register a deferred initializer for crash reporting that will be called lazily when
         // CrashReporter.requireInstance is first accessed. This allows all processes to register

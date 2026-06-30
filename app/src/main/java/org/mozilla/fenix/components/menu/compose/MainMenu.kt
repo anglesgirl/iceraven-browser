@@ -323,12 +323,13 @@ fun MainMenu(
         )
 
         MenuGroup {
-            MozillaAccountMenuItem(
-                account = account,
-                accountState = accountState,
-                isPrivate = isPrivate,
-                onClick = onMozillaAccountButtonClick,
-            )
+            // AO3 Browser: hide Mozilla account / sign-in entry
+            // MozillaAccountMenuItem(
+            //     account = account,
+            //     accountState = accountState,
+            //     isPrivate = isPrivate,
+            //     onClick = onMozillaAccountButtonClick,
+            // )
 
             MenuItem(
                 label = stringResource(id = R.string.browser_menu_settings),

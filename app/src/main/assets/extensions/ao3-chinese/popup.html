@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AO3 中文助手</title>
+<style>
+  body { font-family: sans-serif; margin: 0; padding: 16px; width: 240px; }
+  h3 { margin: 0 0 12px; font-size: 15px; }
+  .row { display: flex; align-items: center; justify-content: space-between; }
+  .label { font-size: 14px; }
+  .switch { position: relative; width: 44px; height: 24px; }
+  .switch input { opacity: 0; width: 0; height: 0; }
+  .slider { position: absolute; cursor: pointer; inset: 0; background: #ccc; border-radius: 24px; transition: .2s; }
+  .slider:before { content: ""; position: absolute; height: 18px; width: 18px; left: 3px; top: 3px; background: #fff; border-radius: 50%; transition: .2s; }
+  input:checked + .slider { background: #4caf50; }
+  input:checked + .slider:before { transform: translateX(20px); }
+  .hint { margin-top: 10px; font-size: 12px; color: #888; }
+</style>
+</head>
+<body>
+  <h3>雅💓涵 · AO3 中文助手</h3>
+  <div class="row">
+    <span class="label">汉化与翻译</span>
+    <label class="switch">
+      <input type="checkbox" id="toggle">
+      <span class="slider"></span>
+    </label>
+  </div>
+  <p class="hint">关闭后需刷新 AO3 页面生效。</p>
+  <script src="popup.js"></script>
+</body>
+</html>

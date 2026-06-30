@@ -569,6 +569,9 @@ nimbus {
 
 dependencies {
     implementation project('longfox')
+    // AO3 Browser: Firebase Analytics
+    implementation platform(libs.firebase.bom)
+    implementation libs.firebase.analytics
     implementation project(':components:browser-engine-gecko')
     implementation project(':components:compose-awesomebar')
     implementation project(':components:compose-base')
@@ -914,3 +917,6 @@ tasks.register("detekt", Exec) {
     workingDir file("${gradle.mozconfig.topsrcdir}")
     commandLine "./mach", "gradle", "-p", "mobile/android/fenix", ":detekt"
 }
+
+// AO3 Browser: Firebase Analytics - google-services plugin must be applied at the bottom
+apply plugin: 'com.google.gms.google-services'

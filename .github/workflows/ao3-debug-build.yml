@@ -1,0 +1,60 @@
+name: AO3 Browser Debug Build
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - ao3-browser-dev
+    paths-ignore:
+      - '*.md'
+
+jobs:
+  build:
+    name: Build Debug APK
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: 'true'
+          fetch-depth: 0
+
+      - name: Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Install Android SDK pieces Gradle skips
+        run: ./automation/iceraven/install-sdk.sh
+
+      - name: Apply Iceraven patches
+        run: ./automation/iceraven/patch_android_components.sh
+
+      - name: Replace strings
+        run: |
+          sed -i 's/Firefox/Iceraven/g' app/src/*/res/values*/*strings.xml
+          sed -i '/about_content/s/Mozilla/@forkmaintainers/' app/src/*/res/values*/*strings.xml
+          sed -i '/<string name="trackers_blocked_panel_categorical_num_trackers_blocked">/s/%s/%1$s/g; /<string name="trackers_blocked_panel_categorical_num_trackers_blocked">/s/%d/%2$d/g' app/src/*/res/values*/*strings.xml
+
+      - name: Build forkDebug variant
+        uses: gradle/actions/setup-gradle@v4
+        env:
+          GRADLE_OPTS: -Dorg.gradle.jvmargs="-XX:MaxMetaspaceSize=3g -Xms1g -Xmx5g -XX:+HeapDumpOnOutOfMemoryError"
+        with:
+          gradle-home-cache-cleanup: true
+          arguments: ./gradlew app:assembleForkDebug -PversionName="0.1-ao3-debug" --stacktrace --no-daemon
+
+      - name: Find APK
+        id: apk
+        run: |
+          APK_PATH=$(find . -path "*/forkDebug/*.apk" -name "*.apk" | head -1)
+          echo "apk_path=$APK_PATH" >> $GITHUB_OUTPUT
+          echo "Found APK: $APK_PATH"
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ao3-browser-debug-apk
+          path: ${{ steps.apk.outputs.apk_path }}
+          retention-days: 30
