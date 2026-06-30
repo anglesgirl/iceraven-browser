@@ -10,6 +10,8 @@ jobs:
   build-apk:
     name: Build AO3 Browser APK
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -90,3 +92,20 @@ jobs:
           name: ao3-browser-apks
           path: signed-apks/*.apk
           if-no-files-found: error
+
+      - name: Publish to GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.VERSION_NAME }}
+          name: AO3 Browser ${{ env.VERSION_NAME }}
+          target_commitish: ao3-browser-customization
+          prerelease: true
+          files: signed-apks/*.apk
+          body: |
+            AO3 Browser custom build.
+
+            Includes:
+            - AO3-focused browser behavior
+            - DoH enabled with the configured Cloudflare Gateway endpoint
+            - First-run local setup guide for AO3 Chinese
+            - Built-in AO3 Chinese translation extension without Tampermonkey
