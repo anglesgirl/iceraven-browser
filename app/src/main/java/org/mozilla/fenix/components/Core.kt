@@ -104,7 +104,7 @@ import mozilla.components.service.pocket.mars.api.MarsSpocsRequestConfig
 import mozilla.components.service.pocket.mars.api.NEW_TAB_SPOCS_PLACEMENT_KEY
 import mozilla.components.service.sync.autofill.AutofillCreditCardsAddressesStorage
 import mozilla.components.service.sync.logins.SyncableLoginsStorage
-import mozilla.components.support.base.log.Logger
+import mozilla.components.support.base.log.logger.Logger
 import mozilla.components.support.base.worker.Frequency
 import mozilla.components.support.ktx.android.content.appVersionName
 import mozilla.components.support.ktx.android.content.res.readJSONObject
