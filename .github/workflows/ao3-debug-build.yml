@@ -37,13 +37,15 @@ jobs:
           sed -i '/about_content/s/Mozilla/@forkmaintainers/' app/src/*/res/values*/*strings.xml
           sed -i '/<string name="trackers_blocked_panel_categorical_num_trackers_blocked">/s/%s/%1$s/g; /<string name="trackers_blocked_panel_categorical_num_trackers_blocked">/s/%d/%2$d/g' app/src/*/res/values*/*strings.xml
 
-      - name: Build forkDebug variant
+      - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
         env:
           GRADLE_OPTS: -Dorg.gradle.jvmargs="-XX:MaxMetaspaceSize=3g -Xms1g -Xmx5g -XX:+HeapDumpOnOutOfMemoryError"
         with:
           gradle-home-cache-cleanup: true
-          arguments: ./gradlew app:assembleForkDebug -PversionName="0.1-ao3-debug" --stacktrace --no-daemon
+
+      - name: Build forkDebug variant
+        run: ./gradlew app:assembleForkDebug -PversionName="0.1-ao3-debug" --stacktrace --no-daemon
 
       - name: Find APK
         id: apk
