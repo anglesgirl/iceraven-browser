@@ -13,7 +13,6 @@ import mozilla.components.browser.errorpages.ErrorPages
 import mozilla.components.browser.errorpages.ErrorType
 import mozilla.components.concept.engine.EngineSession
 import mozilla.components.concept.engine.request.RequestInterceptor
-import mozilla.components.concept.engine.utils.ABOUT_HOME_URL
 import mozilla.components.support.ktx.kotlin.isContentUrl
 import org.mozilla.fenix.GleanMetrics.ErrorPage
 import org.mozilla.fenix.ext.components
@@ -43,37 +42,21 @@ class AppRequestInterceptor(
         isDirectNavigation: Boolean,
         isSubframeRequest: Boolean,
     ): RequestInterceptor.InterceptionResponse? {
-        if (interceptAboutHomeRequest(uri)) {
-            return RequestInterceptor.InterceptionResponse.Url(AO3_HOME_URL)
-        }
-
-        // Redirect AO3 mirror URLs to official archiveofourown.org (preserve path)
-        if (isDirectNavigation && !isSubframeRequest) {
-            val redirectedUrl = org.mozilla.fenix.utils.Ao3UrlRedirector.redirect(uri)
-            if (redirectedUrl != uri) {
-                return RequestInterceptor.InterceptionResponse.Url(redirectedUrl)
-            }
-        }
-
-        // AO3 Browser: non-AO3 request interception disabled to avoid blocking
-        // translation services and images embedded in articles.
-
+        // AO3 Browser: all request interception removed.
+        // Only AO3 URL filtering is done in FenixBrowserUseCases (address bar),
+        // which does not affect WebExtension requests (translation add-ons, etc.)
+        // or sub-frame requests (article images, etc.)
         val services = context.components.services
-        return listOf(
-            services.appLinksInterceptor,
-            services.storyUTMRequestInterceptor,
-        ).firstNotNullOfOrNull {
-            it.onLoadRequest(
-                engineSession,
-                uri,
-                lastUri,
-                hasUserGesture,
-                isSameDomain,
-                isRedirect,
-                isDirectNavigation,
-                isSubframeRequest,
-            )
-        }
+        return services.appLinksInterceptor.onLoadRequest(
+            engineSession,
+            uri,
+            lastUri,
+            hasUserGesture,
+            isSameDomain,
+            isRedirect,
+            isDirectNavigation,
+            isSubframeRequest,
+        )
     }
 
     override fun onErrorRequest(
@@ -104,16 +87,6 @@ class AppRequestInterceptor(
         )
 
         return RequestInterceptor.ErrorResponse(errorPageUri)
-    }
-
-    /**
-     * Intercepts [uri] request to [ABOUT_HOME_URL] and redirects to AO3.
-     *
-     * @param uri The URI of the request.
-     * @return True if the [uri] request was intercepted and false otherwise.
-     */
-    private fun interceptAboutHomeRequest(uri: String): Boolean {
-        return uri == ABOUT_HOME_URL
     }
 
     /**
@@ -205,6 +178,5 @@ class AppRequestInterceptor(
     companion object {
         internal const val LOW_AND_MEDIUM_RISK_ERROR_PAGES = "low_and_medium_risk_error_pages.html"
         internal const val HIGH_RISK_ERROR_PAGES = "high_risk_error_pages.html"
-        internal const val AO3_HOME_URL = "https://archiveofourown.org/"
     }
 }
