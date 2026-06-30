@@ -21,6 +21,7 @@ import mozilla.components.concept.fetch.MutableHeaders
 import mozilla.components.concept.fetch.Request
 import mozilla.components.concept.fetch.Response
 import mozilla.components.concept.fetch.isSuccess
+import org.json.JSONArray
 import org.json.JSONObject
 import java.io.File
 
@@ -36,7 +37,7 @@ object AppUpdateChecker {
     private const val TAG = "AppUpdateChecker"
 
     private const val GITHUB_API_URL =
-        "https://api.github.com/repos/anglesgirl/iceraven-browser/releases/latest"
+        "https://api.github.com/repos/anglesgirl/iceraven-browser/releases?per_page=1"
 
     /** Timeout for HTTP request in milliseconds */
     private const val REQUEST_TIMEOUT_MS = 15000L
@@ -104,48 +105,91 @@ object AppUpdateChecker {
             val bodyText = response.body.string()
             response.close()
 
-            val json = JSONObject(bodyText)
+            // API returns a JSON array (releases?per_page=1); extract first element
+            val json = try {
+                val arr = JSONArray(bodyText)
+                if (arr.length() == 0) {
+                    Log.w(TAG, "No releases found")
+                    return@withContext CheckResult.Error
+                }
+                arr.getJSONObject(0)
+            } catch (e: Exception) {
+                // Fallback: maybe single object (releases/latest)
+                JSONObject(bodyText)
+            }
+
             val tagName = json.optString("tag_name", "")
             if (tagName.isEmpty()) {
                 Log.w(TAG, "No tag_name in release response")
                 return@withContext CheckResult.Error
             }
 
-            // Compare versions: format is ao3-browser-YYYYMMDD-HHMM
-            // Since the date-time portion is zero-padded, string comparison works correctly.
-            if (tagName == currentVersion) {
-                Log.d(TAG, "Already up to date: $tagName")
+            // Version comparison: extract the date-time suffix after "ao3-browser-"
+            // New format: ao3-browser-YYYYMMDD-HHMM (zero-padded, string comparison works)
+            // Old format: ao3-browser-YYYYMMDD-vN (v-style, N is a number)
+            // For cross-format comparison, old v-style is always considered older.
+            val prefix = "ao3-browser-"
+            val tagSuffix = tagName.removePrefix(prefix)
+            val currentSuffix = currentVersion.removePrefix(prefix)
+
+            val tagIsDateTime = tagSuffix.matches(Regex("\\d{8}-\\d{4}"))
+            val currentIsDateTime = currentSuffix.matches(Regex("\\d{8}-\\d{4}"))
+
+            val isUpToDate = if (tagIsDateTime && currentIsDateTime) {
+                // Both are date-time format: string comparison is correct (zero-padded)
+                tagSuffix <= currentSuffix
+            } else if (currentIsDateTime && !tagIsDateTime) {
+                // Current is date-time (newer format), tag is old v-style: current is newer
+                true
+            } else if (!currentIsDateTime && tagIsDateTime) {
+                // Current is old v-style, tag is date-time: tag is newer
+                false
+            } else {
+                // Both are old format: fall back to string comparison
+                tagSuffix <= currentSuffix
+            }
+
+            if (isUpToDate) {
+                Log.d(TAG, "Already up to date: current=$currentVersion latest=$tagName")
                 return@withContext CheckResult.UpToDate
             }
 
-            if (tagName < currentVersion) {
-                Log.d(TAG, "Current version ($currentVersion) is newer than latest release ($tagName)")
-                return@withContext CheckResult.UpToDate
-            }
-
-            // Find the arm64-v8a APK (preferred) or first APK asset
+            // Find the APK matching the device's CPU architecture
             val assets = json.optJSONArray("assets")
             if (assets == null || assets.length() == 0) {
                 Log.w(TAG, "No assets in release")
                 return@withContext CheckResult.Error
             }
 
-            var preferredAsset: JSONObject? = null
+            // Build a map of abi -> asset from asset names (e.g. app-arm64-v8a-forkRelease-signed.apk)
+            val abiAssetMap = mutableMapOf<String, JSONObject>()
             var fallbackAsset: JSONObject? = null
-
             for (i in 0 until assets.length()) {
                 val asset = assets.getJSONObject(i)
                 val name = asset.optString("name", "")
-                if (name.contains("arm64-v8a")) {
-                    preferredAsset = asset
-                    break
-                }
-                if (name.endsWith(".apk") && fallbackAsset == null) {
-                    fallbackAsset = asset
+                if (!name.endsWith(".apk")) continue
+                if (fallbackAsset == null) fallbackAsset = asset
+                // Match known ABIs in the filename
+                for (abi in listOf("arm64-v8a", "armeabi-v7a", "x86_64", "x86")) {
+                    if (name.contains(abi)) {
+                        abiAssetMap[abi] = asset
+                        break
+                    }
                 }
             }
 
-            val asset = preferredAsset ?: fallbackAsset ?: run {
+            // Select the best APK based on device's supported ABIs (ordered by preference)
+            val deviceAbis = android.os.Build.SUPPORTED_ABIS ?: arrayOf()
+            var selectedAsset: JSONObject? = null
+            for (deviceAbi in deviceAbis) {
+                // SUPPORTED_ABIS may include "arm64-v8a", "armeabi-v7a", "x86_64", "x86"
+                if (abiAssetMap.containsKey(deviceAbi)) {
+                    selectedAsset = abiAssetMap[deviceAbi]
+                    Log.d(TAG, "Selected APK for device ABI: $deviceAbi")
+                    break
+                }
+            }
+            val asset = selectedAsset ?: fallbackAsset ?: run {
                 Log.w(TAG, "No APK asset found in release")
                 return@withContext CheckResult.Error
             }

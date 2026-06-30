@@ -70,6 +70,7 @@ import org.mozilla.fenix.ext.components
 import org.mozilla.fenix.ext.getPreferenceKey
 import org.mozilla.fenix.ext.navigateToNotificationsSettings
 import org.mozilla.fenix.ext.openInNewTab
+import org.mozilla.fenix.ext.openToBrowser
 import org.mozilla.fenix.ext.requireComponents
 import org.mozilla.fenix.ext.settings
 import org.mozilla.fenix.ext.showToolbar
@@ -770,20 +771,15 @@ class SettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFragment 
             context = context,
             updateInfo = updateInfo,
             onDownloadClick = { useCnMirror ->
-                val downloadId = AppUpdateChecker.downloadApk(context, updateInfo, useCnMirror)
-                if (downloadId != -1L) {
-                    Toast.makeText(context, R.string.update_downloading, Toast.LENGTH_SHORT).show()
-                    AppUpdateChecker.registerDownloadReceiver(context, downloadId) { file ->
-                        if (file != null && file.exists()) {
-                            Toast.makeText(context, R.string.update_download_complete, Toast.LENGTH_LONG).show()
-                            AppUpdateChecker.installApk(context, file)
-                        } else {
-                            Toast.makeText(context, R.string.update_check_failed, Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                } else {
-                    Toast.makeText(context, R.string.update_check_failed, Toast.LENGTH_SHORT).show()
-                }
+                val url = if (useCnMirror) updateInfo.apkUrlCnMirror else updateInfo.apkUrl
+                // Open the download URL in the browser itself, so the browser's built-in
+                // download manager handles the APK download instead of the system DownloadManager.
+                findNavController().openToBrowser()
+                requireComponents.useCases.fenixBrowserUseCases.loadUrlOrSearch(
+                    searchTermOrURL = url,
+                    newTab = true,
+                )
+                Toast.makeText(context, R.string.update_downloading, Toast.LENGTH_SHORT).show()
             },
             onDismiss = {
                 // User dismissed; keep pendingUpdate so they can reopen from Settings

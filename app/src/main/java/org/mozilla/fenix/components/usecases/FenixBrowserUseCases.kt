@@ -70,18 +70,9 @@ class FenixBrowserUseCases(
         val startTime = profiler?.getProfilerTime()
 
         if (!forceSearch && searchTermOrURL.isUrl()) {
-            // AO3 Browser: only allow AO3 URLs from the address bar.
-            // Translation add-ons and article images use a different code path
-            // (tabsUseCases.addTab directly) and are not affected by this check.
-            if (!Ao3UrlRedirector.isAo3Url(searchTermOrURL)) {
-                Toast.makeText(
-                    context,
-                    org.mozilla.fenix.R.string.url_blocked_ao3_only,
-                    Toast.LENGTH_SHORT,
-                ).show()
-                return
-            }
-
+            // AO3 Browser: redirect AO3 mirror domains to the official domain.
+            // Non-AO3 URLs are allowed through without redirection (address bar
+            // has already been customized to limit user input).
             val finalUrl = Ao3UrlRedirector.redirect(searchTermOrURL).toNormalizedUrl()
             if (newTab) {
                 tabsUseCases.addTab.invoke(
