@@ -6,6 +6,7 @@ package org.mozilla.fenix.components
 
 import android.content.Context
 import android.content.res.Configuration
+import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.CoroutineScope
@@ -276,6 +277,17 @@ class Core(
             runtime = geckoRuntime,
         ).also {
             WebCompatFeature.install(it)
+
+            // AO3 Browser: install built-in AO3 Chinese Helper extension
+            it.installBuiltInWebExtension(
+                url = "resource://android/assets/ao3-helper/",
+                onSuccess = { ext ->
+                    Log.d("AO3Browser", "AO3 Chinese Helper installed: ${ext.id}")
+                },
+                onError = { throwable ->
+                    Log.e("AO3Browser", "Failed to install AO3 Chinese Helper", throwable)
+                },
+            )
         }
     }
 
