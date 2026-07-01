@@ -571,18 +571,17 @@ nimbus {
             ? gradle.getProperty('localProperties.autoPublish.application-services.dir') : null
 }
 
-// AO3 Browser: Force Firebase/Play-Services dependency versions to win over
-// Glean's transitive dependencies. This prevents protobuf, play-services,
-// and grpc version conflicts between the two telemetry SDKs.
+// AO3 Browser: Firebase Analytics is the primary telemetry SDK.
+// Glean SDK remains as a compile-time dependency (140+ files reference
+// GleanMetrics) but is NEVER initialized at runtime, so all its
+// metric calls are no-ops.
+//
+// The resolutionStrategy forces protobuf to match libs.versions.toml
+// to prevent Glean's transitive protobuf from conflicting with
+// the protobuf-gradle-plugin code generation for app proto files.
 configurations.all {
     resolutionStrategy {
-        force 'com.google.android.gms:play-services-measurement:22.1.2'
-        force 'com.google.android.gms:play-services-measurement-api:22.1.2'
-        force 'com.google.android.gms:play-services-measurement-base:22.1.2'
-        force 'com.google.android.gms:play-services-measurement-impl:22.1.2'
-        force 'com.google.android.gms:play-services-measurement-sdk:22.1.2'
-        force 'com.google.android.gms:play-services-measurement-sdk-api:22.1.2'
-        force 'com.google.protobuf:protobuf-javalite:4.34.1'
+        force "com.google.protobuf:protobuf-javalite:${libs.versions.protobuf.get()}"
     }
 }
 

@@ -353,17 +353,14 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
     }
 
     // AO3 Browser: Glean (Mozilla telemetry) is permanently disabled.
-    // Firebase Analytics is used instead. Glean code references remain for
-    // compilation but are effectively no-ops since Glean is never initialized.
+    // Firebase Analytics is used instead. Glean is NEVER initialized,
+    // which means all GleanMetrics.* calls become no-ops automatically.
+    // We keep the Glean SDK dependency for compilation only.
     @OptIn(DelicateCoroutinesApi::class)
-    @Suppress("DEPRECATION")
     private fun maybeInitializeGlean() {
-        // Force-disable Glean upload as a safety net in case it auto-initializes.
-        try {
-            Glean.setUploadEnabled(false)
-        } catch (e: Exception) {
-            // Glean not initialized yet — that's fine, it means it won't upload.
-        }
+        // Intentionally empty: do not initialize Glean at all.
+        // Without Glean.initialize(), the SDK stays dormant and all
+        // metric recording is silently dropped.
     }
 
     /**
