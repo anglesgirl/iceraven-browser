@@ -373,7 +373,7 @@ class Settings(
 
     var forceEnableZoom by booleanPreference(
         appContext.getPreferenceKey(R.string.pref_key_accessibility_force_enable_zoom),
-        default = false,
+        default = true,
     )
 
     var adjustCampaignId by stringPreference(
