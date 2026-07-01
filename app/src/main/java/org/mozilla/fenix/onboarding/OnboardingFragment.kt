@@ -20,9 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.core.app.NotificationManagerCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.compose.content
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import kotlinx.coroutines.launch
 import mozilla.components.browser.state.action.WebExtensionAction
 import mozilla.components.browser.state.state.extension.WebExtensionPromptRequest
 import mozilla.components.compose.base.LinkTextState
@@ -35,16 +33,11 @@ import mozilla.components.support.base.feature.ViewBoundFeatureWrapper
 import mozilla.components.support.base.log.logger.Logger
 import mozilla.components.support.utils.Browsers
 import mozilla.components.support.utils.BuildManufacturerChecker
-import org.mozilla.fenix.GleanMetrics.Pings
 import org.mozilla.fenix.R
 import org.mozilla.fenix.components.accounts.FenixFxAEntryPoint
 import org.mozilla.fenix.components.appstate.AppAction
 import org.mozilla.fenix.components.appstate.SupportedMenuNotifications
-import org.mozilla.fenix.components.initializeGlean
-import org.mozilla.fenix.components.metrics.InstallReferrerHandlingService
-import org.mozilla.fenix.components.metrics.RtamoAttributionHandler
 import org.mozilla.fenix.components.metrics.installSourcePackage
-import org.mozilla.fenix.components.startMetricsIfEnabled
 import org.mozilla.fenix.ext.application
 import org.mozilla.fenix.ext.components
 import org.mozilla.fenix.ext.hideToolbar
@@ -79,10 +72,6 @@ class OnboardingFragment : Fragment() {
     private val logger = Logger("OnboardingFragment")
 
     private val removeMarketingFeature = ViewBoundFeatureWrapper<MarketingPageRemovalSupport>()
-
-    private val rtamoAttributionHandler by lazy {
-        RtamoAttributionHandler(requireContext(), requireContext().settings(), requireComponents.addonsProvider)
-    }
 
     private val termsOfServiceEventHandler by lazy {
         DefaultOnboardingTermsOfServiceEventHandler(
@@ -466,31 +455,7 @@ class OnboardingFragment : Fragment() {
     }
 
     private fun startGlean() {
-        val settings = requireContext().settings()
-        viewLifecycleOwner.lifecycleScope.launch {
-            initializeGlean(
-                requireContext().applicationContext,
-                logger,
-                settings.isTelemetryEnabled,
-                requireComponents.core.client,
-            )
-        }
-
-        if (!settings.isTelemetryEnabled) {
-            Pings.onboardingOptOut.setEnabled(true)
-            Pings.onboardingOptOut.submit()
-        }
-
-        rtamoAttributionHandler.handleReferrer(InstallReferrerHandlingService.response)
-
-        // The marketing telemetry may be enabled after finishing onboarding.
-        startMetricsIfEnabled(
-            logger = logger,
-            analytics = requireComponents.analytics,
-            isTelemetryEnabled = settings.isTelemetryEnabled,
-            isMarketingTelemetryEnabled = false,
-            isDailyUsagePingEnabled = settings.isDailyUsagePingEnabled,
-        )
+        // AO3 Browser: Glean initialization disabled. Firebase Analytics is used instead.
     }
 
     private fun onFinish(onboardingPageUiData: OnboardingPageUiData?) {
@@ -510,14 +475,7 @@ class OnboardingFragment : Fragment() {
         val settings = requireContext().settings()
         settings.onboardingCompletedTimestamp = System.currentTimeMillis()
 
-        // Telemetry and daily usage ping get enabled after ToU acceptance.
-        startMetricsIfEnabled(
-            logger = logger,
-            analytics = requireComponents.analytics,
-            isTelemetryEnabled = false,
-            isMarketingTelemetryEnabled = settings.isMarketingTelemetryEnabled,
-            isDailyUsagePingEnabled = false,
-        )
+        // AO3 Browser: Mozilla telemetry disabled, Firebase Analytics used instead.
 
         findNavController().nav(
             id = R.id.onboardingFragment,

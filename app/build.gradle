@@ -581,7 +581,7 @@ nimbus {
 // the protobuf-gradle-plugin code generation for app proto files.
 configurations.all {
     resolutionStrategy {
-        force "com.google.protobuf:protobuf-javalite:${libs.versions.protobuf.get()}"
+        force 'com.google.protobuf:protobuf-javalite:4.34.1'
     }
 }
 
