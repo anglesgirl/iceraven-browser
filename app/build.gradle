@@ -582,7 +582,7 @@ configurations.all {
         force 'com.google.android.gms:play-services-measurement-impl:22.1.2'
         force 'com.google.android.gms:play-services-measurement-sdk:22.1.2'
         force 'com.google.android.gms:play-services-measurement-sdk-api:22.1.2'
-        force 'com.google.protobuf:protobuf-javalite:4.26.1'
+        force 'com.google.protobuf:protobuf-javalite:4.34.1'
     }
 }
 
