@@ -751,6 +751,10 @@ dependencies {
     // for AdvertisingIdClient. Previously transitive via Firebase Analytics.
     implementation libs.play.services.ads.id
 
+    // installreferrer: required by InstallReferrerHandlingService and others.
+    // Previously a local stub; now using the real library (also a Clarity transitive dep).
+    implementation 'com.android.installreferrer:installreferrer:2.2'
+
     implementation libs.androidx.room.runtime
     ksp libs.androidx.room.compiler
 
