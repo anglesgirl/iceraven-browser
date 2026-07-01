@@ -284,13 +284,25 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
                         android.util.Log.d("AppUpdateChecker", "Update available: ${result.info.tagName}")
                         org.mozilla.fenix.utils.AppUpdateChecker.pendingUpdate = result.info
                         showUpdateNotification(result.info)
+                        org.mozilla.fenix.utils.AnalyticsTracker.trackEvent(
+                            "update_check",
+                            mapOf("result" to "update_available", "latest_version" to result.info.tagName),
+                        )
                     }
                     org.mozilla.fenix.utils.AppUpdateChecker.CheckResult.UpToDate -> {
                         android.util.Log.d("AppUpdateChecker", "Already up to date: $currentVersion")
                         org.mozilla.fenix.utils.AppUpdateChecker.pendingUpdate = null
+                        org.mozilla.fenix.utils.AnalyticsTracker.trackEvent(
+                            "update_check",
+                            mapOf("result" to "up_to_date", "current_version" to currentVersion),
+                        )
                     }
                     org.mozilla.fenix.utils.AppUpdateChecker.CheckResult.Error -> {
                         android.util.Log.w("AppUpdateChecker", "Update check failed")
+                        org.mozilla.fenix.utils.AnalyticsTracker.trackEvent(
+                            "update_check",
+                            mapOf("result" to "error"),
+                        )
                     }
                 }
             } catch (e: Exception) {

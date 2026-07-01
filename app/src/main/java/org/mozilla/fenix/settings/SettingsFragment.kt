@@ -240,6 +240,9 @@ class SettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFragment 
     override fun onResume() {
         super.onResume()
 
+        // Track settings page view
+        org.mozilla.fenix.utils.AnalyticsTracker.trackScreenView("settings")
+
         // Use nimbus to set the title, and a trivial addition
         val nimbusValidation = FxNimbus.features.nimbusValidation.value()
 

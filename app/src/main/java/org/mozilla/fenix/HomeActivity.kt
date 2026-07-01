@@ -750,6 +750,9 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
     override fun onResume() {
         super.onResume()
 
+        // Track home screen view
+        org.mozilla.fenix.utils.AnalyticsTracker.trackScreenView("home")
+
         // Diagnostic breadcrumb for "Display already aquired" crash:
         // https://github.com/mozilla-mobile/android-components/issues/7960
         breadcrumb(

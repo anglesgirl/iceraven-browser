@@ -7,47 +7,52 @@ package org.mozilla.fenix.utils
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.ProcessLifecycleOwner
 import com.google.firebase.analytics.FirebaseAnalytics
 
 /**
  * Analytics tracker using Firebase Analytics SDK.
  *
- * Uses the official Firebase SDK for reliable data collection.
- * The SDK handles app_instance_id generation, offline caching, and batching automatically.
- *
- * Debug mode is always enabled so events appear in Firebase DebugView without adb.
- * To disable for production, set [DEBUG_MODE] to false.
+ * Tracks key user interactions to provide consistent analytics data.
+ * Events are automatically batched and uploaded by the Firebase SDK.
  */
 object AnalyticsTracker {
 
     private const val TAG = "AnalyticsTracker"
 
-    /** When true, events stream to Firebase DebugView in real-time without needing adb. */
-    private const val DEBUG_MODE = true
-
     private var firebaseAnalytics: FirebaseAnalytics? = null
 
     /**
      * Initialize the tracker. Call this from Application.onCreate().
+     * Also registers a process lifecycle observer to track app foreground/background.
      */
     fun init(context: Context) {
         if (firebaseAnalytics != null) return
         try {
-            firebaseAnalytics = FirebaseAnalytics.getInstance(context)
-
-            // Enable debug mode so events appear in Firebase DebugView without adb.
-            // In debug mode, events are sent immediately instead of batched/delayed.
-            if (DEBUG_MODE) {
-                val bundle = Bundle()
-                bundle.putLong("debug_mode", 1)
-                firebaseAnalytics!!.setUserProperty("debug_mode", "true")
-                // Force enable analytics collection (in case disabled by default)
-                firebaseAnalytics!!.setAnalyticsCollectionEnabled(true)
-                Log.d(TAG, "Firebase Analytics initialized (DEBUG MODE - events visible in DebugView)")
-            } else {
-                firebaseAnalytics!!.setAnalyticsCollectionEnabled(true)
-                Log.d(TAG, "Firebase Analytics initialized")
+            firebaseAnalytics = FirebaseAnalytics.getInstance(context).apply {
+                // Explicitly enable analytics collection
+                setAnalyticsCollectionEnabled(true)
+                // Set minimum session duration to 1 second (default is 10s) so short
+                // visits are still counted as sessions in the real-time dashboard.
+                setMinimumSessionDurationMillis(1000)
             }
+
+            // Track app foreground/background via ProcessLifecycleOwner
+            ProcessLifecycleOwner.get().lifecycle.addObserver(object : DefaultLifecycleObserver {
+                override fun onStart(owner: LifecycleOwner) {
+                    // App came to foreground
+                    trackEvent("app_foreground")
+                }
+
+                override fun onStop(owner: LifecycleOwner) {
+                    // App went to background — Firebase SDK flushes queued events on background
+                    trackEvent("app_background")
+                }
+            })
+
+            Log.d(TAG, "Firebase Analytics initialized with lifecycle tracking")
         } catch (e: Exception) {
             Log.w(TAG, "Failed to initialize Firebase Analytics", e)
         }
@@ -74,6 +79,26 @@ object AnalyticsTracker {
             Log.d(TAG, "Analytics event logged: $eventName (params: $params)")
         } catch (e: Exception) {
             Log.w(TAG, "Failed to log analytics event: $eventName", e)
+        }
+    }
+
+    /**
+     * Track a screen view.
+     *
+     * @param screenName The name of the screen (e.g. "settings", "browser")
+     * @param screenClass Optional class name of the screen
+     */
+    fun trackScreenView(screenName: String, screenClass: String = screenName) {
+        val analytics = firebaseAnalytics ?: return
+        try {
+            val bundle = Bundle().apply {
+                putString(FirebaseAnalytics.Param.SCREEN_NAME, screenName)
+                putString(FirebaseAnalytics.Param.SCREEN_CLASS, screenClass)
+            }
+            analytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle)
+            Log.d(TAG, "Screen view: $screenName")
+        } catch (e: Exception) {
+            Log.w(TAG, "Failed to log screen view: $screenName", e)
         }
     }
 }
