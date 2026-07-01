@@ -34,9 +34,6 @@ object AnalyticsTracker {
             firebaseAnalytics = FirebaseAnalytics.getInstance(context).apply {
                 // Explicitly enable analytics collection
                 setAnalyticsCollectionEnabled(true)
-                // Set minimum session duration to 1 second (default is 10s) so short
-                // visits are still counted as sessions in the real-time dashboard.
-                setMinimumSessionDurationMillis(1000)
             }
 
             // Track app foreground/background via ProcessLifecycleOwner
