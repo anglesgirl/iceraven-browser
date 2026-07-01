@@ -571,6 +571,21 @@ nimbus {
             ? gradle.getProperty('localProperties.autoPublish.application-services.dir') : null
 }
 
+// AO3 Browser: Force Firebase/Play-Services dependency versions to win over
+// Glean's transitive dependencies. This prevents protobuf, play-services,
+// and grpc version conflicts between the two telemetry SDKs.
+configurations.all {
+    resolutionStrategy {
+        force 'com.google.android.gms:play-services-measurement:22.1.2'
+        force 'com.google.android.gms:play-services-measurement-api:22.1.2'
+        force 'com.google.android.gms:play-services-measurement-base:22.1.2'
+        force 'com.google.android.gms:play-services-measurement-impl:22.1.2'
+        force 'com.google.android.gms:play-services-measurement-sdk:22.1.2'
+        force 'com.google.android.gms:play-services-measurement-sdk-api:22.1.2'
+        force 'com.google.protobuf:protobuf-javalite:4.26.1'
+    }
+}
+
 dependencies {
     implementation project('longfox')
     implementation project(':components:browser-engine-gecko')

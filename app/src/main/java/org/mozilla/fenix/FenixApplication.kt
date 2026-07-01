@@ -239,6 +239,11 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
         // Note: The A-C / Fenix crash service processes are responsible for their own setup and
         //       should minimize their dependencies to avoid also crashing.
         runOnlyInMainProcess {
+            // AO3 Browser: Initialize Firebase Analytics first, before anything else,
+            // so events are captured as early as possible.
+            org.mozilla.fenix.utils.AnalyticsTracker.init(this)
+            org.mozilla.fenix.utils.AnalyticsTracker.trackEvent("app_open")
+
             // Start loading the SharedPreferences file from disk on a background thread immediately.
             applicationScope.launch(IO) {
                 applicationContext.getSharedPreferences(Settings.FENIX_PREFERENCES, MODE_PRIVATE)
@@ -253,10 +258,6 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
             val stop = SystemClock.elapsedRealtimeNanos()
             val durationMillis = TimeUnit.NANOSECONDS.toMillis(stop - start)
             PerfStartup.applicationOnCreate.accumulateSamples(listOf(durationMillis))
-
-            // Initialize Google Analytics tracking (Measurement Protocol, no SDK needed)
-            org.mozilla.fenix.utils.AnalyticsTracker.init(this)
-            org.mozilla.fenix.utils.AnalyticsTracker.trackEvent("app_open")
 
             // AO3 Browser: Check for app updates on startup (background, silent)
             checkForAppUpdate()
@@ -351,15 +352,16 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
         }
     }
 
-    // Begin initialization of Glean if we have data-upload consent, otherwise we will have to
-    // wait until we do. Note that Glean initialization is asynchronous any may not be finished
-    // when this method returns.
-    @OptIn(DelicateCoroutinesApi::class) // GlobalScope usage
+    // AO3 Browser: Glean (Mozilla telemetry) is permanently disabled.
+    // Firebase Analytics is used instead. Glean code references remain for
+    // compilation but are effectively no-ops since Glean is never initialized.
+    @OptIn(DelicateCoroutinesApi::class)
     private fun maybeInitializeGlean() {
-        // We delay the Glean initialization until we have user consent from onboarding.
-        // If onboarding is disabled (when in local builds), continue to initialize Glean.
-        if (components.fenixOnboarding.userHasBeenOnboarded() || !FeatureFlags.onboardingFeatureEnabled) {
-            initializeGlean(this, logger, settings().isTelemetryEnabled, components.core.client)
+        // Force-disable Glean upload as a safety net in case it auto-initializes.
+        try {
+            Glean.setUploadEnabled(false)
+        } catch (e: Exception) {
+            // Glean not initialized yet — that's fine, it means it won't upload.
         }
     }
 
@@ -462,20 +464,9 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
     private fun setupPostMegazord() {
         setupLeakCanary()
 
-        if (components.fenixOnboarding.userHasBeenOnboarded()) {
-            startMetricsIfEnabled(
-                logger = logger,
-                analytics = components.analytics,
-                isTelemetryEnabled = settings().isTelemetryEnabled,
-                isMarketingTelemetryEnabled = settings().isMarketingTelemetryEnabled &&
-                    settings().hasMadeMarketingTelemetrySelection,
-                isDailyUsagePingEnabled = settings().isDailyUsagePingEnabled,
-            )
-        } else {
-            CoroutineScope(IO).launch {
-                components.distributionIdManager.startAdjustIfSkippingConsentScreen()
-            }
-        }
+        // AO3 Browser: Mozilla telemetry (startMetricsIfEnabled) is disabled.
+        // Firebase Analytics handles all analytics instead.
+        // Skip the Mozilla metrics pipeline entirely.
 
         setupPush()
 
