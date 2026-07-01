@@ -358,7 +358,7 @@ class FenixSearchMiddleware(
                     nimbusComponents.events,
                 )
 
-                // Track search event with Google Analytics
+                // Track search event with Microsoft Clarity
                 org.mozilla.fenix.utils.AnalyticsTracker.trackEvent(
                     eventName = "ao3_search",
                     params = mapOf(

@@ -571,7 +571,7 @@ nimbus {
             ? gradle.getProperty('localProperties.autoPublish.application-services.dir') : null
 }
 
-// AO3 Browser: Firebase Analytics is the primary telemetry SDK.
+// AO3 Browser: Microsoft Clarity is the primary analytics SDK.
 // Glean SDK remains as a compile-time dependency (140+ files reference
 // GleanMetrics) but is NEVER initialized at runtime, so all its
 // metric calls are no-ops.
@@ -742,12 +742,10 @@ dependencies {
     implementation libs.sentry
     implementation libs.androidx.documentfile
     implementation libs.zxing
-    // Firebase Analytics - BOM aligns all Firebase/Play-Services transitive versions.
-    // Conflicting local stub classes (AdvertisingIdClient, RandomUtil) were removed so
-    // the SDK's real implementations are used, letting analytics and push share one
-    // firebase-common dependency instead of duplicate copies.
-    implementation platform(libs.firebase.bom)
-    implementation libs.firebase.analytics
+    // Microsoft Clarity - session recordings, heatmaps, and custom events.
+    // Replaces Firebase Analytics. Firebase Messaging (for push notifications)
+    // remains through android-components with its own version constraint.
+    implementation 'com.microsoft.clarity:clarity:3.+'
 
     implementation libs.androidx.room.runtime
     ksp libs.androidx.room.compiler

@@ -5,77 +5,82 @@
 package org.mozilla.fenix.utils
 
 import android.content.Context
-import android.os.Bundle
 import android.util.Log
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ProcessLifecycleOwner
-import com.google.firebase.analytics.FirebaseAnalytics
+import com.microsoft.clarity.Clarity
+import com.microsoft.clarity.ClarityConfig
+import com.microsoft.clarity.model.LogLevel
 
 /**
- * Analytics tracker using Firebase Analytics SDK.
+ * Analytics tracker using Microsoft Clarity SDK.
  *
- * Tracks key user interactions to provide consistent analytics data.
- * Events are automatically batched and uploaded by the Firebase SDK.
+ * Provides session recordings, heatmaps, and custom event tracking.
+ * Events are uploaded automatically by the Clarity SDK.
  */
 object AnalyticsTracker {
 
     private const val TAG = "AnalyticsTracker"
+    private const val CLARITY_PROJECT_ID = "xfqtr4s6xh"
 
-    private var firebaseAnalytics: FirebaseAnalytics? = null
+    private var initialized = false
 
     /**
      * Initialize the tracker. Call this from Application.onCreate().
      * Also registers a process lifecycle observer to track app foreground/background.
      */
     fun init(context: Context) {
-        if (firebaseAnalytics != null) return
+        if (initialized) return
         try {
-            firebaseAnalytics = FirebaseAnalytics.getInstance(context).apply {
-                // Explicitly enable analytics collection
-                setAnalyticsCollectionEnabled(true)
-            }
+            val config = ClarityConfig(
+                projectId = CLARITY_PROJECT_ID,
+                logLevel = LogLevel.None,
+            )
+            Clarity.initialize(context, config)
+            initialized = true
 
             // Track app foreground/background via ProcessLifecycleOwner
             ProcessLifecycleOwner.get().lifecycle.addObserver(object : DefaultLifecycleObserver {
                 override fun onStart(owner: LifecycleOwner) {
-                    // App came to foreground
                     trackEvent("app_foreground")
                 }
 
                 override fun onStop(owner: LifecycleOwner) {
-                    // App went to background — Firebase SDK flushes queued events on background
                     trackEvent("app_background")
                 }
             })
 
-            Log.d(TAG, "Firebase Analytics initialized with lifecycle tracking")
+            Log.d(TAG, "Microsoft Clarity initialized with lifecycle tracking")
         } catch (e: Exception) {
-            Log.w(TAG, "Failed to initialize Firebase Analytics", e)
+            Log.w(TAG, "Failed to initialize Microsoft Clarity", e)
         }
     }
 
     /**
      * Track an event.
      *
+     * Clarity custom events don't support key-value parameters directly,
+     * so params are sent as custom tags before the event.
+     *
      * @param eventName The event name (e.g. "app_open", "ao3_search")
      * @param params Optional event parameters as key-value pairs
      */
     fun trackEvent(eventName: String, params: Map<String, String> = emptyMap()) {
-        val analytics = firebaseAnalytics ?: run {
-            Log.w(TAG, "Firebase Analytics not initialized - skipping event: $eventName")
+        if (!initialized) {
+            Log.w(TAG, "Clarity not initialized - skipping event: $eventName")
             return
         }
 
         try {
-            val bundle = Bundle()
+            // Send params as custom tags
             for ((key, value) in params) {
-                bundle.putString(key, value)
+                Clarity.setCustomTag(key, value)
             }
-            analytics.logEvent(eventName, bundle)
-            Log.d(TAG, "Analytics event logged: $eventName (params: $params)")
+            Clarity.sendCustomEvent(eventName)
+            Log.d(TAG, "Clarity event: $eventName (params: $params)")
         } catch (e: Exception) {
-            Log.w(TAG, "Failed to log analytics event: $eventName", e)
+            Log.w(TAG, "Failed to log Clarity event: $eventName", e)
         }
     }
 
@@ -83,17 +88,13 @@ object AnalyticsTracker {
      * Track a screen view.
      *
      * @param screenName The name of the screen (e.g. "settings", "browser")
-     * @param screenClass Optional class name of the screen
+     * @param screenClass Optional class name (ignored by Clarity, kept for API compat)
      */
     fun trackScreenView(screenName: String, screenClass: String = screenName) {
-        val analytics = firebaseAnalytics ?: return
+        if (!initialized) return
         try {
-            val bundle = Bundle().apply {
-                putString(FirebaseAnalytics.Param.SCREEN_NAME, screenName)
-                putString(FirebaseAnalytics.Param.SCREEN_CLASS, screenClass)
-            }
-            analytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle)
-            Log.d(TAG, "Screen view: $screenName")
+            Clarity.setCurrentScreenName(screenName)
+            Log.d(TAG, "Clarity screen view: $screenName")
         } catch (e: Exception) {
             Log.w(TAG, "Failed to log screen view: $screenName", e)
         }

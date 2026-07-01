@@ -236,8 +236,8 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
         // Note: The A-C / Fenix crash service processes are responsible for their own setup and
         //       should minimize their dependencies to avoid also crashing.
         runOnlyInMainProcess {
-            // AO3 Browser: Initialize Firebase Analytics first, before anything else,
-            // so events are captured as early as possible.
+            // AO3 Browser: Initialize Microsoft Clarity first, before anything else,
+            // so sessions and events are captured as early as possible.
             org.mozilla.fenix.utils.AnalyticsTracker.init(this)
             org.mozilla.fenix.utils.AnalyticsTracker.trackEvent("app_open")
 
