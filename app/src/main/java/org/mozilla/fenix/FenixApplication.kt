@@ -356,6 +356,7 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
     // Firebase Analytics is used instead. Glean code references remain for
     // compilation but are effectively no-ops since Glean is never initialized.
     @OptIn(DelicateCoroutinesApi::class)
+    @Suppress("DEPRECATION")
     private fun maybeInitializeGlean() {
         // Force-disable Glean upload as a safety net in case it auto-initializes.
         try {
