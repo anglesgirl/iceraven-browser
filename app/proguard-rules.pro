@@ -37,6 +37,10 @@
 -keep class com.microsoft.clarity.** { *; }
 -dontwarn com.microsoft.clarity.**
 
+# Keep installreferrer (Clarity transitive dependency)
+-keep class com.android.installreferrer.** { *; }
+-dontwarn com.android.installreferrer.**
+
 # Keep AnalyticsTracker class
 -keep class org.mozilla.fenix.utils.AnalyticsTracker { *; }
 -keep class org.mozilla.fenix.utils.AnalyticsTracker$* { *; }
