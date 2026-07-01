@@ -747,6 +747,10 @@ dependencies {
     // remains through android-components with its own version constraint.
     implementation 'com.microsoft.clarity:clarity:3.+'
 
+    // play-services-ads-id: required by ActivationPing and MetricsUtils
+    // for AdvertisingIdClient. Previously transitive via Firebase Analytics.
+    implementation libs.play.services.ads.id
+
     implementation libs.androidx.room.runtime
     ksp libs.androidx.room.compiler
 
