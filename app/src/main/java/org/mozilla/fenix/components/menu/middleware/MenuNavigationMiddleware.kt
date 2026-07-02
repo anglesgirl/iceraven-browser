@@ -41,6 +41,7 @@ import org.mozilla.fenix.components.usecases.ShareUseCases
 import org.mozilla.fenix.ext.nav
 import org.mozilla.fenix.settings.SupportUtils.AMO_HOMEPAGE_FOR_ANDROID
 import org.mozilla.fenix.share.ShareFragment
+import org.mozilla.fenix.utils.AnalyticsTracker
 import org.mozilla.fenix.utils.Settings
 import org.mozilla.fenix.utils.Stories.hasUrlOfAHomeScreenStory
 import org.mozilla.fenix.utils.Stories.hasUrlOfAStoriesScreenStory
@@ -125,22 +126,31 @@ class MenuNavigationMiddleware(
                     MenuDialogFragmentDirections.actionGlobalSettingsFragment(),
                 )
 
-                is MenuAction.Navigate.InstalledAddonDetails -> navController.nav(
+                is MenuAction.Navigate.InstalledAddonDetails -> {
+                    AnalyticsTracker.trackEvent("addons_open")
+                    navController.nav(
                     R.id.menuDialogFragment,
                     MenuDialogFragmentDirections.actionMenuDialogFragmentToInstalledAddonDetailsFragment(
                         addon = action.addon,
                     ),
                 )
+                }
 
-                is MenuAction.Navigate.Bookmarks -> navController.nav(
+                is MenuAction.Navigate.Bookmarks -> {
+                    AnalyticsTracker.trackEvent("bookmarks_open")
+                    navController.nav(
                     R.id.menuDialogFragment,
                     MenuDialogFragmentDirections.actionGlobalBookmarkFragment(BookmarkRoot.Mobile.id),
                 )
+                }
 
-                is MenuAction.Navigate.History -> navController.nav(
+                is MenuAction.Navigate.History -> {
+                    AnalyticsTracker.trackEvent("history_open")
+                    navController.nav(
                     R.id.menuDialogFragment,
                     MenuDialogFragmentDirections.actionGlobalHistoryFragment(),
                 )
+                }
 
                 is MenuAction.Navigate.Downloads -> navController.nav(
                     R.id.menuDialogFragment,

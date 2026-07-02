@@ -345,9 +345,12 @@ android.applicationVariants.configureEach { variant ->
         // same version code. Therefore we need to have different version codes for our ARM and x86
         // builds.
 
-        def versionName = variant.buildType.name == 'nightly' ?
-                "${Config.nightlyVersionName(project)}" :
-                "${Config.releaseVersionName(project)}"
+        // AO3 Browser: prefer -PversionName= passed from CI, fall back to Config default
+        def versionName = project.hasProperty('versionName') ?
+                "${project.property('versionName')}" :
+                (variant.buildType.name == 'nightly' ?
+                    "${Config.nightlyVersionName(project)}" :
+                    "${Config.releaseVersionName(project)}")
         project.logger.debug("versionName override: $versionName")
 
         variant.outputs.each { output ->
@@ -567,6 +570,22 @@ nimbus {
             ? gradle.getProperty('localProperties.autoPublish.application-services.dir') : null
 }
 
+// AO3 Browser: Microsoft Clarity is the primary analytics SDK.
+// Glean SDK remains as a compile-time dependency (140+ files reference
+// GleanMetrics) but is NEVER initialized at runtime, so all its
+// metric calls are no-ops.
+//
+// The resolutionStrategy forces protobuf to 4.34.1 to prevent Glean's
+// transitive protobuf from conflicting with the protobuf-gradle-plugin
+// code generation for app proto files. Protobuf 4.x is backward compatible
+// with 3.x serialization format, so Clarity's protobuf 3.25.3 works
+// fine with the 4.34.1 runtime.
+configurations.all {
+    resolutionStrategy {
+        force 'com.google.protobuf:protobuf-javalite:4.34.1'
+    }
+}
+
 dependencies {
     implementation project('longfox')
     implementation project(':components:browser-engine-gecko')
@@ -724,6 +743,18 @@ dependencies {
     implementation libs.sentry
     implementation libs.androidx.documentfile
     implementation libs.zxing
+    // Microsoft Clarity - session recordings, heatmaps, and custom events.
+    // Uses clarity-compose variant because the app uses Jetpack Compose.
+    // Firebase has been fully removed from the project.
+    implementation 'com.microsoft.clarity:clarity-compose:3.+'
+
+    // play-services-ads-id: required by ActivationPing and MetricsUtils
+    // for AdvertisingIdClient. Previously transitive via Firebase Analytics.
+    implementation libs.play.services.ads.id
+
+    // installreferrer: required by InstallReferrerHandlingService and others.
+    // Previously a local stub; now using the real library (also a Clarity transitive dep).
+    implementation 'com.android.installreferrer:installreferrer:2.2'
 
     implementation libs.androidx.room.runtime
     ksp libs.androidx.room.compiler

@@ -223,11 +223,8 @@ class BackgroundServices(
 
         accountManager.register(AccountManagerReadyObserver(accountManagerAvailableQueue))
 
-        // Enable push if it's configured.
-        push.feature?.let { autoPushFeature ->
-            FxaPushSupportFeature(context, accountManager, autoPushFeature, crashReporter)
-                .initialize()
-        }
+        // AO3 Browser: Push notifications removed.
+        // FxaPushSupportFeature and push-related sync removed.
 
         SendTabFeature(accountManager) { device, tabs ->
             notificationManager.showReceivedTabs(context, device, tabs)

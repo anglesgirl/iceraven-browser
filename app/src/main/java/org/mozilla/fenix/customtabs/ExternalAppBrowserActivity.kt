@@ -15,6 +15,7 @@ import mozilla.components.support.utils.SafeIntent
 import org.mozilla.fenix.HomeActivity
 import org.mozilla.fenix.ext.components
 import org.mozilla.fenix.ext.getIntentSessionId
+import org.mozilla.fenix.utils.AnalyticsTracker
 
 const val EXTRA_IS_SANDBOX_CUSTOM_TAB = "org.mozilla.fenix.customtabs.EXTRA_IS_SANDBOX_CUSTOM_TAB"
 
@@ -36,6 +37,8 @@ open class ExternalAppBrowserActivity : HomeActivity() {
             // Without this the parent HomeActivity class may decide to show the browser UI and we
             // end up with multiple browsers (causing "display already acquired" crashes).
             finishAndRemoveTask()
+        } else {
+            AnalyticsTracker.trackEvent("external_open")
         }
     }
 

@@ -1,0 +1,75 @@
+{
+  "manifest_version": 2,
+  "name": "AO3 中文翻译",
+  "version": "1.9.0.20260525",
+  "description": "为 AO3 提供中文界面和实时内容翻译，不依赖 Tampermonkey。",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "ao3-translator@ao3-browser"
+    }
+  },
+  "applications": {
+    "gecko": {
+      "id": "ao3-translator@ao3-browser"
+    }
+  },
+  "permissions": [
+    "storage",
+    "downloads",
+    "notifications",
+    "<all_urls>",
+    "https://github.com/*",
+    "https://raw.githubusercontent.com/*",
+    "https://cdn.jsdelivr.net/*",
+    "https://translate.googleapis.com/*",
+    "https://translate-pa.googleapis.com/*",
+    "https://edge.microsoft.com/*",
+    "https://api-edge.cognitive.microsofttranslator.com/*",
+    "https://api.anthropic.com/*",
+    "https://api.cerebras.ai/*",
+    "https://api.deepseek.com/*",
+    "https://generativelanguage.googleapis.com/*",
+    "https://api.groq.com/*",
+    "https://api-inference.modelscope.cn/*",
+    "https://api.openai.com/*",
+    "https://api.siliconflow.cn/*",
+    "https://api.together.xyz/*",
+    "https://open.bigmodel.cn/*",
+    "https://fanyi.baidu.com/*",
+    "https://transmart.qq.com/*",
+    "https://cdnjs.cloudflare.com/*"
+  ],
+  "background": {
+    "scripts": [
+      "background.js"
+    ]
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "http://archiveofourown.org/*",
+        "https://archiveofourown.org/*",
+        "http://archiveofourown.gay/*",
+        "https://archiveofourown.gay/*",
+        "https://neversleep.top/*",
+        "https://jdkg.org/*",
+        "https://bk3.jdkg.org/*",
+        "https://archiveofourown.site/*",
+        "https://ao3mirror.site/*",
+        "https://ao1s.top/*",
+        "https://ao3l.site/*",
+        "https://i.aois.top/*",
+        "https://xn--iao3-lw4b.ws/*",
+        "https://ao3sg.hyf9588.tech/*",
+        "https://ao3rc.hyf9588.tech/*"
+      ],
+      "js": [
+        "gm-compat.js",
+        "zh-cn.js",
+        "main.user.js"
+      ],
+      "run_at": "document_start",
+      "all_frames": false
+    }
+  ]
+}

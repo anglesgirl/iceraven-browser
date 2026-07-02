@@ -182,6 +182,7 @@ import org.mozilla.fenix.theme.ThemeManager
 import org.mozilla.fenix.translations.TranslationsAIControllableFeatureRegistrar
 import org.mozilla.fenix.translations.TranslationsEnabledSettings
 import org.mozilla.fenix.utils.AccessibilityUtils.announcePrivateModeForAccessibility
+import org.mozilla.fenix.utils.AnalyticsTracker
 import org.mozilla.fenix.utils.Settings
 import org.mozilla.fenix.utils.changeAppLauncherIcon
 import java.util.Locale
@@ -442,6 +443,12 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
             super.onCreate(savedInstanceState)
         }
 
+        // AO3 Browser: Initialize Microsoft Clarity after super.onCreate().
+        // Clarity requires Activity context for session recording, and must
+        // be initialized after WorkManager (which uses on-demand init).
+        org.mozilla.fenix.utils.AnalyticsTracker.init(this)
+        org.mozilla.fenix.utils.AnalyticsTracker.trackEvent("app_open")
+
         // Checks if Activity is currently in PiP mode if launched from external intents, then exits it
         checkAndExitPiP()
 
@@ -543,7 +550,14 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
                 navigateToHome(navHost.navController)
             }
 
-            if (shouldNavigateToBrowserOnColdStart(savedInstanceState)) {
+            // AO3 Browser: FenixApplication.restoreBrowserState() already creates
+            // an AO3 homepage tab on first launch. Here we just navigate to it.
+            if (savedInstanceState == null &&
+                components.core.store.state.tabs.isNotEmpty()
+            ) {
+                // Tab already created by restoreBrowserState, navigate to browser
+                openToBrowser(BrowserDirection.FromGlobal)
+            } else if (shouldNavigateToBrowserOnColdStart(savedInstanceState)) {
                 if (!shouldStartOnHome()) {
                     navigateToBrowserOnColdStart()
                 }
@@ -742,6 +756,9 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
     @CallSuper
     override fun onResume() {
         super.onResume()
+
+        // Track home screen view
+        org.mozilla.fenix.utils.AnalyticsTracker.trackScreenView("home")
 
         // Diagnostic breadcrumb for "Display already aquired" crash:
         // https://github.com/mozilla-mobile/android-components/issues/7960
@@ -1447,6 +1464,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
             intent = intent,
             settings = components.settings,
             onModeChange = { newMode ->
+                AnalyticsTracker.trackEvent("private_mode_toggle", mapOf("mode" to if (newMode.isPrivate) "private" else "normal"))
                 updateSecureWindowFlags(newMode)
 
                 if (::themeManager.isInitialized) {

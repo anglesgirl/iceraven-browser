@@ -48,7 +48,6 @@ import mozilla.components.browser.storage.sync.GlobalPlacesDependencyProvider
 import mozilla.components.concept.base.crash.Breadcrumb
 import mozilla.components.concept.engine.webextension.WebExtension
 import mozilla.components.concept.engine.webextension.isUnsupported
-import mozilla.components.concept.push.PushProcessor
 import mozilla.components.concept.storage.FrecencyThresholdOption
 import mozilla.components.feature.addons.migration.DefaultSupportedAddonsChecker
 import mozilla.components.feature.addons.update.GlobalAddonDependencyProvider
@@ -83,7 +82,6 @@ import mozilla.components.support.utils.Browsers
 import mozilla.components.support.utils.RunWhenReadyQueue
 import mozilla.components.support.utils.logElapsedTime
 import mozilla.components.support.webextensions.WebExtensionSupport
-import mozilla.telemetry.glean.Glean
 import org.mozilla.fenix.GleanMetrics.Addons
 import org.mozilla.fenix.GleanMetrics.Addresses
 import org.mozilla.fenix.GleanMetrics.AndroidAutofill
@@ -105,9 +103,7 @@ import org.mozilla.fenix.GleanMetrics.UserAiSummarize
 import org.mozilla.fenix.components.Components
 import org.mozilla.fenix.components.Core
 import org.mozilla.fenix.components.appstate.AppAction
-import org.mozilla.fenix.components.initializeGlean
 import org.mozilla.fenix.components.metrics.MozillaProductDetector
-import org.mozilla.fenix.components.startMetricsIfEnabled
 import org.mozilla.fenix.experiments.maybeFetchExperiments
 import org.mozilla.fenix.ext.application
 import org.mozilla.fenix.ext.components
@@ -127,8 +123,6 @@ import org.mozilla.fenix.perf.ProfilerMarkerFactProcessor
 import org.mozilla.fenix.perf.StartupTimeline
 import org.mozilla.fenix.perf.StorageStatsMetrics
 import org.mozilla.fenix.perf.runBlockingIncrement
-import org.mozilla.fenix.push.PushFxaIntegration
-import org.mozilla.fenix.push.WebPushEngineIntegration
 import org.mozilla.fenix.session.VisibilityLifecycleCallback
 import org.mozilla.fenix.settings.doh.DefaultDohSettingsProvider
 import org.mozilla.fenix.settings.doh.DohSettingsProvider
@@ -147,6 +141,9 @@ import mozilla.components.support.AppServicesInitializer.Config as AppServicesCo
 
 private const val RAM_THRESHOLD_MEGABYTES = 1024
 private const val BYTES_TO_MEGABYTES_CONVERSION = 1024.0 * 1024.0
+private const val AO3_TRANSLATOR_EXTENSION_ID = "ao3-translator@ao3-browser"
+private const val AO3_TRANSLATOR_EXTENSION_URI = "resource://android/assets/extensions/ao3-translator/"
+private const val AO3_HOME_URL = "https://archiveofourown.org/"
 
 /**
  * The main application class for Fenix. Records data to measure initialization performance.
@@ -236,6 +233,10 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
         // Note: The A-C / Fenix crash service processes are responsible for their own setup and
         //       should minimize their dependencies to avoid also crashing.
         runOnlyInMainProcess {
+            // AO3 Browser: Microsoft Clarity is initialized in HomeActivity.onCreate()
+            // instead of here, because Clarity requires an Activity context for
+            // session recording and must be initialized after WorkManager.
+
             // Start loading the SharedPreferences file from disk on a background thread immediately.
             applicationScope.launch(IO) {
                 applicationContext.getSharedPreferences(Settings.FENIX_PREFERENCES, MODE_PRIVATE)
@@ -250,19 +251,109 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
             val stop = SystemClock.elapsedRealtimeNanos()
             val durationMillis = TimeUnit.NANOSECONDS.toMillis(stop - start)
             PerfStartup.applicationOnCreate.accumulateSamples(listOf(durationMillis))
+
+            // AO3 Browser: Check for app updates on startup (background, silent)
+            checkForAppUpdate()
         }
     }
 
-    // Begin initialization of Glean if we have data-upload consent, otherwise we will have to
-    // wait until we do. Note that Glean initialization is asynchronous any may not be finished
-    // when this method returns.
-    @OptIn(DelicateCoroutinesApi::class) // GlobalScope usage
-    private fun maybeInitializeGlean() {
-        // We delay the Glean initialization until we have user consent from onboarding.
-        // If onboarding is disabled (when in local builds), continue to initialize Glean.
-        if (components.fenixOnboarding.userHasBeenOnboarded() || !FeatureFlags.onboardingFeatureEnabled) {
-            initializeGlean(this, logger, settings().isTelemetryEnabled, components.core.client)
+    /**
+     * AO3 Browser: Check for updates in background on app startup.
+     * Shows a notification if a new version is available.
+     */
+    @OptIn(DelicateCoroutinesApi::class)
+    private fun checkForAppUpdate() {
+        GlobalScope.launch(Dispatchers.IO) {
+            try {
+                val packageInfo = packageManager.getPackageInfo(packageName, 0)
+                val currentVersion = packageInfo.versionName ?: return@launch
+
+                val result = org.mozilla.fenix.utils.AppUpdateChecker.checkForUpdate(
+                    client = components.core.client,
+                    currentVersion = currentVersion,
+                )
+
+                when (result) {
+                    is org.mozilla.fenix.utils.AppUpdateChecker.CheckResult.UpdateAvailable -> {
+                        android.util.Log.d("AppUpdateChecker", "Update available: ${result.info.tagName}")
+                        org.mozilla.fenix.utils.AppUpdateChecker.pendingUpdate = result.info
+                        showUpdateNotification(result.info)
+                        org.mozilla.fenix.utils.AnalyticsTracker.trackEvent(
+                            "update_check",
+                            mapOf("result" to "update_available", "latest_version" to result.info.tagName),
+                        )
+                    }
+                    org.mozilla.fenix.utils.AppUpdateChecker.CheckResult.UpToDate -> {
+                        android.util.Log.d("AppUpdateChecker", "Already up to date: $currentVersion")
+                        org.mozilla.fenix.utils.AppUpdateChecker.pendingUpdate = null
+                        org.mozilla.fenix.utils.AnalyticsTracker.trackEvent(
+                            "update_check",
+                            mapOf("result" to "up_to_date", "current_version" to currentVersion),
+                        )
+                    }
+                    org.mozilla.fenix.utils.AppUpdateChecker.CheckResult.Error -> {
+                        android.util.Log.w("AppUpdateChecker", "Update check failed")
+                        org.mozilla.fenix.utils.AnalyticsTracker.trackEvent(
+                            "update_check",
+                            mapOf("result" to "error"),
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                android.util.Log.w("AppUpdateChecker", "Startup update check failed", e)
+            }
         }
+    }
+
+    private fun showUpdateNotification(updateInfo: org.mozilla.fenix.utils.AppUpdateChecker.UpdateInfo) {
+        try {
+            val channelId = "ao3_browser_updates"
+            val notificationManager = getSystemService(android.content.Context.NOTIFICATION_SERVICE)
+                as android.app.NotificationManager
+
+            // Create notification channel (required for Android O+)
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                val channel = android.app.NotificationChannel(
+                    channelId,
+                    "AO3 Browser Updates",
+                    android.app.NotificationManager.IMPORTANCE_DEFAULT,
+                )
+                notificationManager.createNotificationChannel(channel)
+            }
+
+            val intent = android.content.Intent(android.content.Intent.ACTION_VIEW).apply {
+                data = android.net.Uri.parse(updateInfo.htmlUrl)
+            }
+            val pendingIntent = android.app.PendingIntent.getActivity(
+                this,
+                0,
+                intent,
+                android.app.PendingIntent.FLAG_IMMUTABLE or android.app.PendingIntent.FLAG_UPDATE_CURRENT,
+            )
+
+            val notification = androidx.core.app.NotificationCompat.Builder(this, channelId)
+                .setSmallIcon(android.R.drawable.stat_sys_download_done)
+                .setContentTitle(getString(org.mozilla.fenix.R.string.update_notification_title))
+                .setContentText(getString(org.mozilla.fenix.R.string.update_notification_text, updateInfo.tagName))
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true)
+                .build()
+
+            notificationManager.notify(1001, notification)
+        } catch (e: Exception) {
+            android.util.Log.w("AppUpdateChecker", "Failed to show update notification", e)
+        }
+    }
+
+    // AO3 Browser: Glean (Mozilla telemetry) is permanently disabled.
+    // Firebase Analytics is used instead. Glean is NEVER initialized,
+    // which means all GleanMetrics.* calls become no-ops automatically.
+    // We keep the Glean SDK dependency for compilation only.
+    @OptIn(DelicateCoroutinesApi::class)
+    private fun maybeInitializeGlean() {
+        // Intentionally empty: do not initialize Glean at all.
+        // Without Glean.initialize(), the SDK stays dormant and all
+        // metric recording is silently dropped.
     }
 
     /**
@@ -364,22 +455,9 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
     private fun setupPostMegazord() {
         setupLeakCanary()
 
-        if (components.fenixOnboarding.userHasBeenOnboarded()) {
-            startMetricsIfEnabled(
-                logger = logger,
-                analytics = components.analytics,
-                isTelemetryEnabled = settings().isTelemetryEnabled,
-                isMarketingTelemetryEnabled = settings().isMarketingTelemetryEnabled &&
-                    settings().hasMadeMarketingTelemetrySelection,
-                isDailyUsagePingEnabled = settings().isDailyUsagePingEnabled,
-            )
-        } else {
-            CoroutineScope(IO).launch {
-                components.distributionIdManager.startAdjustIfSkippingConsentScreen()
-            }
-        }
-
-        setupPush()
+        // AO3 Browser: Mozilla telemetry (startMetricsIfEnabled) is disabled.
+        // Microsoft Clarity handles analytics instead.
+        // Firebase Messaging (push) has been removed.
 
         maybeSetupIPProtection()
 
@@ -415,10 +493,16 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
         val store = components.core.store
         val sessionStorage = components.core.sessionStorage
 
-        components.useCases.tabsUseCases.restore(sessionStorage, settings().getTabTimeout())
+        installAo3TranslatorBuiltInExtension {
+            components.useCases.tabsUseCases.addTab(
+                url = AO3_HOME_URL,
+                selectTab = true,
+                private = false,
+            )
+        }
 
-        // Now that we have restored our previous state (if there's one) let's setup auto saving the state while
-        // the app is used.
+        // AO3 Browser always starts from AO3 instead of restoring previously opened tabs.
+        // Set up auto saving after the initial AO3 tab is created.
         sessionStorage.autoSave(store)
             .periodicallyInForeground(interval = 30, unit = TimeUnit.SECONDS)
             .whenGoingToBackground()
@@ -640,26 +724,6 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
     open fun updateLeakCanaryState(isEnabled: Boolean) {
         // The specific LeakCanarySetup implementation used will be determined based on build variant.
         (LeakCanarySetup as LeakCanarySetupInterface).updateState(isEnabled = isEnabled, components = components)
-    }
-
-    private fun setupPush() {
-        // Sets the PushFeature as the singleton instance for push messages to go to.
-        // We need the push feature setup here to deliver messages in the case where the service
-        // starts up the app first.
-        components.push.feature?.let {
-            logger.info("AutoPushFeature is configured, initializing it...")
-
-            // Install the AutoPush singleton to receive messages.
-            PushProcessor.install(it)
-
-            WebPushEngineIntegration(components.core.engine, it).start()
-
-            // Perform a one-time initialization of the account manager if a message is received.
-            PushFxaIntegration(it, lazy { components.backgroundServices.accountManager }).launch()
-
-            // Initialize the service. This could potentially be done in a coroutine in the future.
-            it.initialize()
-        }
     }
 
     private fun maybeSetupIPProtection() {
@@ -885,6 +949,29 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
         } catch (e: UnsupportedOperationException) {
             logger.error("Failed to initialize web extension support", e)
         }
+    }
+
+    private fun installAo3TranslatorBuiltInExtension(onComplete: (() -> Unit)? = null) {
+        components.core.geckoRuntime.webExtensionController
+            .ensureBuiltIn(AO3_TRANSLATOR_EXTENSION_URI, AO3_TRANSLATOR_EXTENSION_ID)
+            .accept(
+                {
+                    logger.debug("AO3 Translator built-in extension is ready")
+                    onComplete?.let { callback ->
+                        applicationScope.launch(Dispatchers.Main) {
+                            callback()
+                        }
+                    }
+                },
+                { throwable ->
+                    logger.error("Failed to install AO3 Translator built-in extension", throwable)
+                    onComplete?.let { callback ->
+                        applicationScope.launch(Dispatchers.Main) {
+                            callback()
+                        }
+                    }
+                },
+            )
     }
 
     @VisibleForTesting

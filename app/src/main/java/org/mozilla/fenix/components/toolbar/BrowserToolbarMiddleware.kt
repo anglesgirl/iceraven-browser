@@ -136,6 +136,7 @@ import org.mozilla.fenix.settings.ShortcutType
 import org.mozilla.fenix.settings.quicksettings.protections.cookiebanners.getCookieBannerUIMode
 import org.mozilla.fenix.tabstray.ext.isActiveDownload
 import org.mozilla.fenix.tabstray.redux.state.Page
+import org.mozilla.fenix.utils.AnalyticsTracker
 import org.mozilla.fenix.utils.Settings
 import org.mozilla.fenix.utils.Stories.hasUrlOfAHomeScreenStory
 import org.mozilla.fenix.utils.Stories.hasUrlOfAStoriesScreenStory
@@ -485,10 +486,12 @@ class BrowserToolbarMiddleware(
                 when (action.isActive) {
                     true -> {
                         ReaderMode.closed.record(NoExtras())
+                        AnalyticsTracker.trackEvent("reader_mode_off")
                         readerModeController.hideReaderView()
                     }
                     false -> {
                         ReaderMode.opened.record(NoExtras())
+                        AnalyticsTracker.trackEvent("reader_mode_on")
                         readerModeController.showReaderView()
                     }
                 }
@@ -548,6 +551,7 @@ class BrowserToolbarMiddleware(
                             title = selectedTab.content.title,
                             parentGuid = parentGuid,
                         )
+                        AnalyticsTracker.trackEvent("bookmark_add")
 
                         appStore.dispatch(
                             BookmarkAction.BookmarkAdded(
@@ -590,6 +594,7 @@ class BrowserToolbarMiddleware(
 
             is ShareClicked -> {
                 val selectedTab = browserStore.state.selectedTab ?: return
+                AnalyticsTracker.trackEvent("share_page")
                 shareUseCases.shareUrl(
                     id = selectedTab.id,
                     url = selectedTab.content.url,

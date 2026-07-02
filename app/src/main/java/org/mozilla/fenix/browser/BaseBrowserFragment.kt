@@ -232,6 +232,7 @@ import org.mozilla.fenix.tabstray.ext.toDisplayTitle
 import org.mozilla.fenix.tabstray.redux.state.Page
 import org.mozilla.fenix.theme.FirefoxTheme
 import org.mozilla.fenix.theme.ThemeManager
+import org.mozilla.fenix.utils.AnalyticsTracker
 import org.mozilla.fenix.utils.allowUndo
 import org.mozilla.fenix.wifi.SitePermissionsWifiIntegration
 import java.lang.ref.WeakReference
@@ -710,6 +711,7 @@ abstract class BaseBrowserFragment :
                 positiveButtonRadius = pixelSizeFor(R.dimen.tab_corner_radius).toFloat(),
             ),
             onDownloadStartedListener = { downloadId ->
+                AnalyticsTracker.trackEvent("download_start")
                 context.components.appStore.dispatch(
                     AppAction.DownloadAction.DownloadInProgress(
                         downloadId,
@@ -2418,7 +2420,9 @@ abstract class BaseBrowserFragment :
                 view = view,
             )
         }
-        findInPageIntegration.withFeature { it.launch() }
+        findInPageIntegration.withFeature {
+            AnalyticsTracker.trackEvent("find_in_page")
+            it.launch() }
     }
 
     @Suppress("CognitiveComplexMethod")

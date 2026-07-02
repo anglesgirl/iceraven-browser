@@ -275,19 +275,7 @@ fun MainMenu(
         }
 
         if (accessPoint == MenuAccessPoint.Home) {
-            MenuGroup {
-                ExtensionsMenuItem(
-                    inCustomTab = false,
-                    isPrivate = isPrivate,
-                    isExtensionsProcessDisabled = isExtensionsProcessDisabled,
-                    isExtensionsExpanded = isExtensionsExpanded,
-                    isAllWebExtensionsDisabled = isAllWebExtensionsDisabled,
-                    webExtensionMenuCount = webExtensionMenuCount,
-                    extensionsMenuItemDescription = extensionsMenuItemDescription,
-                    onExtensionsMenuClick = onExtensionsMenuClick,
-                    extensionSubmenu = extensionSubmenu,
-                )
-            }
+            // AO3 Browser: extensions menu hidden
         }
 
         if (accessPoint == MenuAccessPoint.Browser) {
@@ -322,14 +310,8 @@ fun MainMenu(
             onPasswordsMenuClick = onPasswordsMenuClick,
         )
 
+        // AO3 Browser: Mozilla account (login) menu hidden
         MenuGroup {
-            MozillaAccountMenuItem(
-                account = account,
-                accountState = accountState,
-                isPrivate = isPrivate,
-                onClick = onMozillaAccountButtonClick,
-            )
-
             MenuItem(
                 label = stringResource(id = R.string.browser_menu_settings),
                 beforeIconPainter = painterResource(id = iconsR.drawable.mozac_ic_settings_24),
@@ -446,17 +428,7 @@ private fun ToolsAndActionsMenuGroup(
             )
         }
 
-        ExtensionsMenuItem(
-            inCustomTab = false,
-            isPrivate = isPrivate,
-            isExtensionsProcessDisabled = isExtensionsProcessDisabled,
-            isExtensionsExpanded = isExtensionsExpanded,
-            isAllWebExtensionsDisabled = isAllWebExtensionsDisabled,
-            webExtensionMenuCount = webExtensionMenuCount,
-            extensionsMenuItemDescription = extensionsMenuItemDescription,
-            onExtensionsMenuClick = onExtensionsMenuClick,
-            extensionSubmenu = extensionSubmenu,
-        )
+        // AO3 Browser: extensions menu hidden in browser menu
 
         if (!moreMenuExpanded) {
             MoreMenuButtonGroup(

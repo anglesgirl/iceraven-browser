@@ -23,6 +23,7 @@ import mozilla.components.lib.state.Middleware
 import mozilla.components.lib.state.Store
 import org.mozilla.fenix.browser.browsingmode.BrowsingMode
 import org.mozilla.fenix.components.usecases.FenixBrowserUseCases
+import org.mozilla.fenix.utils.AnalyticsTracker
 import org.mozilla.fenix.utils.LastSavedFolderCache
 
 private const val WARN_OPEN_ALL_SIZE = 15
@@ -711,6 +712,7 @@ internal class BookmarksMiddleware(
     }
 
     private fun handleDeleteBookmark(bookmark: BookmarkItem.Bookmark) {
+        AnalyticsTracker.trackEvent("bookmark_remove")
         lifecycleScope.launch {
             bookmarksStorage.deleteNode(bookmark.guid)
             lastSavedFolderCache.getGuid()?.let { cachedGuid ->

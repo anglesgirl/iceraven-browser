@@ -6,6 +6,7 @@ package org.mozilla.fenix.components
 
 import android.content.Context
 import android.content.res.Configuration
+import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.CoroutineScope
@@ -276,6 +277,18 @@ class Core(
             runtime = geckoRuntime,
         ).also {
             WebCompatFeature.install(it)
+
+            // AO3 Browser: install built-in AO3 Chinese Translator extension
+            it.installBuiltInWebExtension(
+                url = "resource://android/assets/extensions/ao3-translator/",
+                id = "ao3-translator@ao3-browser",
+                onSuccess = { ext ->
+                    Log.d("AO3Browser", "AO3 Translator extension installed: ${ext.id}")
+                },
+                onError = { throwable ->
+                    Log.e("AO3Browser", "Failed to install AO3 Translator extension", throwable)
+                },
+            )
         }
     }
 
@@ -384,7 +397,7 @@ class Core(
                 RegionMiddleware(context, locationService),
                 SearchMiddleware(
                     context = context,
-                    additionalBundledSearchEngineIds = listOf("reddit", "youtube"),
+                    additionalBundledSearchEngineIds = emptyList(),
                     migration = SearchMigration(context),
                     searchExtraParams = searchExtraParams,
                     searchEngineSelectorConfig = getSearchEngineSelectorConfig(),

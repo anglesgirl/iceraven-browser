@@ -28,3 +28,22 @@
 
 # Keep code generated from Glean Metrics
 -keep class org.mozilla.fenix.GleanMetrics.** {  *; }
+
+####################################################################################################
+# Microsoft Clarity
+####################################################################################################
+
+# Keep Clarity SDK classes from being stripped by R8
+-keep class com.microsoft.clarity.** { *; }
+-dontwarn com.microsoft.clarity.**
+
+# Keep installreferrer (Clarity transitive dependency)
+-keep class com.android.installreferrer.** { *; }
+-dontwarn com.android.installreferrer.**
+
+# Keep AnalyticsTracker class
+-keep class org.mozilla.fenix.utils.AnalyticsTracker { *; }
+-keep class org.mozilla.fenix.utils.AnalyticsTracker$* { *; }
+
+# Keep classes referenced by reflection
+-keep @androidx.annotation.Keep class *

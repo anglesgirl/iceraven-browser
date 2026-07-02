@@ -10,11 +10,9 @@ import mozilla.components.browser.state.state.availableSearchEngines
 
 /**
  * The list of search engine shortcuts to be available for quick search menu.
+ *
+ * AO3 Browser: return empty list to hide all search engine shortcuts from the
+ * quick search menu. The default search engine still works for address bar searches.
  */
 val SearchState.searchEngineShortcuts: List<SearchEngine>
-    get() = (
-        regionSearchEngines + additionalSearchEngines + availableSearchEngines +
-            customSearchEngines + applicationSearchEngines
-        ).filter {
-        !disabledSearchEngineIds.contains(it.id)
-    }
+    get() = emptyList()

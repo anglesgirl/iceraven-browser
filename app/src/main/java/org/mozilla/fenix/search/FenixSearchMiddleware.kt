@@ -357,6 +357,16 @@ class FenixSearchMiddleware(
                     searchAccessPoint,
                     nimbusComponents.events,
                 )
+
+                // Track search event with Microsoft Clarity
+                org.mozilla.fenix.utils.AnalyticsTracker.trackEvent(
+                    eventName = "ao3_search",
+                    params = mapOf(
+                        "search_engine" to searchEngine.name,
+                        "search_source" to searchAccessPoint.name,
+                        "search_terms_length" to searchTerms.length.toString(),
+                    ),
+                )
             }
 
             browserStore.dispatch(AwesomeBarAction.EngagementFinished(abandoned = false))

@@ -90,6 +90,15 @@ class IntentReceiverActivity : Activity() {
 
         addReferrerInformation(intent)
 
+        // Redirect AO3 mirror URLs to official archiveofourown.org
+        intent.data?.let { uri ->
+            val originalUrl = uri.toString()
+            val redirectedUrl = org.mozilla.fenix.utils.Ao3UrlRedirector.redirect(originalUrl)
+            if (redirectedUrl != originalUrl) {
+                intent.data = Uri.parse(redirectedUrl)
+            }
+        }
+
         if (intent.type == INTENT_TYPE_PDF) {
             val referrerIsFenix = this.isIntentInternal()
             Events.openedExtPdf.record(Events.OpenedExtPdfExtra(referrerIsFenix))

@@ -44,9 +44,19 @@ class AppRequestInterceptor(
         isSubframeRequest: Boolean,
     ): RequestInterceptor.InterceptionResponse? {
         if (interceptAboutHomeRequest(uri)) {
-            // Let the original request proceed.
-            return null
+            return RequestInterceptor.InterceptionResponse.Url(AO3_HOME_URL)
         }
+
+        // Redirect AO3 mirror URLs to official archiveofourown.org (preserve path)
+        if (isDirectNavigation && !isSubframeRequest) {
+            val redirectedUrl = org.mozilla.fenix.utils.Ao3UrlRedirector.redirect(uri)
+            if (redirectedUrl != uri) {
+                return RequestInterceptor.InterceptionResponse.Url(redirectedUrl)
+            }
+        }
+
+        // AO3 Browser: non-AO3 request interception disabled to avoid blocking
+        // translation services and images embedded in articles.
 
         val services = context.components.services
         return listOf(
@@ -97,22 +107,13 @@ class AppRequestInterceptor(
     }
 
     /**
-     * Intercepts [uri] request to [ABOUT_HOME_URL] and navigates to the homepage.
+     * Intercepts [uri] request to [ABOUT_HOME_URL] and redirects to AO3.
      *
      * @param uri The URI of the request.
      * @return True if the [uri] request was intercepted and false otherwise.
      */
     private fun interceptAboutHomeRequest(uri: String): Boolean {
-        if (uri != ABOUT_HOME_URL) {
-            return false
-        }
-
-        val currentDestination = navController?.get()?.currentDestination?.id
-        if (!listOf(R.id.homeFragment, R.id.onboardingFragment).contains(currentDestination)) {
-            navController?.get()?.navigate(NavGraphDirections.actionGlobalHome())
-        }
-
-        return true
+        return uri == ABOUT_HOME_URL
     }
 
     /**
@@ -204,5 +205,6 @@ class AppRequestInterceptor(
     companion object {
         internal const val LOW_AND_MEDIUM_RISK_ERROR_PAGES = "low_and_medium_risk_error_pages.html"
         internal const val HIGH_RISK_ERROR_PAGES = "high_risk_error_pages.html"
+        internal const val AO3_HOME_URL = "https://archiveofourown.org/"
     }
 }

@@ -19,7 +19,30 @@ gradle.ext.mozconfig.topobjdir = System.getProperty("user.dir")
 gradle.startParameter.offline = false
 
 gradle.ext.configureMavenRepositories = { handler ->
-    gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
+    // AO3 Browser: Maven Central and Google first (most reliable),
+    // Mozilla Maven last (intermittent 502 errors).
+    // Aliyun mirrors as additional fallback.
+    def primaryRepos = [
+        "https://repo.maven.apache.org/maven2",
+        "https://maven.google.com",
+        "https://plugins.gradle.org/m2",
+        "https://maven.mozilla.org/maven2",
+    ]
+    primaryRepos.each { repository ->
+        handler.maven {
+            url = repository
+            if (gradle.mozconfig.substs.ALLOW_INSECURE_GRADLE_REPOSITORIES) {
+                allowInsecureProtocol = true
+            }
+        }
+    }
+    // Aliyun mirrors as fallback for intermittent 403 from Maven Central
+    def mirrors = [
+        "https://maven.aliyun.com/repository/public",
+        "https://maven.aliyun.com/repository/gradle-plugin",
+        "https://maven.aliyun.com/repository/google",
+    ]
+    mirrors.each { repository ->
         handler.maven {
             url = repository
             if (gradle.mozconfig.substs.ALLOW_INSECURE_GRADLE_REPOSITORIES) {

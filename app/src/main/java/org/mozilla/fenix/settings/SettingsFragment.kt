@@ -5,6 +5,7 @@
 package org.mozilla.fenix.settings
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
@@ -69,6 +70,7 @@ import org.mozilla.fenix.ext.components
 import org.mozilla.fenix.ext.getPreferenceKey
 import org.mozilla.fenix.ext.navigateToNotificationsSettings
 import org.mozilla.fenix.ext.openInNewTab
+import org.mozilla.fenix.ext.openToBrowser
 import org.mozilla.fenix.ext.requireComponents
 import org.mozilla.fenix.ext.settings
 import org.mozilla.fenix.ext.showToolbar
@@ -82,6 +84,9 @@ import org.mozilla.fenix.settings.account.AccountUiView
 import org.mozilla.fenix.snackbar.FenixSnackbarDelegate
 import org.mozilla.fenix.snackbar.SnackbarBinding
 import org.mozilla.fenix.utils.Settings
+import org.mozilla.fenix.utils.AppUpdateChecker
+import org.mozilla.fenix.utils.AppUpdateDialog
+import mozilla.components.support.utils.ext.packageManagerCompatHelper
 import java.lang.ref.WeakReference
 import kotlin.system.exitProcess
 import mozilla.components.ui.icons.R as iconsR
@@ -189,8 +194,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFragment 
 
         findPreference<Preference>(
             getPreferenceKey(R.string.pref_key_translation),
-        )?.isVisible = FxNimbus.features.translations.value().globalSettingsEnabled &&
-            components.core.store.state.translationEngine.isEngineSupported == true
+        )?.isVisible = false
 
         findPreference<Preference>(
             getPreferenceKey(R.string.pref_key_page_summaries),
@@ -236,6 +240,9 @@ class SettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFragment 
     override fun onResume() {
         super.onResume()
 
+        // Track settings page view
+        org.mozilla.fenix.utils.AnalyticsTracker.trackScreenView("settings")
+
         // Use nimbus to set the title, and a trivial addition
         val nimbusValidation = FxNimbus.features.nimbusValidation.value()
 
@@ -243,8 +250,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFragment 
         val suffix = nimbusValidation.settingsPunctuation
         val toolbarTitle = "$title$suffix"
 
-        val showSearch = requireContext().settings().isSettingsSearchEnabled &&
-                (!args.searchInProgress)
+        val showSearch = false
 
         if (showSearch) {
             showToolbarWithIconButton(
@@ -551,6 +557,11 @@ class SettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFragment 
                 SettingsFragmentDirections.actionSettingsFragmentToAboutFragment()
             }
 
+            resources.getString(R.string.pref_key_check_update) -> {
+                handleCheckForUpdate()
+                null
+            }
+
             // Only displayed when secret settings are enabled
             resources.getString(R.string.pref_key_debug_settings) -> {
                 SettingsFragmentDirections.actionSettingsFragmentToSecretSettingsFragment()
@@ -652,6 +663,131 @@ class SettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFragment 
         setupTrackingProtectionPreference(settings)
         setupDnsOverHttpsPreference(settings)
         setupEmailMaskPreference(settings, requireComponents)
+        hideAo3UnneededPreferences()
+    }
+
+    private fun hideAo3UnneededPreferences() {
+        listOf(
+            R.string.pref_key_sign_in,
+            R.string.pref_key_search_settings,
+            R.string.pref_key_tabs,
+            R.string.pref_key_home,
+            R.string.pref_key_customize,
+            R.string.pref_key_passwords,
+            R.string.pref_key_email_masks,
+            R.string.pref_key_credit_cards,
+            R.string.pref_key_translation,
+            R.string.pref_key_page_summaries,
+            R.string.pref_key_ai_controls,
+            R.string.pref_key_import_bookmarks,
+            R.string.pref_key_make_default_browser,
+            R.string.pref_key_private_browsing,
+            R.string.pref_key_ip_protection_settings,
+            R.string.pref_key_https_only_settings,
+            R.string.pref_key_cookie_banner_private_mode,
+            R.string.pref_key_tracking_protection_settings,
+            R.string.pref_key_delete_browsing_data_on_quit_preference,
+            R.string.pref_key_notifications,
+            R.string.pref_key_addons,
+            R.string.pref_key_install_local_addon,
+            R.string.pref_key_override_amo_collection,
+            R.string.pref_key_link_sharing,
+            R.string.pref_key_open_links_in_apps,
+            R.string.pref_key_firefox_labs,
+            R.string.pref_key_leakcanary,
+            R.string.pref_key_remote_improvements,
+            R.string.pref_key_remote_debugging,
+            R.string.pref_key_enable_gecko_logs,
+            R.string.pref_key_debug_settings,
+            R.string.pref_key_secret_debug_info,
+            R.string.pref_key_nimbus_experiments,
+            R.string.pref_key_start_profiler,
+            R.string.pref_key_sync_debug,
+        ).forEach { key ->
+            findPreference<Preference>(getPreferenceKey(key))?.isVisible = false
+        }
+
+        // AO3 Browser: Always show "Check for updates"; display new version if available
+        val updatePref = findPreference<Preference>(getPreferenceKey(R.string.pref_key_check_update))
+        if (updatePref != null) {
+            val pending = AppUpdateChecker.pendingUpdate
+            updatePref.isVisible = true
+            if (pending != null) {
+                updatePref.title = getString(R.string.preferences_check_update)
+                updatePref.summary = getString(R.string.update_available_title, pending.tagName)
+            } else {
+                updatePref.title = getString(R.string.preferences_check_update)
+                updatePref.summary = null
+            }
+        }
+    }
+
+    /**
+     * AO3 Browser: Check for updates on demand. Shows update dialog if a new
+     * version is available, otherwise shows "already up to date" toast.
+     */
+    private fun handleCheckForUpdate() {
+        val context = requireContext()
+
+        // If we already have a pending update from startup check, show it directly
+        val pending = AppUpdateChecker.pendingUpdate
+        if (pending != null) {
+            showUpdateDialog(context, pending)
+            return
+        }
+
+        // Otherwise do a fresh check
+        viewLifecycleOwner.lifecycleScope.launch {
+            Toast.makeText(context, R.string.update_checking, Toast.LENGTH_SHORT).show()
+            try {
+                val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
+                val currentVersion = packageInfo.versionName ?: return@launch
+
+                val result = AppUpdateChecker.checkForUpdate(
+                    client = components.core.client,
+                    currentVersion = currentVersion,
+                )
+
+                when (result) {
+                    is AppUpdateChecker.CheckResult.UpdateAvailable -> {
+                        AppUpdateChecker.pendingUpdate = result.info
+                        // Refresh the preference to show the new version summary
+                        val updatePref = findPreference<Preference>(getPreferenceKey(R.string.pref_key_check_update))
+                        updatePref?.summary = getString(R.string.update_available_title, result.info.tagName)
+                        showUpdateDialog(context, result.info)
+                    }
+                    AppUpdateChecker.CheckResult.UpToDate -> {
+                        Toast.makeText(context, R.string.update_up_to_date, Toast.LENGTH_SHORT).show()
+                    }
+                    AppUpdateChecker.CheckResult.Error -> {
+                        Toast.makeText(context, R.string.update_check_failed, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            } catch (e: Exception) {
+                Toast.makeText(context, R.string.update_check_failed, Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun showUpdateDialog(context: Context, updateInfo: AppUpdateChecker.UpdateInfo) {
+        AppUpdateDialog(
+            context = context,
+            updateInfo = updateInfo,
+            onDownloadClick = { useCnMirror ->
+                val url = if (useCnMirror) updateInfo.apkUrlCnMirror else updateInfo.apkUrl
+                // Open the download URL in the browser itself, so the browser's built-in
+                // download manager handles the APK download instead of the system DownloadManager.
+                findNavController().openToBrowser()
+                requireComponents.useCases.fenixBrowserUseCases.loadUrlOrSearch(
+                    searchTermOrURL = url,
+                    newTab = true,
+                )
+                Toast.makeText(context, R.string.update_downloading, Toast.LENGTH_SHORT).show()
+            },
+            onDismiss = {
+                // User dismissed; keep pendingUpdate so they can reopen from Settings
+            },
+        ).show()
     }
 
     private val setToDefaultPromptRequestLauncher: ActivityResultLauncher<Intent> =
