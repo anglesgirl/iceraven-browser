@@ -576,9 +576,11 @@ nimbus {
 // GleanMetrics) but is NEVER initialized at runtime, so all its
 // metric calls are no-ops.
 //
-// The resolutionStrategy forces protobuf to match libs.versions.toml
-// to prevent Glean's transitive protobuf from conflicting with
-// the protobuf-gradle-plugin code generation for app proto files.
+// The resolutionStrategy forces protobuf to 4.34.1 to prevent Glean's
+// transitive protobuf from conflicting with the protobuf-gradle-plugin
+// code generation for app proto files. Protobuf 4.x is backward compatible
+// with 3.x serialization format, so Clarity's protobuf 3.25.3 works
+// fine with the 4.34.1 runtime.
 configurations.all {
     resolutionStrategy {
         force 'com.google.protobuf:protobuf-javalite:4.34.1'
@@ -743,9 +745,10 @@ dependencies {
     implementation libs.androidx.documentfile
     implementation libs.zxing
     // Microsoft Clarity - session recordings, heatmaps, and custom events.
+    // Uses clarity-compose variant because the app uses Jetpack Compose.
     // Replaces Firebase Analytics. Firebase Messaging (for push notifications)
     // remains through android-components with its own version constraint.
-    implementation 'com.microsoft.clarity:clarity:3.+'
+    implementation 'com.microsoft.clarity:clarity-compose:3.+'
 
     // play-services-ads-id: required by ActivationPing and MetricsUtils
     // for AdvertisingIdClient. Previously transitive via Firebase Analytics.

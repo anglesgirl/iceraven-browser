@@ -236,10 +236,9 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
         // Note: The A-C / Fenix crash service processes are responsible for their own setup and
         //       should minimize their dependencies to avoid also crashing.
         runOnlyInMainProcess {
-            // AO3 Browser: Initialize Microsoft Clarity first, before anything else,
-            // so sessions and events are captured as early as possible.
-            org.mozilla.fenix.utils.AnalyticsTracker.init(this)
-            org.mozilla.fenix.utils.AnalyticsTracker.trackEvent("app_open")
+            // AO3 Browser: Microsoft Clarity is initialized in HomeActivity.onCreate()
+            // instead of here, because Clarity requires an Activity context for
+            // session recording and must be initialized after WorkManager.
 
             // Start loading the SharedPreferences file from disk on a background thread immediately.
             applicationScope.launch(IO) {

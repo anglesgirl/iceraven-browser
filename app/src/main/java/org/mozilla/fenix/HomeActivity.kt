@@ -442,6 +442,12 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
             super.onCreate(savedInstanceState)
         }
 
+        // AO3 Browser: Initialize Microsoft Clarity after super.onCreate().
+        // Clarity requires Activity context for session recording, and must
+        // be initialized after WorkManager (which uses on-demand init).
+        org.mozilla.fenix.utils.AnalyticsTracker.init(this)
+        org.mozilla.fenix.utils.AnalyticsTracker.trackEvent("app_open")
+
         // Checks if Activity is currently in PiP mode if launched from external intents, then exits it
         checkAndExitPiP()
 

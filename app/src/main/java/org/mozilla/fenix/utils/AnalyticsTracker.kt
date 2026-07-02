@@ -4,7 +4,7 @@
 
 package org.mozilla.fenix.utils
 
-import android.content.Context
+import android.app.Activity
 import android.util.Log
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
@@ -17,25 +17,32 @@ import com.microsoft.clarity.ClarityConfig
  *
  * Provides session recordings, heatmaps, and custom event tracking.
  * Events are uploaded automatically by the Clarity SDK.
+ *
+ * IMPORTANT: Clarity must be initialized from an Activity (not Application)
+ * context, and after WorkManager initialization. See Clarity docs:
+ * "Add the following code to your startup activity only"
+ * "If you use a custom WorkManager initializer, Clarity initialization
+ * must take place after the WorkManager initializer."
  */
 object AnalyticsTracker {
 
     private const val TAG = "AnalyticsTracker"
     private const val CLARITY_PROJECT_ID = "xfqtr4s6xh"
 
+    @Volatile
     private var initialized = false
 
     /**
-     * Initialize the tracker. Call this from Application.onCreate().
-     * Also registers a process lifecycle observer to track app foreground/background.
+     * Initialize the tracker. Must be called from the startup Activity's onCreate(),
+     * after super.onCreate() and after WorkManager is initialized.
      */
-    fun init(context: Context) {
+    fun init(activity: Activity) {
         if (initialized) return
         try {
             val config = ClarityConfig(
                 projectId = CLARITY_PROJECT_ID,
             )
-            Clarity.initialize(context, config)
+            Clarity.initialize(activity, config)
             initialized = true
 
             // Track app foreground/background via ProcessLifecycleOwner
