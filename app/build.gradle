@@ -31,7 +31,6 @@ apply plugin: 'jacoco'
 apply plugin: 'androidx.navigation.safeargs.kotlin'
 apply plugin: 'kotlinx-serialization'
 apply plugin: 'com.google.devtools.ksp'
-apply plugin: 'com.google.gms.google-services'
 
 // The OSS-licenses plugin is only needed for shipping builds, so skip it during
 // `mach lint` (which always passes `-Pandroid-lint`) to avoid unnecessary overhead.
@@ -746,8 +745,7 @@ dependencies {
     implementation libs.zxing
     // Microsoft Clarity - session recordings, heatmaps, and custom events.
     // Uses clarity-compose variant because the app uses Jetpack Compose.
-    // Replaces Firebase Analytics. Firebase Messaging (for push notifications)
-    // remains through android-components with its own version constraint.
+    // Firebase has been fully removed from the project.
     implementation 'com.microsoft.clarity:clarity-compose:3.+'
 
     // play-services-ads-id: required by ActivationPing and MetricsUtils

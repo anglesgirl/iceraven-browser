@@ -830,14 +830,6 @@
             android:exported="false" />
 
         <service
-            android:name=".push.FirebasePushService"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
-            </intent-filter>
-        </service>
-
-        <service
             android:name=".perf.ProfilerService"
             android:foregroundServiceType="specialUse"
             android:exported="false">
@@ -863,10 +855,7 @@
             android:readPermission="android.permission.DUMP"
             android:grantUriPermissions="false" />
 
-        <meta-data
-            android:name="firebase_messaging_auto_init_enabled"
-            android:value="true" />
-        <!-- Firebase Analytics removed — replaced by Microsoft Clarity -->
+        <!-- Firebase fully removed — analytics replaced by Microsoft Clarity -->
         <!-- Removes the default Workmanager  initialization so that we can use on-demand initializer. -->
         <provider
             android:name="androidx.startup.InitializationProvider"

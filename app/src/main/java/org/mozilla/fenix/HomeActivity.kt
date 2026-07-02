@@ -182,6 +182,7 @@ import org.mozilla.fenix.theme.ThemeManager
 import org.mozilla.fenix.translations.TranslationsAIControllableFeatureRegistrar
 import org.mozilla.fenix.translations.TranslationsEnabledSettings
 import org.mozilla.fenix.utils.AccessibilityUtils.announcePrivateModeForAccessibility
+import org.mozilla.fenix.utils.AnalyticsTracker
 import org.mozilla.fenix.utils.Settings
 import org.mozilla.fenix.utils.changeAppLauncherIcon
 import java.util.Locale
@@ -1463,6 +1464,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
             intent = intent,
             settings = components.settings,
             onModeChange = { newMode ->
+                AnalyticsTracker.trackEvent("private_mode_toggle", mapOf("mode" to if (newMode.isPrivate) "private" else "normal"))
                 updateSecureWindowFlags(newMode)
 
                 if (::themeManager.isInitialized) {

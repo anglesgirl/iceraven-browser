@@ -63,6 +63,7 @@ import org.mozilla.fenix.tabstray.redux.state.Page
 import org.mozilla.fenix.tabstray.redux.state.TabsTrayState
 import org.mozilla.fenix.tabstray.redux.store.TabsTrayStore
 import org.mozilla.fenix.tabstray.ui.TabManagementFragmentDirections
+import org.mozilla.fenix.utils.AnalyticsTracker
 import org.mozilla.fenix.utils.Settings
 import java.util.concurrent.TimeUnit
 import kotlin.coroutines.CoroutineContext
@@ -288,6 +289,7 @@ class DefaultTabManagerController(
      * @param isPrivate [Boolean] indicating whether the new tab is private.
      */
     private fun openNewTab(isPrivate: Boolean) {
+        AnalyticsTracker.trackEvent("tab_new", mapOf("private" to isPrivate.toString()))
         val startTime = profiler?.getProfilerTime()
         browsingModeManager.mode = BrowsingMode.fromBoolean(isPrivate)
 
@@ -357,6 +359,7 @@ class DefaultTabManagerController(
             val isLastTab = browserStore.state.getNormalOrPrivateTabs(it.content.private).size == 1
             val isCurrentTab = browserStore.state.selectedTabId.equals(tabId)
             if (!isLastTab || !isCurrentTab) {
+                AnalyticsTracker.trackEvent("tab_close", mapOf("private" to it.content.private.toString()))
                 tabsUseCases.removeTab(tabId)
                 showUndoSnackbarForTab(it.content.private)
             } else {
@@ -579,6 +582,7 @@ class DefaultTabManagerController(
         val selected = tabsTrayStore.state.mode.selectedTabs
         when {
             selected.isEmpty() && tabsTrayStore.state.mode.isSelect().not() -> {
+                AnalyticsTracker.trackEvent("tab_switch", mapOf("private" to tab.private.toString()))
                 TabsTray.openedExistingTab.record(TabsTray.OpenedExistingTabExtra(source ?: "unknown"))
                 tabsUseCases.selectTab(tab.id)
                 val mode = BrowsingMode.fromBoolean(tab.private)
