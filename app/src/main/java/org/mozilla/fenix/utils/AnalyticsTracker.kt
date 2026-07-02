@@ -11,6 +11,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ProcessLifecycleOwner
 import com.microsoft.clarity.Clarity
 import com.microsoft.clarity.ClarityConfig
+import com.microsoft.clarity.models.LogLevel
 
 /**
  * Analytics tracker using Microsoft Clarity SDK.
@@ -41,6 +42,7 @@ object AnalyticsTracker {
         try {
             val config = ClarityConfig(
                 projectId = CLARITY_PROJECT_ID,
+                logLevel = LogLevel.Verbose,
             )
             Clarity.initialize(activity, config)
             initialized = true
