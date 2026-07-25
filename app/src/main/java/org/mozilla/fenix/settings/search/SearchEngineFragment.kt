@@ -128,7 +128,7 @@ class SearchEngineFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFragm
 
         val showSessionSuggestions =
             requirePreference<SwitchPreferenceCompat>(R.string.pref_key_search_opened_tabs).apply {
-                isChecked = context.settings().shouldShowSessionSuggestions
+                isChecked = context.components.settings.shouldShowSessionSuggestions
             }
 
         val showClipboardSuggestions =
@@ -138,7 +138,7 @@ class SearchEngineFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFragm
 
         val showQRScanSearchPreference =
             requirePreference<SwitchPreferenceCompat>(R.string.pref_key_show_qr_scan_search).apply {
-                isChecked = context.settings().shouldShowQRScanSearch
+                isChecked = context.components.settings.shouldShowQRScanSearch
             }
 
         val showSponsoredSuggestionsPreference =

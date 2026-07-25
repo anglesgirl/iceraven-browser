@@ -45,7 +45,6 @@ import org.mozilla.fenix.components.appstate.AppAction.SportsWidgetAction
 import org.mozilla.fenix.components.appstate.sports.SportsWidgetState
 import org.mozilla.fenix.components.components
 import org.mozilla.fenix.compose.list.SwitchListItem
-import org.mozilla.fenix.ext.settings
 import org.mozilla.fenix.home.sports.MatchCard
 import org.mozilla.fenix.home.sports.MatchStatus
 import org.mozilla.fenix.home.sports.SportCardErrorState

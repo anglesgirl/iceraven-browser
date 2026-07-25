@@ -131,17 +131,6 @@ val tablistItemThumbnailBorder: BorderStroke
     )
 
 /**
- * Border drawn around a tab list item's thumbnail.
- */
-val tablistItemThumbnailBorder: BorderStroke
-    @Composable
-    @ReadOnlyComposable
-    get() = BorderStroke(
-        width = AcornLayout.AcornBorder.thin,
-        color = MaterialTheme.colorScheme.surfaceContainerHighest,
-    )
-
-/**
  * Shape information for a tab item displayed in a list.
  *
  * @property borderShape: The [Shape] representing the item's border.

@@ -9,10 +9,6 @@ import android.content.ActivityNotFoundException
 import android.content.Intent
 import androidx.annotation.VisibleForTesting
 import com.google.android.play.core.review.ReviewManager
-import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
 import mozilla.components.support.base.log.logger.Logger
 import org.mozilla.fenix.GleanMetrics.ReviewPrompt
 import org.mozilla.fenix.components.ReviewPromptAttemptResult.Displayed

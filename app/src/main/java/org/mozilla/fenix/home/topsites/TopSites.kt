@@ -75,8 +75,8 @@ import mozilla.components.ui.icons.R as iconsR
  */
 const val TOP_SITES_ITEM_SIZE = 84
 
-private const val TOP_SITES_TO_SHOW = 20
-private const val TOP_SITES_PER_ROW = 4
+internal const val TOP_SITES_TO_SHOW = 20
+internal const val TOP_SITES_PER_ROW = 4
 private const val TOP_SITES_ROW_WIDTH = TOP_SITES_PER_ROW * TOP_SITES_ITEM_SIZE
 internal const val TOP_SITES_FAVICON_CARD_SIZE = 60
 internal const val TOP_SITES_FAVICON_SIZE = 36

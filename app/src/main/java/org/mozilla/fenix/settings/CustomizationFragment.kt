@@ -278,13 +278,13 @@ class CustomizationFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFrag
         addToRadioGroup(topPreference, bottomPreference)
 
         requirePreference<SwitchPreferenceCompat>(R.string.pref_key_strip_url).apply {
-            isChecked = requireContext().settings().shouldStripUrl
+            isChecked = context.components.settings.shouldStripUrl
 
             onPreferenceChangeListener = SharedPreferenceUpdater()
         }
 
         requirePreference<SwitchPreferenceCompat>(R.string.pref_key_suggest_shipped_domains).apply {
-            isChecked = requireContext().settings().shouldSuggestShippedDomains
+            isChecked = context.components.settings.shouldSuggestShippedDomains
             onPreferenceChangeListener = SharedPreferenceUpdater()
         }
     }
@@ -365,26 +365,26 @@ class CustomizationFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFrag
 
     private fun setupAddonsCustomizationCategory() {
         requirePreference<EditTextPreference>(R.string.pref_key_addons_custom_account).apply {
-            text = requireContext().settings().customAddonsAccount
+            text = context.components.settings.customAddonsAccount
             onPreferenceChangeListener = SharedPreferenceUpdater()
         }
 
         requirePreference<EditTextPreference>(R.string.pref_key_addons_custom_collection).apply {
-            text = requireContext().settings().customAddonsCollection
+            text = context.components.settings.customAddonsCollection
             onPreferenceChangeListener = SharedPreferenceUpdater()
         }
     }
 
     private fun setupSystemBehaviorCategory() {
         requirePreference<SwitchPreferenceCompat>(R.string.pref_key_relinquish_memory_under_pressure).apply {
-            isChecked = requireContext().settings().shouldRelinquishMemoryUnderPressure
+            isChecked = context.components.settings.shouldRelinquishMemoryUnderPressure
             onPreferenceChangeListener = SharedPreferenceUpdater()
         }
     }
 
     private fun setupDownloadCustomizationCategory() {
         requirePreference<SwitchPreferenceCompat>(R.string.pref_key_success_download_dialog).apply {
-            isChecked = requireContext().settings().shouldShowSuccessDownloadDialog
+            isChecked = context.components.settings.shouldShowSuccessDownloadDialog
             onPreferenceChangeListener = SharedPreferenceUpdater()
         }
     }
@@ -392,20 +392,20 @@ class CustomizationFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFrag
     private fun setupOtherCustomizationCategory() {
 
         requirePreference<SwitchPreferenceCompat>(R.string.pref_key_show_fullscreen_toast).apply {
-            isChecked = requireContext().settings().shouldShowFullScreenToast
+            isChecked = context.components.settings.shouldShowFullScreenToast
             onPreferenceChangeListener = SharedPreferenceUpdater()
         }
 
 
         requirePreference<SwitchPreferenceCompat>(R.string.pref_key_show_sign_in_button).apply {
-            isChecked = requireContext().settings().shouldShowSignInButton
+            isChecked = context.components.settings.shouldShowSignInButton
             onPreferenceChangeListener = SharedPreferenceUpdater()
         }
     }
 
     private fun setupAppIconCategory() {
         requirePreference<PreferenceCategory>(R.string.pref_key_customization_category_app_icon).apply {
-           isVisible = context.settings().appIconSelection
+           isVisible = context.components.settings.appIconSelection
         }
     }
 

@@ -189,7 +189,7 @@ class HomeSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFragm
         )
 
         requirePreference<EditTextPreference>(R.string.pref_key_custom_homepage_url).apply {
-            text = requireContext().settings().customHomepageUrl
+            text = fenixSettings.customHomepageUrl
             onPreferenceChangeListener = SharedPreferenceUpdater()
         }
         setupOpeningScreenPreferences()

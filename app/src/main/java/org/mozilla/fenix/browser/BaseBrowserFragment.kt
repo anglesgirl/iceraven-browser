@@ -2213,7 +2213,7 @@ abstract class BaseBrowserFragment :
             // Close find in page bar if opened
             findInPageIntegration.onBackPressed()
 
-            if (requireContext().settings().shouldShowFullScreenToast) {
+            if (requireComponents.settings.shouldShowFullScreenToast) {
                 FullScreenNotificationToast(
                     activity = activity,
                     gestureNavString = getString(R.string.exit_fullscreen_with_gesture_short),

@@ -19,7 +19,7 @@ import mozilla.components.concept.sync.Profile
 import mozilla.components.service.fxa.manager.FxaAccountManager
 import org.mozilla.fenix.R
 import org.mozilla.fenix.ext.bitmapForUrl
-import org.mozilla.fenix.ext.settings
+import org.mozilla.fenix.ext.components
 import org.mozilla.fenix.settings.requirePreference
 import mozilla.components.ui.icons.R as iconsR
 
@@ -85,7 +85,7 @@ class AccountUiView(
 
             // Signed-out.
         } else {
-            if (context.settings().shouldShowSignInButton) {
+            if (context.components.settings.shouldShowSignInButton) {
                 preferenceSignIn.isVisible = true
             } else {
                 preferenceSignIn.isVisible = false

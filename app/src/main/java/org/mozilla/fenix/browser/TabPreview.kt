@@ -539,7 +539,7 @@ class TabPreview @JvmOverloads constructor(
             ""
         } else {
             val spannedUrl = url.applyRegistrableDomainSpan(context.components.publicSuffixList)
-            if (context.settings().shouldStripUrl) {
+            if (context.components.settings.shouldStripUrl) {
                 URLStringUtils.toDisplayUrl(spannedUrl)
             } else {
                 spannedUrl

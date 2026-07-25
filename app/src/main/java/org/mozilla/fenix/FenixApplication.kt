@@ -755,8 +755,7 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
             // for the relvant android-components code and
             // https://stuff.mit.edu/afs/sipb/project/android/docs/reference/android/content/ComponentCallbacks2.html
             // for the list of memory pressure levels.
-            val settings = this.settings()
-            if (settings.shouldRelinquishMemoryUnderPressure) {
+            if (components.settings.shouldRelinquishMemoryUnderPressure) {
                 // We will give up our RAM when asked nicely
                 components.core.store.dispatch(SystemAction.LowMemoryAction(level))
             }

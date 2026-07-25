@@ -606,7 +606,7 @@ class Core(
     val autofillStorage: AutofillCreditCardsAddressesStorage get() = lazyAutofillStorage.value
     val domainsAutocompleteProvider: BaseDomainAutocompleteProvider? get() =
         if (FxNimbus.features.suggestShippedDomains.value().enabled &&
-            context.settings().shouldSuggestShippedDomains) {
+            context.components.settings.shouldSuggestShippedDomains) {
             lazyDomainsAutocompleteProvider.value
         } else {
             null

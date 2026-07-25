@@ -949,8 +949,6 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
         )
 
         super.recreate()
-
-        this@HomeActivity.settings().promptToSetAsDefaultBrowserDisplayedInOnboarding = true
     }
 
     /**

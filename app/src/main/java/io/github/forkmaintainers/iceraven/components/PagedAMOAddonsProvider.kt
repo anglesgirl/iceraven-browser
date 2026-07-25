@@ -30,7 +30,7 @@ import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import org.mozilla.fenix.Config
-import org.mozilla.fenix.ext.settings
+import org.mozilla.fenix.ext.components
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
@@ -426,11 +426,11 @@ class PagedAMOAddonsProvider(
         if (collectionName.isNotEmpty()) {
             return collectionName
         }
-        var result = context.settings().customAddonsCollection
-        if (Config.channel.isNightlyOrDebug && context.settings()
+        var result = context.components.settings.customAddonsCollection
+        if (Config.channel.isNightlyOrDebug && context.components.settings
                 .amoCollectionOverrideConfigured()
         ) {
-            result = context.settings().overrideAmoCollection
+            result = context.components.settings.overrideAmoCollection
         }
         logger.info("Determined collection name: $result")
         return result
@@ -444,11 +444,11 @@ class PagedAMOAddonsProvider(
         if (collectionUser.isNotEmpty()) {
             return collectionUser
         }
-        var result = context.settings().customAddonsAccount
-        if (Config.channel.isNightlyOrDebug && context.settings()
+        var result = context.components.settings.customAddonsAccount
+        if (Config.channel.isNightlyOrDebug && context.components.settings
                 .amoCollectionOverrideConfigured()
         ) {
-            result = context.settings().overrideAmoUser
+            result = context.components.settings.overrideAmoUser
         }
         logger.info("Determined collection account: $result")
         return result
