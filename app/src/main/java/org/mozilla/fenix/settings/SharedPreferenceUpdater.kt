@@ -21,11 +21,11 @@ open class SharedPreferenceUpdater : Preference.OnPreferenceChangeListener {
 
     override fun onPreferenceChange(preference: Preference, newValue: Any?): Boolean {
         if (newValue is Boolean) {
-            preference.context.settings().preferences.edit {
+            preference.context.components.settings().preferences.edit {
                 putBoolean(preference.key, newValue)
             }
         } else if (newValue is String) {
-            preference.context.settings().preferences.edit {
+            preference.context.components.settings().preferences.edit {
                 putString(preference.key, newValue)
             }
             logger.info("Set string preference ${preference.key} to $newValue")

@@ -7,7 +7,7 @@ package org.mozilla.fenix.components.metrics
 import android.content.Context
 import android.os.RemoteException
 import mozilla.components.support.base.log.logger.Logger
-import org.mozilla.fenix.ext.settings
+import org.mozilla.fenix.utils.Settings
 import java.util.concurrent.TimeUnit
 
 /**
@@ -18,12 +18,13 @@ import java.util.concurrent.TimeUnit
  */
 class InstallReferrerMetricsService(
     private val context: Context,
+    private val settings: Settings,
 ) : MetricsService {
     private val logger = Logger("InstallReferrerMetricsService")
     override val type = MetricServiceType.Data
 
     override fun start() {
-        if (context.settings().utmParamsKnown) {
+        if (settings.utmParamsKnown) {
             logger.debug("UTM params already known, skipping")
             return
         }

@@ -195,10 +195,12 @@ class DownloadTest {
             verifyDownloadedFileExistsInDownloadsList("smallZip.zip")
             clickDownloadItemMenuIcon("smallZip.zip")
             deleteDownloadedItem("smallZip.zip")
+            confirmDeleteDownloadDialogIfDisplayed()
             clickSnackbarButton(composeTestRule, "Undo")
             verifyDownloadedFileExistsInDownloadsList("smallZip.zip")
             clickDownloadItemMenuIcon("smallZip.zip")
             deleteDownloadedItem("smallZip.zip")
+            confirmDeleteDownloadDialogIfDisplayed()
             verifyEmptyDownloadsList()
         }
     }
@@ -228,7 +230,7 @@ class DownloadTest {
             clickDownloadedItem(secondDownloadedFile)
             openMultiSelectMoreOptionsMenu()
             clickMultiSelectRemoveButton()
-            clickMultiSelectDeleteDialogButton()
+            confirmDeleteDownloadDialogIfDisplayed()
             clickSnackbarButton(composeTestRule, "Undo")
             verifyDownloadedFileExistsInDownloadsList(firstDownloadedFile)
             verifyDownloadedFileExistsInDownloadsList(secondDownloadedFile)
@@ -236,7 +238,7 @@ class DownloadTest {
             clickDownloadedItem(secondDownloadedFile)
             openMultiSelectMoreOptionsMenu()
             clickMultiSelectRemoveButton()
-            clickMultiSelectDeleteDialogButton()
+            confirmDeleteDownloadDialogIfDisplayed()
             verifyEmptyDownloadsList()
         }
     }

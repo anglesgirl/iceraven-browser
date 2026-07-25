@@ -72,7 +72,7 @@
   <!-- Text for the menu button to remove a recently saved bookmark from the user's home screen -->
   <string name="home_bookmarks_menu_item_remove">Fjern</string>
   <!-- About content. %1$s is the name of the app (for example "Firefox"). -->
-  <string name="about_content">%1$s er lavet af Mozilla.</string>
+  <string name="about_content" tools:ignore="BrandUsage">%1$s er lavet af Mozilla.</string>
   <!-- Private Browsing -->
   <string name="private_browsing_common_myths">Udbredte myter om privat browsing</string>
   <!-- Text to be announced by the accessibility service to inform the user that the private browsing mode is currently active. -->
@@ -149,6 +149,8 @@
   <string name="home_screen_shortcut_open_new_private_tab_2">Nyt privat faneblad</string>
   <!-- Shortcut action to open Passwords screen -->
   <string name="home_screen_shortcut_passwords">Adgangskoder</string>
+  <!-- Shortcut action to open uninstall survey -->
+  <string name="home_screen_shortcut_uninstall_survey">Afinstaller, hvorfor?</string>
   <!--
     Recent Tabs
 
@@ -454,62 +456,6 @@
     Content description (not visible, for screen readers etc.): Close button for the home onboarding dialog
   -->
   <string name="onboarding_home_content_description_close_button">Luk</string>
-  <!--
-    Juno first user onboarding flow experiment, strings are marked unused as they are only referenced by Nimbus experiments.
-
-    Description for learning more about our privacy notice.
-  -->
-  <string name="juno_onboarding_privacy_notice_text" tools:ignore="BrandUsage">Privatlivserklæring for Firefox</string>
-  <!-- Title for set firefox as default browser screen used by Nimbus experiments. -->
-  <string name="juno_onboarding_default_browser_title_nimbus_2">Vi elsker at holde dig sikker</string>
-  <!-- Description for set firefox as default browser screen used by Nimbus experiments. -->
-  <string name="juno_onboarding_default_browser_description_nimbus_3">Vores browser er støttet af en nonprofit-organisation og forhindrer virksomheder i at følge dig rundt på nettet i det skjulte.</string>
-  <!-- Text for the button to set firefox as default browser on the device -->
-  <string name="juno_onboarding_default_browser_positive_button" tools:ignore="UnusedResources">Angiv som standard-browser</string>
-  <!-- Text for the button dismiss the screen and move on with the flow -->
-  <string name="juno_onboarding_default_browser_negative_button" tools:ignore="UnusedResources">Ikke nu</string>
-  <!-- Title for sign in to sync screen. -->
-  <string name="juno_onboarding_sign_in_title_2">Krypter dine data, når du skifter mellem enheder</string>
-  <!--
-    Description for sign in to sync screen. Nimbus experiments do not support string placeholders.
-    Note: The word "Firefox" should NOT be translated
-  -->
-  <string name="juno_onboarding_sign_in_description_3" tools:ignore="BrandUsage">Firefox krypterer dine adgangskoder, bogmærker med mere, når du er synkroniseret.</string>
-  <!-- Text for the button to sign in to sync on the device -->
-  <string name="juno_onboarding_sign_in_positive_button" tools:ignore="UnusedResources">Log ind</string>
-  <!-- Text for the button dismiss the screen and move on with the flow -->
-  <string name="juno_onboarding_sign_in_negative_button" tools:ignore="UnusedResources">Ikke nu</string>
-  <!--
-    Title for enable notification permission screen used by Nimbus experiments. Nimbus experiments do not support string placeholders.
-    Note: The word "Firefox" should NOT be translated
-  -->
-  <string name="juno_onboarding_enable_notifications_title_nimbus_2" tools:ignore="BrandUsage">Meddelelser gør dig mere sikker, når du bruger Firefox</string>
-  <!--
-    Description for enable notification permission screen used by Nimbus experiments. Nimbus experiments do not support string placeholders.
-    Note: The word "Firefox" should NOT be translated
-  -->
-  <string name="juno_onboarding_enable_notifications_description_nimbus_2" tools:ignore="BrandUsage">Send sikkert faneblade mellem dine enheder, og opdag andre privatlivsfunktioner i Firefox.</string>
-  <!-- Text for the button to request notification permission on the device -->
-  <string name="juno_onboarding_enable_notifications_positive_button" tools:ignore="UnusedResources">Slå meddelelser til</string>
-  <!-- Text for the button dismiss the screen and move on with the flow -->
-  <string name="juno_onboarding_enable_notifications_negative_button" tools:ignore="UnusedResources">Ikke nu</string>
-  <!--
-    Title for add search widget screen used by Nimbus experiments. Nimbus experiments do not support string placeholders.
-    Note: The word "Firefox" should NOT be translated
-  -->
-  <string name="juno_onboarding_add_search_widget_title" tools:ignore="BrandUsage,UnusedResources">Prøv Firefox\' søge-widget</string>
-  <!--
-    Description for add search widget screen used by Nimbus experiments. Nimbus experiments do not support string placeholders.
-    Note: The word "Firefox" should NOT be translated
-  -->
-  <string name="juno_onboarding_add_search_widget_description" tools:ignore="BrandUsage,UnusedResources">Med Firefox på din startskærm har du nem adgang til browseren, der er fokuseret på at beskytte dit privatliv og blokerer forsøg på at spore dig på tværs af websteder.</string>
-  <!--
-    Text for the button to add search widget on the device used by Nimbus experiments. Nimbus experiments do not support string placeholders.
-    Note: The word "Firefox" should NOT be translated
-  -->
-  <string name="juno_onboarding_add_search_widget_positive_button" tools:ignore="BrandUsage,UnusedResources">Tilføj Firefox-widget</string>
-  <!-- Text for the button to dismiss the screen and move on with the flow -->
-  <string name="juno_onboarding_add_search_widget_negative_button" tools:ignore="UnusedResources">Ikke nu</string>
   <!-- Title for the privacy preferences dialog shown during onboarding. Note: The word "Firefox" should NOT be translated. -->
   <string name="onboarding_preferences_dialog_title" tools:ignore="BrandUsage">Hjælp os med at gøre Firefox bedre</string>
   <!-- Title for the crash reporting option in the privacy preferences dialog shown during onboarding. -->
@@ -529,17 +475,13 @@
   <!-- Button text to reopen firefox after the crash is processed %s is the name of the app (for example "Firefox") -->
   <string name="startup_crash_restart">Genåbn %s</string>
   <!-- Title for the usage data option in the privacy preferences dialog shown during onboarding. Note: The word "Mozilla" should NOT be translated. -->
-  <string name="onboarding_preferences_dialog_usage_data_title">Send tekniske data og data om brug til Mozilla</string>
+  <string name="onboarding_preferences_dialog_usage_data_title" tools:ignore="BrandUsage">Send tekniske data og data om brug til Mozilla</string>
   <string name="onboarding_preferences_dialog_usage_data_description_2" tools:ignore="BrandUsage">Data om din enhed, hardwarekonfiguration og hvordan du bruger Firefox hjælper med at forbedre funktioner, ydeevne og stabilitet for alle.</string>
   <string name="onboarding_preferences_dialog_usage_data_learn_more_2">Læs mere</string>
   <!-- Positive button label for the privacy preferences dialog shown during onboarding. -->
   <string name="onboarding_preferences_dialog_positive_button">Færdig</string>
   <!-- Terms of service onboarding title card label. 'Firefox' intentionally hardcoded here -->
   <string name="onboarding_welcome_to_firefox" tools:ignore="BrandUsage">Velkommen til Firefox</string>
-  <!-- Terms of service sub header label. -->
-  <string name="onboarding_terms_of_service_sub_header_2">Hurtig og sikker browsing</string>
-  <!-- Terms of service onboarding page continue button label. -->
-  <string name="onboarding_term_of_service_agree_and_continue_button_label_2">Fortsæt</string>
   <!-- Line one of the terms of service onboarding page. %1$s is replaced by an active link, using onboarding_term_of_service_line_one_link_text_2 as text (“Firefox Terms of Use”). -->
   <string name="onboarding_term_of_service_line_one_2">Ved at fortsætte accepterer du %1$s.</string>
   <!-- Used as text for the link in onboarding_term_of_service_line_one_2. -->
@@ -607,16 +549,6 @@
   <string name="onboarding_redesign_sync_positive_button" tools:ignore="UnusedResources">Start synkronisering</string>
   <!-- Sync onboarding redesign negative button text. -->
   <string name="onboarding_redesign_sync_negative_button" tools:ignore="UnusedResources">Ikke nu</string>
-  <!-- Marketing onboarding page title. 'Firefox' is intentionally hardcoded. -->
-  <string name="onboarding_marketing_title" tools:ignore="BrandUsage,UnusedResources">Hjælp os med at udvikle Firefox</string>
-  <!-- Marketing onboarding page body. 'Firefox' is intentionally hardcoded. -->
-  <string name="onboarding_marketing_body" tools:ignore="BrandUsage,UnusedResources">Når du deler, hvordan du opdagede Firefox, og at du bruger appen, hjælper du os med at introducere vores browser til flere mennesker.</string>
-  <!-- Marketing onboarding page opt-out checkbox. Unchecking the box does not increase data collection. Our data practices remain the same. 'Mozilla' is intentionally hardcoded. -->
-  <string name="onboarding_marketing_opt_out_checkbox">Del data med Mozillas partnere indenfor markedsføringsteknologi. Disse data vil aldrig blive solgt eller brugt til at vise dig reklamer.</string>
-  <!-- Marketing onboarding page clickable link text to "learn more" on how data is used. -->
-  <string name="onboarding_marketing_learn_more" tools:ignore="UnusedResources">Sådan bruger vi dataene</string>
-  <!-- Marketing onboarding page button label. Button to confirm choice and start browsing. -->
-  <string name="onboarding_marketing_positive_button" tools:ignore="UnusedResources">Bekræft og gå i gang</string>
   <!-- Marketing onboarding page title variant. “One last thing” refers to the final step or action in the onboarding process that we’re asking users to take before they can start using the browser. -->
   <string name="onboarding_marketing_title_1" tools:ignore="UnusedResources">En sidste ting</string>
   <!-- Marketing onboarding page body variant. 'Firefox' is intentionally hardcoded. -->
@@ -696,12 +628,12 @@
   <!-- Marketing onboarding body. 'Firefox' and 'Mozilla' are intentionally hardcoded. -->
   <string name="nova_onboarding_marketing_body_2" tools:ignore="BrandUsage">Del, hvordan du opdagede Firefox, og at du bruger appen med Mozillas partnere indenfor markedsføringsteknologi. Disse data vil aldrig blive solgt.</string>
   <!-- Marketing onboarding body. 'Firefox' and 'Mozilla' are intentionally hardcoded. -->
-  <string name="nova_onboarding_marketing_body_3" tools:ignore="BrandUsage">Du kan hjælpe os med at nå ud til flere mennesker ved at give Mozilla tilladelse til at informere de kanaler, hvor vi promoverer Firefox, om at du er Firefox-bruger.</string>
+  <string name="nova_onboarding_marketing_body_3" tools:ignore="BrandUsage,UnusedResources">Du kan hjælpe os med at nå ud til flere mennesker ved at give Mozilla tilladelse til at informere de kanaler, hvor vi promoverer Firefox, om at du er Firefox-bruger.</string>
   <!--
     Marketing onboarding body. 'Firefox' and 'Mozilla' are intentionally hardcoded.
     “Platform you came from” refers to the external app, website, store, campaign, or other source that directed the user to Firefox.
   -->
-  <string name="nova_onboarding_marketing_body_4" tools:ignore="BrandUsage">Du kan hjælpe os med at nå ud til flere personer ved at give Mozilla tilladelse til at informere den platform, du kom fra, om, at du bruger Firefox.</string>
+  <string name="nova_onboarding_marketing_body_4" tools:ignore="BrandUsage,UnusedResources">Du kan hjælpe os med at nå ud til flere personer ved at give Mozilla tilladelse til at informere den platform, du kom fra, om, at du bruger Firefox.</string>
   <!--
     Marketing onboarding body. 'Firefox' and 'Mozilla' are intentionally hardcoded.
     “Platform you came from” refers to the external app, website, store, campaign, or other source that directed the user to Firefox.
@@ -713,14 +645,33 @@
     %1$s is replaced by an active link, using nova_onboarding_marketing_body_link_text as text (“How we use the data”).
   -->
   <string name="nova_onboarding_marketing_body_6" tools:ignore="BrandUsage,UnusedResources">Hjælp os med at nå ud til flere mennesker ved at give Mozilla tilladelse til at informere den platform, du kom fra, om, at du bruger Firefox. %1$s</string>
+  <!--
+    Marketing onboarding body. 'Firefox' and 'Mozilla' are intentionally hardcoded.
+    “Platform you came from” refers to the external app, website, store, campaign, or other source that directed the user to Firefox.
+    %1$s is replaced by an active link, using nova_onboarding_marketing_body_link_text_1 as text (“Learn More”).
+  -->
+  <string name="nova_onboarding_marketing_body_7" tools:ignore="BrandUsage">Du kan hjælpe os med at nå ud til flere personer ved at give Mozilla tilladelse til at informere den platform, du kom fra, om, at du bruger Firefox. %1$s</string>
+  <!-- Marketing onboarding additional body text. 'Firefox' is intentionally hardcoded. -->
+  <string name="nova_onboarding_marketing_body_line_two" tools:ignore="BrandUsage">Firefox er stolt af at være uafhængig og vi sætter en ære i at forsvare det åbne internet mod teknologimonopoler.</string>
+  <!--
+    Marketing onboarding additional body text. 'Firefox' is intentionally hardcoded.
+    “Allowing” refers to the main button “Allow and Continue”; the ask for the user is to allow communicating back to the platform.
+  -->
+  <string name="nova_onboarding_marketing_body_line_three" tools:ignore="BrandUsage">Overvej at give tilladelse for at hjælpe Firefox med at få succes.</string>
   <!-- Marketing onboarding body link text. -->
   <string name="nova_onboarding_marketing_body_link_text">Sådan bruger vi dataene</string>
+  <!-- Marketing onboarding body link text. -->
+  <string name="nova_onboarding_marketing_body_link_text_1">Læs mere</string>
   <!-- Marketing onboarding primary button text. 'Firefox' is intentionally hardcoded. -->
-  <string name="nova_onboarding_marketing_primary_button_text" tools:ignore="BrandUsage">Hjælp Firefox</string>
+  <string name="nova_onboarding_marketing_primary_button_text" tools:ignore="BrandUsage,UnusedResources">Hjælp Firefox</string>
+  <!-- Marketing onboarding primary button text. -->
+  <string name="nova_onboarding_marketing_primary_button_text_3">Ja</string>
   <!-- Marketing onboarding primary button text. -->
   <string name="nova_onboarding_marketing_primary_button_text_2">Tillad og fortsæt</string>
   <!-- Marketing onboarding secondary button text. -->
-  <string name="nova_onboarding_marketing_secondary_button_text">Nej tak</string>
+  <string name="nova_onboarding_marketing_secondary_button_text" tools:ignore="UnusedResources">Nej tak</string>
+  <!-- Marketing onboarding secondary button text. -->
+  <string name="nova_onboarding_marketing_secondary_button_text_2">Nej</string>
   <!-- Notifications onboarding title. 'Firefox' is intentionally hardcoded. -->
   <string name="nova_onboarding_notifications_title" tools:ignore="BrandUsage,UnusedResources">Meddelelser gør dig mere sikker, når du bruger Firefox</string>
   <!-- Notifications onboarding subtitle. 'Firefox' is intentionally hardcoded. -->
@@ -754,41 +705,6 @@
   <string name="nova_onboarding_app_icon_prompt_body" tools:ignore="UnusedResources">Giv din startskærm et personligt præg.</string>
   <!-- ==== End of Project "Nova" onboarding strings ==== -->
 
-  <!-- Onboarding header for the toolbar selection card, used by Nimbus experiments. -->
-  <string name="onboarding_customize_toolbar_title" tools:ignore="UnusedResources">Vælg placeringen af værktøjslinjen</string>
-  <!-- Onboarding sub header for toolbar selection card, used by Nimbus experiments. -->
-  <string name="onboarding_customize_toolbar_description" tools:ignore="UnusedResources">Hold søgning indenfor rækkevidde.</string>
-  <!-- Onboarding label for 'Save and continue' button, used by Nimbus experiments. -->
-  <string name="onboarding_save_and_continue_button">Gem og fortsæt</string>
-  <!-- Onboarding toolbar selection card label for 'top' option, used by Nimbus experiments. -->
-  <string name="onboarding_customize_toolbar_top_option">Top</string>
-  <!-- Onboarding toolbar selection card label for 'bottom' option, used by Nimbus experiments. -->
-  <string name="onboarding_customize_toolbar_bottom_option">Bund</string>
-  <!-- Onboarding toolbar selection card content description for the main image. -->
-  <string name="onboarding_customize_toolbar_main_image_content_description">Stort overskriftsbillede af valg af værktøjslinjevisning, der viser en illustreret værktøjslinje.</string>
-  <!-- Onboarding toolbar selection card content description for the toolbar placement image. -->
-  <string name="onboarding_customize_toolbar_placement_bottom_content_description">Billede af den nederste værktøjslinje</string>
-  <string name="onboarding_customize_toolbar_placement_top_content_description">Billede af den øverste værktøjslinje</string>
-  <!-- Action label for toolbar options that can be selected. Talkback will append this to say "Double tap to select". -->
-  <string name="onboarding_customize_toolbar_a11y_action_label_select">vælge</string>
-  <!-- Onboarding header for the theme selection card, used by Nimbus experiments. -->
-  <string name="onboarding_customize_theme_title" tools:ignore="UnusedResources">Vælg et tema</string>
-  <!-- Onboarding sub header for theme selection card, used by Nimbus experiments. -->
-  <string name="onboarding_customize_theme_description" tools:ignore="UnusedResources">Se nettet i det bedste lys.</string>
-  <!-- Onboarding label for 'Save and start browsing' button, used by Nimbus experiments. -->
-  <string name="onboarding_save_and_start_button">Gem og gå i gang</string>
-  <!-- Onboarding theme selection card label for 'dark' option, used by Nimbus experiments. -->
-  <string name="onboarding_customize_theme_dark_option">Mørk</string>
-  <!-- Onboarding theme selection card label for 'light' option, used by Nimbus experiments. -->
-  <string name="onboarding_customize_theme_light_option">Lys</string>
-  <!-- Onboarding theme selection card label for 'System auto' option, used by Nimbus experiments. -->
-  <string name="onboarding_customize_theme_system_option">Samme som systemet</string>
-  <!-- Onboarding theme selection card content description for the main image. -->
-  <string name="onboarding_customize_theme_main_image_content_description">Stort overskriftsbillede af valg af temavisning, der viser illustreret kunstner og byggeværktøjer.</string>
-  <!-- Onboarding theme selection card content description for the theme selection image. %1$s is placeholder for either 'system', 'light' or 'dark'. -->
-  <string name="onboarding_customize_theme_content_description">Billede af temaet %1$s</string>
-  <!-- Action label for options that can be selected. Talkback will append this to say "Double tap to select". -->
-  <string name="onboarding_customize_theme_a11y_action_label_select">vælge</string>
   <!--
     Widget Picker
 
@@ -933,7 +849,7 @@
   <!-- Preference for accessibility -->
   <string name="preferences_accessibility">Tilgængelighed</string>
   <!-- Preference to override the Mozilla account server -->
-  <string name="preferences_override_account_server">Selvvalgt Mozilla-kontoserver</string>
+  <string name="preferences_override_account_server" tools:ignore="BrandUsage">Selvvalgt Mozilla-kontoserver</string>
   <!-- Preference to override the Sync token server -->
   <string name="preferences_override_sync_tokenserver">Selvvalgt synkroniseringsserver</string>
   <!-- Preference category for account information -->
@@ -961,7 +877,7 @@
   <!-- Preference description shown in the banner prompting the user to sign in for sync features -->
   <string name="preferences_sign_in_description">Synkroniser faneblade, bogmærker, adgangskoder m.m.</string>
   <!-- Preference shown instead of account display name while account profile information isn't available yet. -->
-  <string name="preferences_account_default_name_2">Mozilla-konto</string>
+  <string name="preferences_account_default_name_2" tools:ignore="BrandUsage">Mozilla-konto</string>
   <!-- Preference text for account title when there was an error syncing FxA -->
   <string name="preferences_account_sync_error">Opret forbindelse igen for at fortsætte synkronisering</string>
   <!-- Preference for language -->
@@ -1009,7 +925,7 @@
   <!-- Summary for preference to show Firefox Suggest search suggestions for web content -->
   <string name="preferences_show_nonsponsored_suggestions_summary">Få forslag fra nettet relateret til din søgning</string>
   <!-- Preference title for switch preference to show search optimization cards -->
-  <string name="preferences_show_search_optimization_cards">Hent forslag fra Mozilla, mens du skriver</string>
+  <string name="preferences_show_search_optimization_cards" tools:ignore="BrandUsage">Hent forslag fra Mozilla, mens du skriver</string>
   <!-- Preference for link sharing -->
   <string name="preferences_link_sharing">Link-deling</string>
   <!-- Title for the link sharing toggle. %1$s is replaced by the brand name (e.g. Firefox). -->
@@ -1121,6 +1037,8 @@
   <string name="customize_toggle_pocket_sponsored">Sponsorerede historier</string>
   <!-- Title for the opening wallpaper settings screen -->
   <string name="customize_wallpapers">Baggrunde</string>
+  <!-- Label for the menu item that opens the wallpaper settings screen. -->
+  <string name="browser_menu_change_wallpaper">Skift baggrund</string>
   <!-- Title for the customize home screen section with sponsored shortcuts. -->
   <string name="customize_toggle_contile">Sponsorerede genveje</string>
   <!-- Title for the customize home screen section that toggles the Homepage sports widget. -->
@@ -1337,7 +1255,7 @@
   <string name="preferences_usage_data_description_1" tools:ignore="BrandUsage">Data om din enhed, din hardware-konfiguration og hvordan du bruger appen hjælper os med at forbedre funktioner, ydelse og stabilitet i Firefox.</string>
   <!-- Preference switch for daily usage ping data collection -->
   <string name="preferences_daily_usage_ping_title">Ping for dagligt brug</string>
-  <string name="preferences_daily_usage_ping_description">Dette hjælper Mozilla med at vurdere antallet af aktive brugere.</string>
+  <string name="preferences_daily_usage_ping_description" tools:ignore="BrandUsage">Dette hjælper Mozilla med at vurdere antallet af aktive brugere.</string>
   <string name="preferences_daily_usage_ping_learn_more">Læs mere om ping for dagligt brug</string>
   <!-- Title for the crash reporting option in the privacy preferences dialog shown during onboarding. -->
   <string name="crash_reporting_snack_bar_message">Rapport sendt</string>
@@ -1363,7 +1281,7 @@
   <!-- Title for studies preferences -->
   <string name="preference_experiments_2">Undersøgelser</string>
   <!-- Summary for studies preferences -->
-  <string name="preference_experiments_summary_2">Tillad at Mozilla installerer og afvikler undersøgelser</string>
+  <string name="preference_experiments_summary_2" tools:ignore="BrandUsage">Tillad at Mozilla installerer og afvikler undersøgelser</string>
   <!--
     Turn On Sync Preferences
 
@@ -2050,6 +1968,14 @@
   <!-- The error message of the URL text field when an invalid URL has been entered. -->
   <string name="webcompat_reporter_url_error_invalid">Indtast en gyldig URL</string>
   <!-- The label/title of a field in the Web Compat Reporter feature for explaining a high-level reason why the site is broken. -->
+  <string name="webcompat_reporter_label_whats_broken_3">Hvad virker ikke?</string>
+  <!-- Content description for the icon button that clears the selected broken site reason in the WebCompat Reporter. -->
+  <string name="webcompat_reporter_clear_reason_content_description">Ryd den valgte årsag</string>
+  <!-- The error message of the description when the user selects "Something else" as the reason, but left the description empty or too short. -->
+  <string name="webcompat_reporter_description_error">Indtast mindst ti tegn</string>
+  <!-- The label/title of a mandatory field in the Web Compat Reporter feature for adding additional information. -->
+  <string name="webcompat_reporter_label_mandatory_description">Beskriv problemet i detaljer for at hjælpe os med at undersøge det</string>
+  <!-- The label/title of a field in the Web Compat Reporter feature for explaining a high-level reason why the site is broken. -->
   <string name="webcompat_reporter_label_whats_broken_2">Hvad virker ikke?</string>
   <!-- The placeholder text for the dropdown where a user selects a high-level reason why the site is broken. -->
   <string name="webcompat_reporter_choose_reason_2">Vælg en årsag</string>
@@ -2063,6 +1989,8 @@
   <string name="webcompat_reporter_add_more_info">Tilføj flere oplysninger</string>
   <!-- The button text for the cancel button to leave the Web Compat Reporter feature. -->
   <string name="webcompat_reporter_cancel">Annuller</string>
+  <!-- The button text for the send button to submit the provided form data. -->
+  <string name="webcompat_reporter_send_report">Send rapport</string>
   <!-- The button text for the send button to submit the provided form data. -->
   <string name="webcompat_reporter_send">Send</string>
   <!-- Text for a snackbar to confirm the successful submission of a WebCompat report. -->
@@ -2083,6 +2011,12 @@
   <string name="webcompat_reporter_preview_bottom_sheet_header">Forhåndsvisning af rapport</string>
   <!-- Label for the “Send” button shown in the WebCompat Report preview panel, which the user taps to submit the report. -->
   <string name="webcompat_reporter_preview_bottom_sheet_send">Send</string>
+  <!-- Title for the Edit URL confirmation dialog in the WebCompatReporter -->
+  <string name="webcompat_reporter_edit_url_dialog_title">Rediger websteds-URL</string>
+  <!-- Text shown on the save button for the Edit URL confirmation dialog in the WebCompatReporter. -->
+  <string name="webcompat_reporter_edit_url_dialog_save">Gem</string>
+  <!-- Text shown on the dismiss button for the Edit URL confirmation dialog in the WebCompatReporter. -->
+  <string name="webcompat_reporter_edit_url_dialog_dismiss">Afvis</string>
   <!--
     These reason strings are dropdown options on a WebCompat reporter form, indicating what is broken on the site.
 
@@ -2102,6 +2036,10 @@
   <!-- Broken site reason text for site asked to turn off ad blocker -->
   <string name="webcompat_reporter_reason_turn_off_adblocker">Websted bad om at slå blokering af reklamer fra</string>
   <!-- Broken site reason text for browser isn’t supported or blocked -->
+  <string name="webcompat_reporter_reason_notsupported_2">Browseren blokeres eller understøttes ikke</string>
+  <!-- Broken site reason text for the site being deceptive -->
+  <string name="webcompat_reporter_reason_site_is_deceptive">Dette websted er vildledende</string>
+  <!-- Broken site reason text for browser isn’t supported or blocked -->
   <string name="webcompat_reporter_reason_notsupported">Browseren blokeres eller understøttes ikke</string>
   <!-- Broken site reason text for something else -->
   <string name="webcompat_reporter_reason_other">Andet</string>
@@ -2112,7 +2050,7 @@
   -->
   <string name="tab_crash_title_2">%1$s kan ikke indlæse siden.</string>
   <!-- Send crash report checkbox text on the tab crash page -->
-  <string name="tab_crash_send_report">Send fejlrapport til Mozilla</string>
+  <string name="tab_crash_send_report" tools:ignore="BrandUsage">Send fejlrapport til Mozilla</string>
   <!-- Close tab button text on the tab crash page -->
   <string name="tab_crash_close">Luk faneblad</string>
   <!-- Restore tab button text on the tab crash page -->
@@ -2521,6 +2459,8 @@
   <string name="preferences_take_survey">Deltag i undersøgelsen</string>
   <!-- Preference for not taking the short survey. -->
   <string name="preferences_not_take_survey">Nej tak</string>
+  <!-- Error message shown in a Toast when the system fails to trigger the device uninstallation prompt. -->
+  <string name="uninstall_survey_error_failed">Systemets afinstallationsprompt kunne ikke åbnes. Brug systemets afinstallationshandling direkte.</string>
   <!--
     Snackbar
 
@@ -2669,7 +2609,11 @@
     Link displayed in enhanced tracking protection panel to access tracking protection settings
   -->
   <string name="etp_settings">Indstillinger for beskyttelse</string>
-  <!-- Preference title for enhanced tracking protection settings -->
+  <!--
+    Enhanced Tracking Protection
+
+    Preference title for enhanced tracking protection settings
+  -->
   <string name="preference_enhanced_tracking_protection">Udvidet beskyttelse mod sporing</string>
   <!-- Preference summary for enhanced tracking protection settings on/off switch -->
   <string name="preference_enhanced_tracking_protection_summary">Nu med Komplet Cookiebeskyttelse, vores hidtil stærkeste barriere mod sporing på tværs af websteder.</string>
@@ -3178,6 +3122,14 @@
   <string name="ip_protection_onboarding_body">%1$s ved at skjule din placering, selv på offentlige wi-fi. Få %2$d GB gratis hver måned.</string>
   <!-- Used as text for a link in ip_protection_onboarding_body. Make sure to adapt capitalization if the link is in the middle of the sentence. -->
   <string name="ip_protection_onboarding_body_link">Brug nettet med ekstra beskyttelse</string>
+  <!--
+    The body of the VPN onboarding card for a promotion that provides unlimited data bandwidth for a certain time.
+    %1$s is a localized date (for example "Jun 9") indicating the end of the promotional period.
+    %2$s is a link using ip_protection_onboarding_body_link_promo (“Learn more”) as text. It links to a support article about VPN on Firefox.
+  -->
+  <string name="ip_protection_onboarding_body_promo">Slå den til for at gøre din browsing mere privat og sværere at spore. Prøv den nu og få ubegrænset båndbredde indtil %1$s. %2$s</string>
+  <!-- Used as text for a link in ip_protection_onboarding_body. Make sure to adapt capitalization if the link is in the middle of the sentence. -->
+  <string name="ip_protection_onboarding_body_link_promo">Læs mere</string>
   <!-- Label for the dismiss button on the onboarding bottom sheet. -->
   <string name="ip_protection_onboarding_not_now_button">Ikke nu</string>
   <!-- Snackbar (in-app pop-up notification) text to signal the browser VPN connection error -->
@@ -3187,6 +3139,8 @@
     %1$d is the total monthly allowance in GB (for example "50").
   -->
   <string name="ip_protection_data_limit_reached_snackbar">%1$d GB \u0020VPN-data brugt. Mængden af tilgængelig data nulstilles næste måned.</string>
+  <!-- Snackbar (in-app pop-up notification) action button text that takes the user to the VPN settings screen. -->
+  <string name="ip_protection_data_limit_reached_snackbar_action">Indstillinger</string>
   <!--
     Autofill
 
@@ -3493,6 +3447,8 @@
   <string name="homepage_shortcuts_add_website">Tilføj websted</string>
   <!-- Title text for the "Enter a Website URL" dialog for adding a shortcut. -->
   <string name="homepage_shortcuts_add_website_title">Indtast en webadresse</string>
+  <!-- Title for the "Popular sites" section in the "Add to homepage" bottom sheet. -->
+  <string name="homepage_shortcuts_popular_sites">Populære websteder</string>
   <!-- Title text displayed in the dialog when shortcuts limit is reached. -->
   <string name="shortcut_max_limit_title">Grænsen for genveje er nået</string>
   <!-- Content description text displayed in the dialog when shortcut limit is reached. -->
@@ -3918,6 +3874,62 @@
   <string name="protection_panel_privacy_and_security_settings_2">Indstillinger for beskyttelse af dit privatliv</string>
   <!-- Title text for the protection panel permissions section. -->
   <string name="protection_panel_permissions_title">Tilladelser</string>
+  <plurals name="trackers_blocked_panel_total_num_trackers_blocked_2">
+    <!--
+      Text for displaying the total number of trackers blocked in the trackers blocked panel.
+      %1$d is a placeholder for the number of trackers blocked.
+    -->
+    <item quantity="one">%1$d forsøg på sporing blokeret på dette websted</item>
+    <item quantity="other">%1$d forsøg på sporing blokeret på dette websted</item>
+  </plurals>
+  <plurals name="trackers_blocked_panel_num_social_media_trackers">
+    <!--
+      Text for displaying in the trackers blocked panel the total number of blocked social media trackers.
+      %1$d is a placeholder for the number of social media trackers blocked.
+    -->
+    <item quantity="one">%1$d sporing via sociale medier</item>
+    <item quantity="other">%1$d sporinger via sociale medier</item>
+  </plurals>
+  <plurals name="trackers_blocked_panel_num_cross_site_cookies">
+    <!--
+      Text for displaying in the trackers blocked panel the total number of blocked cross-site tracking cookies.
+      %1$d is a placeholder for the number of cross-site tracking cookies blocked.
+    -->
+    <item quantity="one">%1$d sporings-cookie på tværs af websteder</item>
+    <item quantity="other">%1$d sporings-cookies på tværs af websteder</item>
+  </plurals>
+  <plurals name="trackers_blocked_panel_num_cryptominers">
+    <!--
+      Text for displaying in the trackers blocked panel the total number of blocked cryptomining scripts.
+      %1$d is a placeholder for the number of cryptominers blocked.
+    -->
+    <item quantity="one">%1$d cryptominer</item>
+    <item quantity="other">%1$d cryptominers</item>
+  </plurals>
+  <plurals name="trackers_blocked_panel_num_fingerprinters">
+    <!--
+      Text for displaying in the trackers blocked panel the total number of blocked fingerprinter scripts.
+      %1$d is a placeholder for the number of fingerprinters blocked.
+    -->
+    <item quantity="one">%1$d fingerprinter</item>
+    <item quantity="other">%1$d fingerprinters</item>
+  </plurals>
+  <plurals name="trackers_blocked_panel_num_trackers_2">
+    <!--
+      Text for displaying in the trackers blocked panel the total number of blocked generic tracking scripts.
+      %1$d is a placeholder for the number of trackers blocked.
+    -->
+    <item quantity="one">%1$d sporings-indhold</item>
+    <item quantity="other">%1$d sporings-indhold</item>
+  </plurals>
+  <plurals name="trackers_blocked_panel_num_trackers_blocked_this_week_2">
+    <!--
+      Text for displaying the number of trackers blocked this week in the trackers blocked panel.
+      %1$d is a placeholder for the number of trackers blocked this week.
+    -->
+    <item quantity="one">%1$d forsøg på sporing blokeret denne uge</item>
+    <item quantity="other">%1$d forsøg på sporing blokeret denne uge</item>
+  </plurals>
   <!--
     Text for displaying the total number of trackers blocked in the trackers blocked panel.
     %d is a placeholder for the number of trackers blocked.
@@ -3949,6 +3961,8 @@
     %s is a placeholder for the name of the certificate authority that issued the certificate.
   -->
   <string name="connection_security_panel_verified_by">Bekræftet af %s</string>
+  <!-- Content description (not visible, for screen readers etc.) for the handle used to drag the protections dashboard to the bottom of the screen and close it. -->
+  <string name="tracker_protections_dashboard_close_handlebar_content_description">Luk oversigt</string>
   <!--
     Text for the connection security panel when the site uses a QWAC.
     %s is a placeholder for the organization for which the certificate was issued.
@@ -4072,6 +4086,26 @@
   <string name="microsurvey_sync_title" tools:ignore="BrandUsage,UnusedResources">Hvor tilfreds er du med synkroniseringsfunktionen i Firefox?</string>
   <!-- Text shown in the survey title for 'describe your experience so far' microsurvey. Note: The word "Firefox" should NOT be translated. -->
   <string name="microsurvey_describe_your_experience_title" tools:ignore="BrandUsage,UnusedResources">Hjælp os med at forbedre Firefox. Hvad beskriver bedst din oplevelse indtil videre?</string>
+  <!--
+    Uninstall Survey
+
+    Title text for the uninstall survey dialog, asking the user for the reason they are removing the app
+  -->
+  <string name="microsurvey_uninstall_survey_title">Din feedback er vigtig. Hvorfor afinstallerer du?</string>
+  <!-- Uninstall survey answer option -->
+  <string name="uninstall_survey_option_1_v2">Den er langsom eller upålidelig</string>
+  <!-- Uninstall survey answer option -->
+  <string name="uninstall_survey_option_2_v2">Websteder virkede ikke korrekt</string>
+  <!-- Uninstall survey answer option -->
+  <string name="uninstall_survey_option_3_v2">Manglende funktioner jeg har brug for</string>
+  <!-- Uninstall survey answer option -->
+  <string name="uninstall_survey_option_4_v2">Videoer, filhentninger eller medier virkede ikke</string>
+  <!-- Uninstall survey answer option -->
+  <string name="uninstall_survey_option_5_v2">Den er svær at bruge eller dårligt designet</string>
+  <!-- Uninstall survey answer option -->
+  <string name="uninstall_survey_option_6_v2">Bekymringer om privatlivet eller sikkerhed</string>
+  <!-- Button label shown at the bottom of the uninstall survey -->
+  <string name="uninstall_survey_button_label">Send feedback og afinstaller</string>
   <!--
     Accessibility
 
@@ -4651,6 +4685,44 @@
   <string name="privacy_notice_updated_homepage_message_privacy_notice" tools:ignore="UnusedResources">privatlivserklæring</string>
   <!-- The second active link used in privacy_notice_updated_homepage_message -->
   <string name="privacy_notice_updated_homepage_message_learn_more" tools:ignore="UnusedResources">Læs mere</string>
+  <!-- Google Lens prototype related strings -->
+  <string name="preferences_debug_settings_google_lens_integration">Aktiver integration af Google Lens</string>
+  <!-- Lens image search button content description -->
+  <string name="lens_search_content_description">Søg med billede</string>
+  <!-- Content description for the gallery picker button in the Lens camera screen -->
+  <string name="content_description_gallery">Vælg fra galleriet for at sende til Google Lens</string>
+  <!-- Content description for the shutter button in the Lens camera screen -->
+  <string name="content_description_take_photo">Tag et billede og send det til Google Lens</string>
+  <!-- Image context menu entry that sends the long-pressed image to Google Lens -->
+  <string name="context_menu_open_image_with_google_lens">Søg med Google Lens</string>
+  <!-- Toast shown when the user denies the camera permission requested by the Lens camera screen -->
+  <string name="lens_camera_permission_denied">Tilladelse nægtet</string>
+  <!--
+    Title shown at the top of the camera screen, next to the close button, telling the
+    user that the photo they capture will be sent to Google Lens for a visual search.
+  -->
+  <string name="lens_camera_title_lens">Google Lens</string>
+  <!--
+    Title shown at the top of the camera screen, next to the close button, telling the
+    user that the camera is being used to scan a QR code.
+  -->
+  <string name="lens_camera_title_qr">QR-kode</string>
+  <!-- Title for the Google Lens Search Settings page feature toggle -->
+  <string name="search_settings_google_lens_title">Aktiver Google Lens-søgning</string>
+  <!-- Description for the Google Lens Search Settings page feature toggle -->
+  <string name="search_settings_google_lens_description">Sender billeder og fotos til Google til visuel søgning.</string>
+  <!-- Caption shown under the Google Lens toggle clarifying when the feature is available -->
+  <string name="preferences_google_lens_availability_caption">Kun tilgængelig, når Google er aktiveret ovenfor og er din aktive søgetjeneste, mens du browser.</string>
+  <!-- Title for the Google Lens AI feature toggle -->
+  <string name="ai_controls_google_lens_title">Google Lens</string>
+  <!-- Description for the Google Lens AI feature toggle -->
+  <string name="ai_controls_google_lens_description">Sender billeder og fotos til Google til visuel søgning.</string>
+  <!-- Content description for the Google Lens half of the camera mode toggle -->
+  <string name="lens_camera_mode_lens">Google Lens</string>
+  <!-- Content description for the QR scanner half of the camera mode toggle -->
+  <string name="lens_camera_mode_qr">QR-skanner</string>
+  <!-- Toast shown when the user picks an image from the gallery in QR mode but no QR code is found in it -->
+  <string name="lens_camera_qr_no_code_found">Ingen QR-kode fundet på billedet</string>
   <!--
     Firefox Labs
 
@@ -4687,6 +4759,8 @@
   <string name="firefox_labs_feature_enable_dialog_message">Genstart %s for at slå denne funktion til.</string>
   <!-- The description text that is displayed in the confirmation dialog on the Firefox Labs screen for toggling "off" experimental features. %s is the name of the app (for example "Firefox Nightly") -->
   <string name="firefox_labs_feature_disable_dialog_message">Genstart %s for at slå denne funktion fra.</string>
+  <!-- Helper text shown beneath a Firefox Labs item when it is blocked from being turned on. -->
+  <string name="firefox_labs_feature_conflict">Funktionen kan ikke prøves.</string>
   <!-- Text displayed on the Firefox Labs screen when there are no Labs experimental features present. -->
   <string name="firefox_labs_no_labs_available_description">Ingen eksperimentelle funktioner at afprøve lige nu</string>
 </resources>

@@ -9,7 +9,9 @@ import android.content.ActivityNotFoundException
 import android.content.Intent
 import androidx.annotation.VisibleForTesting
 import com.google.android.play.core.review.ReviewManager
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import mozilla.components.support.base.log.logger.Logger
 import org.mozilla.fenix.GleanMetrics.ReviewPrompt
@@ -53,28 +55,26 @@ class PlayStoreReviewPromptController(
 /**
  * Result of an attempt to show a Play Store In-App Review Prompt.
  */
-@VisibleForTesting
-enum class ReviewPromptAttemptResult {
+sealed interface ReviewPromptAttemptResult {
     /**
      * Attempted completed without error, but the API didn't allow to display the prompt.
      */
-    NotDisplayed,
+    data object NotDisplayed : ReviewPromptAttemptResult
 
     /**
      * Prompt has been shown.
      */
-    Displayed,
+    data object Displayed : ReviewPromptAttemptResult
 
     /**
      * There was an error, for example this is a device without Play Store.
      */
-    Error,
+    data class Error(val exception: Exception) : ReviewPromptAttemptResult
 
     /**
      * Attempt completed without error, but we weren't able to determine if prompt has been shown or not.
      */
-    Unknown,
-    ;
+    data object Unknown : ReviewPromptAttemptResult
 
     companion object {
         /**
@@ -116,7 +116,7 @@ fun recordReviewPromptEvent(
     val promptWasDisplayed = when (promptAttemptResult) {
         NotDisplayed -> "false"
         Displayed -> "true"
-        Error, Unknown -> "error"
+        is Error, Unknown -> "error"
     }
 
     ReviewPrompt.promptAttempt.record(

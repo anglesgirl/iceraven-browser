@@ -29,12 +29,11 @@ import org.mozilla.fenix.theme.Theme
 fun SettingsSectionHeader(
     text: String,
     modifier: Modifier = Modifier,
-    color: Color = MaterialTheme.colorScheme.onSurfaceVariant,
 ) {
     Text(
         text = text,
         style = FirefoxTheme.typography.headline8,
-        color = color,
+        color = MaterialTheme.colorScheme.onSurface,
         modifier = modifier.semantics { heading() },
     )
 }

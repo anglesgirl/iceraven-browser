@@ -209,7 +209,6 @@ class SportsControllerTest {
         controller.handleRefreshClicked(LiveMatchRefreshSource.LIVE_MATCH_HEADER)
 
         verify {
-            settings.sportsSelectedCountries = countryCodes
             appStore.dispatch(
                 AppAction.SportsWidgetAction.FetchFailed(SportCardErrorState.ConnectionInterrupted),
             )
