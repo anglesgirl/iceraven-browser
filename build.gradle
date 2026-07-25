@@ -30,6 +30,10 @@ plugins {
     alias(libs.plugins.ksp)
 }
 
+subprojects {
+    apply plugin: 'com.jetbrains.python.envs'
+}
+
 mozilla {
     ktlintSourcePaths = ["app/src/**/*.kt", "!**/build/**/*.kt"]
 }
