@@ -33,7 +33,9 @@ class PlayStoreReviewPromptController(
     /**
      * Launch the in-app review flow, unless we've hit the quota.
      */
-    suspend fun tryPromptReview(activity: Activity, onNotDisplayed: () -> Unit = {}, onError: () -> Unit = {},) {}
+    suspend fun tryPromptReview(activity: Activity): ReviewPromptAttemptResult {
+        return ReviewPromptAttemptResult.from("isNoOp=true")
+    }
 
     /**
      * Try to launch the play store review flow.
