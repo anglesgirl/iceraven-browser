@@ -14,6 +14,8 @@ done
 sed -i "s#gleanPythonEnvDir#// gleanPythonEnvDir#g" android-components/**/*.gradle
 sed -i "s#\.\./\.\./\.\./\.\./\.\./gradle/libs.versions.toml#../../../gradle/libs.versions.toml#g" android-components/**/*.gradle
 sed -i "s#\.\./\.\./\.\./\.\./\.\./gradle/libs.versions.toml#../../../gradle/libs.versions.toml#g" android-components/**/*.kts
+
+sed -i "s#, version.ref = \"python-envs-plugin\"##g" gradle/libs.versions.toml
 sed -i "\#plugins {#a\    alias(libs.plugins.python.envs.plugin)" android-components/components/lib/integrity-googleplay/build.gradle
 
 sed -i 's#mobile/android/version.txt#version.txt#g' android-components/plugins/config/src/main/java/ConfigPlugin.kt
