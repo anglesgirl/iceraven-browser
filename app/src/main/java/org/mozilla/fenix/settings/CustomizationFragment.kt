@@ -118,7 +118,6 @@ class CustomizationFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFrag
         setupAddonsCustomizationCategory()
         setupSystemBehaviorCategory()
         setupOtherCustomizationCategory()
-        setupAppIconCategory()
     }
 
     private fun updateToolbarCategoryBasedOnTabStrip(
@@ -400,12 +399,6 @@ class CustomizationFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFrag
         requirePreference<SwitchPreferenceCompat>(R.string.pref_key_show_sign_in_button).apply {
             isChecked = context.components.settings.shouldShowSignInButton
             onPreferenceChangeListener = SharedPreferenceUpdater()
-        }
-    }
-
-    private fun setupAppIconCategory() {
-        requirePreference<PreferenceCategory>(R.string.pref_key_customization_category_app_icon).apply {
-           isVisible = context.components.settings.appIconSelection
         }
     }
 
