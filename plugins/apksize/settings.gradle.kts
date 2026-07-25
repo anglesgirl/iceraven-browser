@@ -8,7 +8,7 @@ pluginManagement {
         gradle.extra["mozconfig"] = gradle.parent!!.extra["mozconfig"]
         gradle.extra["configureMavenRepositories"] = gradle.parent!!.extra["configureMavenRepositories"]
     } else {
-        apply(from = file("../../../gradle/mozconfig.gradle"))
+        apply(from = file("../../gradle/mozconfig.gradle"))
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -30,7 +30,7 @@ dependencyResolutionManagement {
     }
     versionCatalogs {
         create("libs") {
-            from(files("../../../../../gradle/libs.versions.toml"))
+            from(files("../../gradle/libs.versions.toml"))
         }
     }
 }

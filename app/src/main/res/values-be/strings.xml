@@ -1372,18 +1372,6 @@
   <!-- Tab group color: Grey -->
   <string name="tab_group_color_grey">Шэры</string>
   <!--
-    Color labels for tab groups, used for accessibility and selection UI.
-
-    Tab group color: Yellow
-  -->
-  <string name="tab_group_color_yellow">Жоўты</string>
-  <!-- Tab group color: Orange -->
-  <string name="tab_group_color_orange">Аранжавы</string>
-  <!-- Tab group color: Red -->
-  <string name="tab_group_color_red">Чырвоны</string>
-  <!-- Tab group color: Pink -->
-  <string name="tab_group_color_pink">Ружовы</string>
-  <!--
     History
 
     Text for the button to search all history

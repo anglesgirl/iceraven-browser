@@ -3882,3 +3882,885 @@
     <item quantity="one">%1$d воситаи пайгирӣ дар ин сомона манъ карда шудааст</item>
     <item quantity="other">%1$d воситаи пайгирӣ дар ин сомона манъ карда шудаанд</item>
   </plurals>
+  <plurals name="trackers_blocked_panel_num_social_media_trackers">
+    <!--
+      Text for displaying in the trackers blocked panel the total number of blocked social media trackers.
+      %1$d is a placeholder for the number of social media trackers blocked.
+    -->
+    <item quantity="one">%1$d воситаи пайгирии шабакаҳои иҷтимоӣ</item>
+    <item quantity="other">%1$d воситаи пайгирии шабакаҳои иҷтимоӣ</item>
+  </plurals>
+  <plurals name="trackers_blocked_panel_num_cross_site_cookies">
+    <!--
+      Text for displaying in the trackers blocked panel the total number of blocked cross-site tracking cookies.
+      %1$d is a placeholder for the number of cross-site tracking cookies blocked.
+    -->
+    <item quantity="one">%1$d кукии васоити пайгирии байнисомонавӣ</item>
+    <item quantity="other">%1$d кукии васоити пайгирии байнисомонавӣ</item>
+  </plurals>
+  <plurals name="trackers_blocked_panel_num_cryptominers">
+    <!--
+      Text for displaying in the trackers blocked panel the total number of blocked cryptomining scripts.
+      %1$d is a placeholder for the number of cryptominers blocked.
+    -->
+    <item quantity="one">%1$d криптомайнер</item>
+    <item quantity="other">%1$d криптомайнер</item>
+  </plurals>
+  <plurals name="trackers_blocked_panel_num_fingerprinters">
+    <!--
+      Text for displaying in the trackers blocked panel the total number of blocked fingerprinter scripts.
+      %1$d is a placeholder for the number of fingerprinters blocked.
+    -->
+    <item quantity="one">%1$d хонандаи нақши ангуштон</item>
+    <item quantity="other">%1$d хонандаи нақши ангуштон</item>
+  </plurals>
+  <plurals name="trackers_blocked_panel_num_trackers_2">
+    <!--
+      Text for displaying in the trackers blocked panel the total number of blocked generic tracking scripts.
+      %1$d is a placeholder for the number of trackers blocked.
+    -->
+    <item quantity="one">%1$d муҳтавои пайгирикунанда</item>
+    <item quantity="other">%1$d муҳтавои пайгирикунанда</item>
+  </plurals>
+  <plurals name="trackers_blocked_panel_num_trackers_blocked_this_week_2">
+    <!--
+      Text for displaying the number of trackers blocked this week in the trackers blocked panel.
+      %1$d is a placeholder for the number of trackers blocked this week.
+    -->
+    <item quantity="one">%1$d воситаи пайгирии манъшуда дар ин ҳафта</item>
+    <item quantity="other">%1$d воситаи пайгирии манъшуда дар ин ҳафта</item>
+  </plurals>
+  <!--
+    Text for displaying the total number of trackers blocked in the trackers blocked panel.
+    %d is a placeholder for the number of trackers blocked.
+  -->
+  <string name="trackers_blocked_panel_total_num_trackers_blocked">Васоити пайгирии манъшуда: %d</string>
+  <!--
+    Text for displaying the number of trackers blocked for a specific tracker category in the trackers blocked panel.
+    %s is a placeholder for the name of the tracker category.
+    %d is a placeholder for the number of trackers blocked.
+  -->
+  <string name="trackers_blocked_panel_categorical_num_trackers_blocked">%s: %d</string>
+  <!--
+    Description text for a dialog confirming whether the user wants to delete all data for current site.
+    %s is a placeholder for the base domain of website.
+  -->
+  <string name="clear_site_data_dialog_description"><![CDATA[Агар шумо барои сомонаи асосии <b>%s</b> кукиҳо ва маълумоти сомонаро тоза кунед, ин амал метавонад шуморо аз низомҳои сомонаҳои алоқаманд берун барорад ва сабадҳои харидории шуморо тоза намояд.]]></string>
+  <!-- Button text on the clear site data dialog to allow users to confirm they wish to clear the site data. -->
+  <string name="clear_site_data_dialog_positive_button_text">Пок кардан</string>
+  <!-- Button text on the clear site data dialog to allow users to cancel the action and not clear the site data. -->
+  <string name="clear_site_data_dialog_negative_button_text">Бекор кардан</string>
+  <!-- Text for the connection security panel when the site is secure. -->
+  <string name="connection_security_panel_secure">Пайвасти боэътимод</string>
+  <!-- Text for the connection security panel when the site is not secure. -->
+  <string name="connection_security_panel_not_secure">Пайвастшавӣ бехатар нест</string>
+  <!-- Text for the connection security panel when accessed from local PDF. -->
+  <string name="connection_security_panel_local_pdf">Ин саҳифа дар дастгоҳи шумо нигоҳ дошта мешавад</string>
+  <!--
+    Text for the connection security panel to indicate who the certificate was verified by.
+    %s is a placeholder for the name of the certificate authority that issued the certificate.
+  -->
+  <string name="connection_security_panel_verified_by">Аз ҷониби «%s» тасдиқ карда шудааст</string>
+  <!-- Content description (not visible, for screen readers etc.) for the handle used to drag the protections dashboard to the bottom of the screen and close it. -->
+  <string name="tracker_protections_dashboard_close_handlebar_content_description">Пӯшидани лавҳаи иттилоотӣ</string>
+  <!--
+    Text for the connection security panel when the site uses a QWAC.
+    %s is a placeholder for the organization for which the certificate was issued.
+  -->
+  <string name="connection_security_panel_issued_to">Ба «%s» дода шудааст</string>
+  <!-- Text for the connection security panel when the site uses a QWAC. -->
+  <string name="connection_security_panel_qualified_certificate">Мувофиқи талабот ва меъёрҳои Низомномаи (ИА) 2024/1183 тахассус дорад.</string>
+  <!--
+    Debug drawer
+
+    The user-facing title of the Debug Drawer feature.
+  -->
+  <string name="debug_drawer_title">Абзорҳои ислоҳи хатоҳо</string>
+  <!-- Content description (not visible, for screen readers etc.): Navigate back within the debug drawer. -->
+  <string name="debug_drawer_back_button_content_description">Ба қафо гузаштан</string>
+  <!-- Content description (not visible, for screen readers etc.): Open debug drawer. -->
+  <string name="debug_drawer_fab_content_description">Кушодани менюи таҳиякунандаи ислоҳи хатоҳо</string>
+  <!--
+    Debug drawer tabs tools
+
+    The title of the Tab Tools feature in the Debug Drawer.
+  -->
+  <string name="debug_drawer_tab_tools_title">Абзорҳои варақаҳо</string>
+  <!-- The title of the tab count section in Tab Tools. -->
+  <string name="debug_drawer_tab_tools_tab_count_title">Шумораи варақаҳо</string>
+  <!-- The active tab count category in the tab count section in Tab Tools. -->
+  <string name="debug_drawer_tab_tools_tab_count_active">Фаъол</string>
+  <!-- The inactive tab count category in the tab count section in Tab Tools. -->
+  <string name="debug_drawer_tab_tools_tab_count_inactive">Ғайрифаъол</string>
+  <!-- The private tab count category in the tab count section in Tab Tools. -->
+  <string name="debug_drawer_tab_tools_tab_count_private">Хусусӣ</string>
+  <!-- The total tab count category in the tab count section in Tab Tools. -->
+  <string name="debug_drawer_tab_tools_tab_count_total">Ҳамагӣ</string>
+  <!-- The title of the tab creation tool section in Tab Tools. -->
+  <string name="debug_drawer_tab_tools_tab_creation_tool_title">Абзори эҷоди варақаҳо</string>
+  <!-- The label of the text field in the tab creation tool. -->
+  <string name="debug_drawer_tab_tools_tab_creation_tool_text_field_label">Шумораи варақаҳое, ки эҷод карда мешаванд</string>
+  <!-- The error message of the text field in the tab creation tool when the text field is empty -->
+  <string name="debug_drawer_tab_tools_tab_quantity_empty_error">Майдони матн холӣ аст</string>
+  <!-- The error message of the text field in the tab creation tool when the text field has characters other than digits -->
+  <string name="debug_drawer_tab_tools_tab_quantity_non_digits_error">Лутфан, танҳо ададҳои бутуни мусбатро ворид кунед</string>
+  <!-- The error message of the text field in the tab creation tool when the text field is a zero -->
+  <string name="debug_drawer_tab_tools_tab_quantity_non_zero_error">Лутфан, рақамеро зиёда аз сифр ворид намоед</string>
+  <!--
+    The error message of the text field in the tab creation tool when the text field is a
+    quantity greater than the max tabs. %1$s is the maximum number of tabs
+    that can be generated in one operation.
+  -->
+  <string name="debug_drawer_tab_tools_tab_quantity_exceed_max_error">Шумораи ҳадди аксари варақаҳое (%1$s), ки дар як амалиёт эҷод карда мешаванд, зиёд шуд</string>
+  <!-- The button text to add tabs to the active tab group in the tab creation tool. -->
+  <string name="debug_drawer_tab_tools_tab_creation_tool_button_text_active">Илова кардан ба варақаҳои фаъол</string>
+  <!-- The button text to add tabs to the inactive tab group in the tab creation tool. -->
+  <string name="debug_drawer_tab_tools_tab_creation_tool_button_text_inactive">Илова кардан ба варақаҳои ғайрифаъол</string>
+  <!-- The button text to add tabs to the private tab group in the tab creation tool. -->
+  <string name="debug_drawer_tab_tools_tab_creation_tool_button_text_private">Илова кардан ба варақаҳои хусусӣ</string>
+  <!--
+    Microsurvey
+    Note: Some strings are marked as unused as they are referenced via the Nimbus experimentation
+    platform and have no persistent reference in code
+
+    Prompt view
+
+    The microsurvey prompt title. Note: The word "Firefox" should NOT be translated
+  -->
+  <string name="micro_survey_prompt_title" tools:ignore="BrandUsage,UnusedResources">Ба мо барои беҳтар кардани браузери «Firefox» кумак расонед. Ин танҳо як дақиқа мегирад.</string>
+  <!-- The continue button label -->
+  <string name="micro_survey_continue_button_label" tools:ignore="UnusedResources">Идома додан</string>
+  <!--
+    Survey view
+
+    The survey header
+  -->
+  <string name="micro_survey_survey_header_2">Лутфан, саволномаро пур намоед</string>
+  <!-- The privacy notice link -->
+  <string name="micro_survey_privacy_notice_2">Огоҳномаи махфият</string>
+  <!-- The submit button label text -->
+  <string name="micro_survey_submit_button_label">Пешниҳод кардан</string>
+  <!-- The survey completion header -->
+  <string name="micro_survey_survey_header_confirmation" tools:ignore="UnusedResources">Саволнома ба поён расид</string>
+  <!-- The survey completion confirmation text -->
+  <string name="micro_survey_feedback_confirmation">Ташаккур барои изҳори назари шумо!</string>
+  <!-- Option for likert scale -->
+  <string name="likert_scale_option_1" tools:ignore="UnusedResources">Хеле қаноатманд</string>
+  <!-- Option for likert scale -->
+  <string name="likert_scale_option_2" tools:ignore="UnusedResources">Қаноатманд</string>
+  <!-- Option for likert scale -->
+  <string name="likert_scale_option_3" tools:ignore="UnusedResources">Бетараф</string>
+  <!-- Option for likert scale -->
+  <string name="likert_scale_option_4" tools:ignore="UnusedResources">Дарғазаб</string>
+  <!-- Option for likert scale -->
+  <string name="likert_scale_option_5" tools:ignore="UnusedResources">Хеле дарғазаб</string>
+  <!-- Option for likert scale -->
+  <string name="likert_scale_option_6" tools:ignore="UnusedResources">Ман онро истифода намебарам</string>
+  <!-- Option for likert scale. Note: The word "Firefox" should NOT be translated. -->
+  <string name="likert_scale_option_7" tools:ignore="BrandUsage,UnusedResources">Ман дар «Firefox» аз имкони ҷустуҷӯ истифода намебарам</string>
+  <!-- Option for likert scale -->
+  <string name="likert_scale_option_8" tools:ignore="UnusedResources">Ман ҳамоҳангсозиро истифода намебарам</string>
+  <!-- Option for likert scale -->
+  <string name="likert_scale_option_slow_or_buggy" tools:ignore="UnusedResources">Суст ё дорои хато мебошад</string>
+  <!-- Option for likert scale -->
+  <string name="likert_scale_option_features_hard_to_find_or_missing" tools:ignore="UnusedResources">Хусусиятҳое, ки душворёб ё нопайдо мебошанд</string>
+  <!-- Option for likert scale -->
+  <string name="likert_scale_option_confusing_or_hard_to_use" tools:ignore="UnusedResources">Барои истифода душворфаҳм ё мушкил аст</string>
+  <!-- Option for likert scale -->
+  <string name="likert_scale_option_its_okay" tools:ignore="UnusedResources">Хуб аст, аммо нисбат ба браузерҳои дигар беҳтар нест</string>
+  <!-- Option for likert scale. Note: The word "Firefox" should NOT be translated. -->
+  <string name="likert_scale_option_i_plan_to_keep_using" tools:ignore="BrandUsage,UnusedResources">Ман истифодаи браузери «Firefox»-ро ба нақша гирифтам</string>
+  <!-- Text shown in prompt for printing microsurvey. "sec" It's an abbreviation for "second". Note: The word "Firefox" should NOT be translated. -->
+  <string name="microsurvey_prompt_printing_title" tools:ignore="BrandUsage,UnusedResources">Ба беҳтар кардани чоп дар «Firefox» кумак кунед. Ин танҳо як сония мегирад</string>
+  <!-- Text shown in prompt for search microsurvey. Note: The word "Firefox" should NOT be translated. -->
+  <string name="microsurvey_prompt_search_title" tools:ignore="BrandUsage,UnusedResources">Ба мо барои беҳтар кардани имкони ҷустуҷӯ дар «Firefox» кумак расонед. Ин танҳо як дақиқа мегирад</string>
+  <!-- Text shown in prompt for sync microsurvey. Note: The word "Firefox" should NOT be translated. -->
+  <string name="microsurvey_prompt_sync_title" tools:ignore="BrandUsage,UnusedResources">Ба мо барои беҳтар кардани имкони ҳамоҳангсозӣ дар «Firefox» кумак расонед. Ин танҳо як дақиқа мегирад</string>
+  <!-- Text shown in the survey title for printing microsurvey. Note: The word "Firefox" should NOT be translated. -->
+  <string name="microsurvey_survey_printing_title" tools:ignore="BrandUsage,UnusedResources">Шумо аз вазифаи чоп дар «Firefox» то чӣ андоза қаноатмандед?</string>
+  <!-- Text shown in the survey title for homepage microsurvey. Note: The word "Firefox" should NOT be translated. -->
+  <string name="microsurvey_homepage_title" tools:ignore="BrandUsage,UnusedResources">Шумо аз саҳифаи асосии браузери «Firefox» то чӣ андоза қаноатмандед?</string>
+  <!-- Text shown in the survey title for search experience microsurvey. Note: The word "Firefox" should NOT be translated. -->
+  <string name="microsurvey_search_title" tools:ignore="BrandUsage,UnusedResources">Шумо аз таҷрибаи ҷустуҷӯ дар «Firefox» то чӣ андоза қаноатмандед?</string>
+  <!-- Text shown in the survey title for sync experience microsurvey. Note: The word "Firefox" should NOT be translated. -->
+  <string name="microsurvey_sync_title" tools:ignore="BrandUsage,UnusedResources">Шумо аз таҷрибаи ҳамоҳангсозӣ дар «Firefox» то чӣ андоза қаноатмандед?</string>
+  <!-- Text shown in the survey title for 'describe your experience so far' microsurvey. Note: The word "Firefox" should NOT be translated. -->
+  <string name="microsurvey_describe_your_experience_title" tools:ignore="BrandUsage,UnusedResources">Ба мо барои беҳтар кардани браузери «Firefox» кумак расонед. Кадом банд таҷрибаи беҳтарини шуморо тавсиф мекунад?</string>
+  <!--
+    Uninstall Survey
+
+    Title text for the uninstall survey dialog, asking the user for the reason they are removing the app
+  -->
+  <string name="microsurvey_uninstall_survey_title">Изҳори назари шумо муҳим аст. Сабаби лағв кардани насби барнома дар чӣ аст?</string>
+  <!-- Uninstall survey answer option -->
+  <string name="uninstall_survey_option_1_v2">Суст ё беэътимод мебошад</string>
+  <!-- Uninstall survey answer option -->
+  <string name="uninstall_survey_option_2_v2">Сомонаҳо дуруст кор накарданд</string>
+  <!-- Uninstall survey answer option -->
+  <string name="uninstall_survey_option_3_v2">Хусусиятҳои зарурӣ вуҷуд надоранд</string>
+  <!-- Uninstall survey answer option -->
+  <string name="uninstall_survey_option_4_v2">Видеоҳо, боргириҳо ё расона кор накарданд</string>
+  <!-- Uninstall survey answer option -->
+  <string name="uninstall_survey_option_5_v2">Истифодаи он душвор аст ё тарҳи нодуруст дорад</string>
+  <!-- Uninstall survey answer option -->
+  <string name="uninstall_survey_option_6_v2">Мушкилӣ дар масъалаҳои махфият ё амният</string>
+  <!-- Button label shown at the bottom of the uninstall survey -->
+  <string name="uninstall_survey_button_label">Ирсоли изҳори назар ва лағв кардани насб</string>
+  <!--
+    Accessibility
+
+    Content description for the survey application icon. Note: The word "Firefox" should NOT be translated.
+  -->
+  <string name="microsurvey_app_icon_content_description" tools:ignore="BrandUsage">Ангораи браузери «Firefox»</string>
+  <!-- Content description for the survey feature icon. -->
+  <string name="microsurvey_feature_icon_content_description">Нишонаи хусусияти саволнома</string>
+  <!-- Content description (not visible, for screen readers etc.) for closing microsurvey bottom sheet. -->
+  <string name="microsurvey_close_handle_content_description">Пӯшидани саволнома</string>
+  <!-- Content description for "X" button that is closing microsurvey. -->
+  <string name="microsurvey_close_button_content_description">Пӯшидан</string>
+  <!-- The title of the autofill tab in the Debug Drawer. -->
+  <string name="debug_drawer_autofill_title">Абзорҳои пуркунии худкор</string>
+  <!--
+    Debug drawer logins
+
+    The title of the Logins feature in the Debug Drawer.
+  -->
+  <string name="debug_drawer_logins_title">Воридшавиҳо</string>
+  <!-- The title of the logins section in the Logins feature. %s is the site domain. -->
+  <string name="debug_drawer_logins_current_domain_label">Домени ҷорӣ: %s</string>
+  <!-- The label for a button to add a new fake login for the current domain in the Logins feature. -->
+  <string name="debug_drawer_logins_add_login_button">Илова кардани воридшавии қалбакӣ барои ин домен</string>
+  <!-- Content description for delete button. %s is the username of the login. -->
+  <string name="debug_drawer_logins_delete_login_button_content_description">Нест кардани воридшавӣ бо номи корбари «%s»</string>
+  <!--
+    Debug drawer addresses
+
+    The title of the Addresses feature in the Debug Drawer.
+  -->
+  <string name="debug_drawer_addresses_title">Нишониҳо</string>
+  <!-- The title of the section header for the list of debug locales that can be enabled and disabled. -->
+  <string name="debug_drawer_addresses_debug_locales_header">Забонҳои ислоҳи хатоҳо барои фаъолсозӣ</string>
+  <!-- The title of the header for the section for managing addresses. -->
+  <string name="debug_drawer_addresses_management_header">Идоракунии нишониҳо</string>
+  <!-- The title of the button in the debug drawer for adding a new address. -->
+  <string name="debug_drawer_add_new_address">Илова кардани нишонии нав барои забони интихобшуда</string>
+  <!-- The title of the button for deleting in the debug drawer all addresses. -->
+  <string name="debug_drawer_delete_all_addresses">Нест кардани ҳамаи нишониҳо</string>
+  <!--
+    Debug drawer credit cards
+
+    The title of the credit cards feature in the Debug Drawer.
+  -->
+  <string name="debug_drawer_credit_cards_title">Кортҳои кредитӣ</string>
+  <!-- The title of the button in the debug drawer for adding a new credit card -->
+  <string name="debug_drawer_add_new_credit_card">Илова кардани корти кредитии нав</string>
+  <!-- The title of the button for deleting in the debug drawer all addresses. -->
+  <string name="debug_drawer_delete_all_credit_cards">Нест кардани ҳамаи кортҳои кредитӣ</string>
+  <!--
+    Debug drawer "contextual feature recommendation" (CFR) tools
+
+    The title of the CFR Tools feature in the Debug Drawer
+  -->
+  <string name="debug_drawer_cfr_tools_title">Абзорҳои «CFR»</string>
+  <!-- The title of the reset CFR section in CFR Tools -->
+  <string name="debug_drawer_cfr_tools_reset_cfr_title">Аз нав танзим кардани «CFR»</string>
+  <!--
+    Glean debug tools
+
+    The title of the glean debugging feature
+  -->
+  <string name="glean_debug_tools_title">Абзорҳои ислоҳи хатоҳои «Glean»</string>
+  <!--
+    Debug drawer region tools
+
+    Title of the Region tools in the Debug Drawer.
+    This tool allows temporarily overriding the home region (user's default locale)
+    and the current region (device's detected location) for testing purposes.
+  -->
+  <string name="debug_drawer_region_tools_title">Абзорҳои минтақавӣ</string>
+  <!-- The description of the Region tools in the Debug Drawer -->
+  <string name="debug_drawer_regin_tools_description">Барои гузаронидани санҷишҳо, ин имкон қиматҳои минтақаи хонагӣ ва ҷориро иваз мекунад.</string>
+  <!-- The text label for displaying home region. -->
+  <string name="debug_drawer_home_region_label">Минтақаи хонагӣ</string>
+  <!-- The text label for displaying current region. -->
+  <string name="debug_drawer_current_region_label">Минтақаи ҷорӣ</string>
+  <!-- The text field label for overriding home region. -->
+  <string name="debug_drawer_override_home_region_label">Иваз кардани минтақаи хонагӣ</string>
+  <!-- The text field label for overriding current region. -->
+  <string name="debug_drawer_override_current_region_label">Иваз кардани минтақаи ҷорӣ</string>
+  <!-- The title of the button for overriding home and current region. -->
+  <string name="debug_drawer_override_region">Иваз кардани минтақаи хонагӣ ва ҷорӣ</string>
+  <!-- The title of the button for overriding home region permanently. -->
+  <string name="debug_drawer_override_home_region_permanently">Ба таври доимӣ иваз кардани минтақаи хонагӣ</string>
+  <!--
+    Add-ons debug tools
+
+    The description of the Add-ons Tools in the Debug Drawer
+  -->
+  <string name="debug_drawer_addons_tools_title">Абзорҳои ҷузъҳои иловагӣ</string>
+  <!-- The title of the button used to check for add-on updates. -->
+  <string name="addons_debug_tools_check_for_updates_button">Санҷиши навсозиҳо</string>
+  <!--
+    Messages explaining how to exit fullscreen mode
+
+    Message shown to explain how to exit fullscreen mode when gesture navigation is enabled.
+
+    Localisation note: this text should be as short as possible, max 68 chars
+  -->
+  <string name="exit_fullscreen_with_gesture_short">Аз боло кашед ва барои баромад ишораи бозгаштро истифода баред</string>
+  <!--
+    Message shown to explain how to exit fullscreen mode when using back button navigation.
+
+    Localisation note: this text should be as short as possible, max 68 chars
+  -->
+  <string name="exit_fullscreen_with_back_button_short">Аз боло кашед ва барои баромад тугмаи «Бозгашт»-ро пахш намоед</string>
+  <!--
+    Beta Label Component !
+
+    Text shown as a label or tag to indicate a feature or area is still undergoing active development. Note that here "Beta" should not be translated, as it is used as an icon styled element.
+  -->
+  <string name="beta_feature">BETA</string>
+  <!--
+    Root certificate expiration warnings
+
+    These strings for homepage cards and push notifications to be pushed to users running outdated versions of Firefox. We want to encourage these users to update to the latest version so their extensions and other features don't stop working when Firefox's old root certificate expires on 2025-03-14. For more information, see this SUMO article: https://support.mozilla.org/kb/root-certificate-expiration !
+
+    Homepage card button to open Google Play Store. "Update" is a verb.
+  -->
+  <string name="certificate_warning_homepage_card_update_now_button" tools:ignore="UnusedResources">Ҳозир навсозӣ кунед</string>
+  <!-- Homepage card title about old Firefox version. "Update" is a verb. Note: The word "Firefox" should NOT be translated. -->
+  <string name="certificate_warning_homepage_card_hca1_title" tools:ignore="BrandUsage,UnusedResources">Браузери «Firefox»-и худро навсозӣ кунед</string>
+  <!-- Homepage card message about old Firefox version -->
+  <string name="certificate_warning_homepage_card_hca1_message" tools:ignore="UnusedResources">Дар санаи 14 март, муҳлати гувоҳиномаи решагӣ ба анҷом мерасад ва боиси он мегардад, ки кори баъзе хусусиятҳо қатъ карда мешавад.</string>
+  <!-- Homepage card title about old Firefox version. "Update" is a verb. -->
+  <string name="certificate_warning_homepage_card_hcr1_title" tools:ignore="UnusedResources">То санаи 14 матр браузерро навсозӣ кунед</string>
+  <!-- Homepage card message about old Firefox version. Note: The word "Firefox" should NOT be translated. -->
+  <string name="certificate_warning_homepage_card_hcr1_message" tools:ignore="BrandUsage,UnusedResources">Дар санаи 14 март, муҳлати гувоҳиномаи решагӣ ба анҷом мерасад ва боиси он мегардад, ки версияи ҷории «Firefox»-и шумо ба таври дуруст кор намекунад.</string>
+  <!-- Homepage card title about old Firefox version -->
+  <string name="certificate_warning_homepage_card_hcw2_title" tools:ignore="UnusedResources">Барои навсозӣ камтар аз 7 рӯз мондааст</string>
+  <!-- Homepage card message about old Firefox version. Note: The word "Firefox" should NOT be translated. -->
+  <string name="certificate_warning_homepage_card_hcw2_message" tools:ignore="BrandUsage,UnusedResources">Дар санаи 14 март, баъзе ҷузъҳои иловагӣ ва хусусиятҳои дигари «Firefox» дигар кор намекунанд, зеро ки гувоҳиномаи решагӣ ба анҷом мерасад.</string>
+  <!-- Homepage card title about old Firefox version. Note: The word "Firefox" should NOT be translated. -->
+  <string name="certificate_warning_homepage_card_hcw3_title" tools:ignore="BrandUsage,UnusedResources">Имконияти охирин барои нигоҳ доштани «Firefox»</string>
+  <!-- Homepage card message about old Firefox version. Note: The word "Firefox" should NOT be translated. -->
+  <string name="certificate_warning_homepage_card_hcw3_message" tools:ignore="BrandUsage,UnusedResources">Дар санаи 14 март, версияи ҷории «Firefox»-и шумо ба таври дуруст кор намекунад, зеро ки муҳлати гувоҳиномаи решагӣ ба анҷом мерасад.</string>
+  <!-- Push notification title about old Firefox version. "Update" is a noun. -->
+  <string name="certificate_warning_push_notification_update_recommended_title" tools:ignore="UnusedResources">Навсозӣ тавсия дода мешавад</string>
+  <!-- Push notification message about old Firefox version -->
+  <string name="certificate_warning_push_notification_pnr1_message" tools:ignore="UnusedResources">Санаи 14 март ҷузъҳои иловагӣ ва баъзе хусусиятҳо дигар кор намекунанд.</string>
+  <!-- Push notification title about old Firefox version. Note: The word "Firefox" should NOT be translated. -->
+  <string name="certificate_warning_push_notification_pnw2_title" tools:ignore="BrandUsage,UnusedResources">Шумо аз версияи куҳнаи «Firefox» истифода мебаред</string>
+  <!-- Push notification message about old Firefox version. "Update" is a verb. -->
+  <string name="certificate_warning_push_notification_pnw2_message" tools:ignore="UnusedResources">Барои идомаи истифодабарии ҷузъҳои иловагӣ ва хусусиятҳои дигар, браузерро то санаи 14 март навсозӣ кунед.</string>
+  <!-- Push notification message about old Firefox version -->
+  <string name="certificate_warning_push_notification_pnw3_message" tools:ignore="UnusedResources">Фардо баъзе хусусиятҳо дигар кор намекунанд.</string>
+  <!-- TextField Design System Component -->
+
+  <!--
+    Setup checklist feature
+
+    ===== Setup checklist feature: Title =====
+
+    Title for the setup checklist feature when the state is 'incomplete'. %1$s is the name of the app (for example "Firefox").
+  -->
+  <string name="setup_checklist_title_state_incomplete">Ба анҷом расонидани танзими «%1$s»</string>
+  <!-- Title for the setup checklist feature when the state is 'completed' -->
+  <string name="setup_checklist_title_state_completed">Табрик мекунем!</string>
+  <!--
+    ===== Setup checklist feature: Subtitles for 3 steps =====
+
+    Subtitle for a setup checklist with 3 steps initial step. %1$s is the name of the app (for example "Firefox").
+  -->
+  <string name="setup_checklist_subtitle_3_steps_initial_state">Барои танзим кардани «%1$s» ба мақсадҳои таҷрибаи тамошобинии беҳтарин, лутфан, 3 қадами зеринро иҷро намоед.</string>
+  <!-- Subtitle for a setup checklist with 3 steps when the first task is completed. -->
+  <string name="setup_checklist_subtitle_3_steps_first_step">Оғози олӣ! Шумо қадами 1-умро аз 3 қадами умумӣ иҷро кардед.</string>
+  <!-- Subtitle for a setup checklist with 3 steps when two of the tasks are completed. -->
+  <string name="setup_checklist_subtitle_3_steps_second_step">Қариб ҳамааш тайёр аст! Ду қадам иҷро шуд ва танҳо 1 қадами дигар монд.</string>
+  <!-- Subtitle for a setup checklist with 3 steps completed state. %1$s is the name of the app (for example "Firefox"). -->
+  <string name="setup_checklist_subtitle_3_steps_completed_state">Шумо ҳамаи 3 қадамро иҷро кардед. Аз беҳтарин суръат, махфият ва амнияти браузери «%1$s» истифода баред.</string>
+  <!--
+    ===== Setup checklist feature: Subtitles for 6 steps =====
+
+    Subtitle for a setup checklist with 6 steps initial state. %1$s is the name of the app (for example "Firefox").
+  -->
+  <string name="setup_checklist_subtitle_6_steps_initial_state">Барои танзим кардани «%1$s» ба мақсадҳои таҷрибаи тамошобинии беҳтарин, лутфан, ҳамаи 6 қадами зеринро иҷро намоед.</string>
+  <!-- Subtitle for a setup checklist with 6 steps when the first task is completed. -->
+  <string name="setup_checklist_subtitle_6_steps_first_step">Оғози олӣ! Шумо қадами 1-умро аз 6 қадами умумӣ иҷро кардед.</string>
+  <!-- Subtitle for the setup checklist when the second task is completed. -->
+  <string name="setup_checklist_subtitle_6_steps_second_step">Шумо қадами 1-умро аз 6 қадами умумӣ иҷро кардед. Пешравии бузург!</string>
+  <!-- Subtitle for a setup checklist with 6 steps when three of the tasks are completed. -->
+  <string name="setup_checklist_subtitle_6_steps_third_step">Шумо дар ними роҳ қарор доред! Се қадам иҷро шуд ва танҳо 3 қадами дигар монд.</string>
+  <!-- Subtitle for a setup checklist with 6 steps when the fourth task is completed. -->
+  <string name="setup_checklist_subtitle_6_steps_fourth_step">Шумо дар қадами 4-ум қарор доред! Танҳо 2 қадами дигар монд.</string>
+  <!-- Subtitle for a setup checklist with 6 steps when the fifth task is completed. -->
+  <string name="setup_checklist_subtitle_6_steps_fifth_step">Қариб ҳамааш тайёр аст! Барои расидан ба марра танҳо 1 қадами дигар монд.</string>
+  <!-- Subtitle for a setup checklist with 6 steps completed state. %1$s is the name of the app (for example "Firefox"). -->
+  <string name="setup_checklist_subtitle_6_steps_completed_state">Шумо ҳамаи 6 қадамро иҷро кардед. Аз беҳтарин суръат, махфият ва амнияти браузери «%1$s» истифода баред.</string>
+  <!--
+    ===== Setup checklist feature: Subtitles for 5 steps (Large screen devices don't support toolbar placement) =====
+
+    Subtitle for a setup checklist with 5 steps initial state. %1$s is the name of the app (for example "Firefox").
+  -->
+  <string name="setup_checklist_subtitle_5_steps_initial_state">Барои танзим кардани «%1$s» ба мақсадҳои таҷрибаи тамошобинии беҳтарин, лутфан, ҳамаи 5 қадами зеринро иҷро намоед.</string>
+  <!-- Subtitle for a setup checklist with 5 steps when the first task is completed. -->
+  <string name="setup_checklist_subtitle_5_steps_first_step">Оғози олӣ! Шумо қадами 1-умро аз 5 қадами умумӣ иҷро кардед.</string>
+  <!-- Subtitle for the setup checklist when the second task is completed. -->
+  <string name="setup_checklist_subtitle_5_steps_second_step">Шумо қадами 1-умро аз 5 қадами умумӣ иҷро кардед. Пешравии бузург!</string>
+  <!-- Subtitle for a setup checklist with 5 steps when three of the tasks are completed. -->
+  <string name="setup_checklist_subtitle_5_steps_third_step">Шумо дар ними роҳ қарор доред! Се қадам иҷро шуд ва танҳо 2 қадами дигар монд.</string>
+  <!-- Subtitle for a setup checklist with 5 steps when the fifth task is completed. -->
+  <string name="setup_checklist_subtitle_5_steps_fourth_step">Қариб ҳамааш тайёр аст! Барои расидан ба марра танҳо 1 қадами дигар монд.</string>
+  <!-- Subtitle for a setup checklist with 5 steps completed state. %1$s is the name of the app (for example "Firefox"). -->
+  <string name="setup_checklist_subtitle_5_steps_completed_state">Шумо ҳамаи 5 қадамро иҷро кардед. Аз беҳтарин суръат, махфият ва амнияти браузери «%1$s» истифода баред.</string>
+  <!--
+    ===== Setup checklist feature: Task titles =====
+
+    The title of the default browser task for the setup checklist
+  -->
+  <string name="setup_checklist_task_default_browser">Гузоштан ҳамчун браузери пешфарз</string>
+  <!-- The title of the sign-in task for the setup checklist -->
+  <string name="setup_checklist_task_account_sync">Ба ҳисоби худ ворид шавед</string>
+  <!-- The title of the theme selection task for the setup checklist -->
+  <string name="setup_checklist_task_theme_selection">Мавзуеро интихоб намоед</string>
+  <!-- The title of the toolbar selection task for the setup checklist -->
+  <string name="setup_checklist_task_toolbar_selection">Ҷойгиршавии навори абзорҳоро интихоб намоед</string>
+  <!-- The title of the explore extensions task for the setup checklist -->
+  <string name="setup_checklist_task_explore_extensions">Васеъшавиҳоро озмоед</string>
+  <!-- The title of the search widget task for the setup checklist -->
+  <string name="setup_checklist_task_search_widget_2">Озмоиши виҷети ҷустуҷӯ</string>
+  <!--
+    ===== Setup checklist feature: Group titles =====
+
+    The title of the 'essentials' group in the setup checklist. %1$s is the name of the app (for example "Firefox").
+  -->
+  <string name="setup_checklist_group_essentials">Чизҳои муҳим барои «%1$s»</string>
+  <!-- The title of the 'customize' group in the setup checklist. %1$s is the name of the app (for example "Firefox"). -->
+  <string name="setup_checklist_group_customize">Браузери «%1$s»-и худро ба таври дихоҳ танзим намоед</string>
+  <!-- The title of the 'helpful tools' group in the setup checklist -->
+  <string name="setup_checklist_group_helpful_tools">Абзорҳои муфид</string>
+  <!--
+    ===== Setup checklist feature: Button =====
+
+    Text for the 'remove' button for the setup checklist
+  -->
+  <string name="setup_checklist_button_remove">Тоза кардани рӯйхати санҷишӣ</string>
+  <!--
+    ===== Setup checklist feature: Accessibility =====
+
+    Accessibility description for a check mark on a completed task
+  -->
+  <string name="a11y_completed_task_description">Вазифаи иҷрошуда</string>
+  <!-- Accessibility description for the task icon -->
+  <string name="a11y_task_icon_description">Нишонаи вазифа</string>
+  <!--
+    Private browsing mode authentication screen
+
+    Label for the secondary action to exit private browsing mode
+  -->
+  <string name="pbm_authentication_leave_private_tabs">Баромадан аз реҷаи варақаҳои хусусӣ</string>
+  <!-- Label for the primary action button to unlock private tabs -->
+  <string name="pbm_authentication_unlock">Кушодани қулф</string>
+  <!-- Title text instructing the user to unlock private tabs -->
+  <string name="pbm_authentication_unlock_private_tabs">Кушодани қулфи варақаҳои хусусӣ</string>
+  <!-- Authentication prompt title to enable the private tabs mode -->
+  <string name="pbm_authentication_enable_lock">Фаъол кардани қулфи экрани варақаҳои хусусӣ</string>
+  <!-- Authentication prompt title to disable the private tabs mode -->
+  <string name="pbm_authentication_disable_lock">Ғайрифаъол кардани қулфи экрани варақаҳои хусусӣ</string>
+  <!-- Label for a preference shown when the device supports screen lock (e.g., PIN, pattern, or password) but the user has not set one up. -->
+  <string name="pbm_authentication_lock_device_feature_disabled">Барои пинҳон кардани варақаҳо қулфи экранро танзим кунед</string>
+  <!-- Title text for the contextual feature recommendation (CFR) suggesting the user enable a screen lock to protect private tabs -->
+  <string name="private_tab_cfr_title">Барои пинҳон кардани варақаҳои хусусӣ қулфи экранро истифода мебаред?</string>
+  <!-- Negative button text for the contextual feature recommendation (CFR) dismissing the screen lock suggestion -->
+  <string name="private_tab_cfr_negative">Не, ташаккур</string>
+  <!-- Positive button text for the contextual feature recommendation (CFR) enabling screen lock for private tabs -->
+  <string name="private_tab_cfr_positive">Қулф кардани варақаҳо</string>
+  <!--
+    Review prompt
+
+    Title for a prompt asking the user about their experience using the app. %1$s is the name of the app (for example "Firefox").
+  -->
+  <string name="review_prompt_pre_prompt_header">Шумо дар бораи «%1$s» чӣ фикр доред?</string>
+  <!-- Label for a button negatively rating the user's experience with the app -->
+  <string name="review_prompt_negative_button">Ман мушкилӣ мекашам</string>
+  <!-- Label for a button positively rating the user's experience with the app -->
+  <string name="review_prompt_positive_button">Ин зӯр аст!</string>
+  <!-- Title for a prompt asking the user to rate the app on Google Play Store. %1$s is the name of the app (for example "Firefox"). -->
+  <string name="review_prompt_rate_header">Ташаккур барои дӯст доштани «%1$s». Як сония вақт доред, ки муҳаббати худро бо баҳодиҳӣ изҳор намоед?</string>
+  <!-- Label for a button proceeding to rate the app on Google Play Store. %1$s is the name of the app (for example "Firefox"). -->
+  <string name="review_prompt_rate_button">Ба «%1$s» дар «Play Store» баҳо диҳед</string>
+  <!-- Title for a prompt asking the user send us feedback. %1$s is the name of the app (for example "Firefox"). -->
+  <string name="review_prompt_feedback_header">Афсӯс, ки шумо мушкилӣ мекашед. Ба мо маълумот диҳед, ки чӣ тавр мо метавонем «%1$s»-ро беҳтар кунем.</string>
+  <!-- Label for a button opening a feedback forum -->
+  <string name="review_prompt_feedback_button">Назари худро изҳор кунед</string>
+  <!--
+    Settings Search Strings
+
+    Title of Settings Search. "Search" is a verb here
+  -->
+  <string name="settings_search_title">Танзимоти ҷустуҷӯ</string>
+  <!-- Content description (not visible, for screen readers etc.) for the button to clear the search field for settings search -->
+  <string name="content_description_settings_search_clear_search">Пок кардани ҷустуҷӯ</string>
+  <!-- Content description (not visible, for screen readers etc.) for the button to navigate back to the Settings page from the Settings Search screen. -->
+  <string name="content_description_settings_search_navigate_back">Ба қафо гузаштан</string>
+  <!-- Message displayed when the search field in the Settings Search screen is empty -->
+  <string name="settings_search_empty_query_placeholder">Ягон ҷустуҷӯи охирин нест</string>
+  <!-- Text of button allowing to clear history of recent searches done in the settings screen. -->
+  <string name="settings_search_clear_recent_searches_message">Ҳамаро пок кунед</string>
+  <!-- Section header for recent search results -->
+  <string name="settings_search_recent_searches_section_header">Натиҷаҳои ҷустуҷӯи охирин</string>
+  <!-- Message displayed when the search field is not empty but search results is empty. -->
+  <string name="settings_search_no_results_title">Ҳеҷ чиз рӯй надод</string>
+  <!-- Sub-message displayed when the search field is not empty but search results is empty. -->
+  <string name="settings_search_no_results_message">Шояд аз ҷустуҷӯи дигар истифода барем?</string>
+  <!-- Content Description for the button to open Settings Search (to search through settings). -->
+  <string name="settings_search_button_content_description">Тугмаи ҷустуҷӯи танзимот</string>
+  <!-- ==== Terms of use pop up prompt ==== -->
+
+  <!-- Title for the pop up prompt -->
+  <string name="terms_of_use_prompt_title">Мо тағйиру иловаҳо дорем</string>
+  <!--
+    Message for the terms of use pop up prompt
+    %1$s is the product name "Firefox"
+    %2$s is the string terms_of_use_prompt_link_terms_of_use (Terms of Use) that is a link to the terms of use
+    %3$s is the string terms_of_use_prompt_link_privacy_notice (Privacy Notice) that is a link to the privacy notice
+  -->
+  <string name="terms_of_use_prompt_message_1">Мо «%1$s»-ро бо тартиби нав (%2$s) ҷорӣ кардем ва ба «%3$s» тағйиру иловаҳо ворид намудем.</string>
+  <!--
+    Second part of the terms of use pop up prompt
+    %1$s is the string terms_of_use_prompt_link_learn_more (Learn more) that is a link to a website with more information about the terms of use
+  -->
+  <string name="terms_of_use_prompt_message_2">Лутфан, вақтро ҷудо намуда, ҳуҷҷатҳои мазкурро баррасӣ кунед ва ризоияти худро иброз намоед. %1$s.</string>
+  <!-- Terms of use link in the pop up prompt message that links to the terms of use -->
+  <string name="terms_of_use_prompt_link_terms_of_use">Шартҳои истифода</string>
+  <!-- Privacy notice link in the pop up prompt message that links to the privacy notice -->
+  <string name="terms_of_use_prompt_link_privacy_notice">Огоҳномаи махфият</string>
+  <!-- Learn more link in the pop up prompt message that links to a site with more information about the terms of use -->
+  <string name="terms_of_use_prompt_link_learn_more">Маълумоти бештар</string>
+  <!-- Label for a button to accept the terms of use -->
+  <string name="terms_of_use_prompt_accept">Қабул кардан</string>
+  <!-- Label for a button to postpone accepting the terms of use -->
+  <string name="terms_of_use_prompt_postpone">Баъдтар ёдоварӣ кунед</string>
+  <!-- ==== Experiment strings. ==== -->
+
+  <!-- A title for the popup prompt. -->
+  <string name="terms_of_use_prompt_title_option_a" tools:ignore="UnusedResources">Шартҳои истифода</string>
+  <!--
+    A title for the popup prompt.
+    %1$s is the product name "Firefox"
+  -->
+  <string name="terms_of_use_prompt_title_option_b" tools:ignore="UnusedResources">Ёддоште аз «%1$s»</string>
+  <!--
+    Copy for the Terms of Use popup prompt body line two.
+    %1$s is the string terms_of_use_prompt_body_line_two_alternative_link ("here") that is a link to the Terms of Use
+  -->
+  <string name="terms_of_use_prompt_body_line_two_alternative" tools:ignore="UnusedResources">Шумо метавонед аз %1$s маълумоти бештар гиред.</string>
+  <!-- Link text for terms_of_use_prompt_body_line_two_alternative that links to a site with more information about the Terms of Use -->
+  <string name="terms_of_use_prompt_body_line_two_alternative_link" tools:ignore="UnusedResources">ин ҷой</string>
+  <!--
+    Sports widget
+
+    Title text shown at the top of the sports widget country selector, encouraging the user to pick a national team to follow.
+  -->
+  <string name="sports_widget_country_selector_title">Дастаи худро пайгирӣ кунед</string>
+  <!-- Section header for the North America region in the sports widget country selector. -->
+  <string name="sports_widget_confederation_north_america">Амрикои Шимолӣ</string>
+  <!-- Section header for the Africa confederation group in the sports widget country selector. -->
+  <string name="sports_widget_confederation_africa">Африқо</string>
+  <!-- Section header for the Asia confederation group in the sports widget country selector. -->
+  <string name="sports_widget_confederation_asia">Осиё</string>
+  <!-- Section header for the CONCACAF confederation group in the sports widget country selector. "CONCACAF" is the abbreviation for "Confederation of North, Central America and Caribbean Association Football". -->
+  <string name="sports_widget_confederation_concacaf">«КОНКАКАФ»</string>
+  <!-- Section header for the Europe confederation group in the sports widget country selector. -->
+  <string name="sports_widget_confederation_europe">Аврупо</string>
+  <!-- Section header for the Oceania confederation group in the sports widget country selector. -->
+  <string name="sports_widget_confederation_oceania">Уқёнусия</string>
+  <!-- Section header for the South America confederation group in the sports widget country selector. -->
+  <string name="sports_widget_confederation_south_america">Амрикои Ҷанубӣ</string>
+  <!-- Country name for England in the sports widget. England cannot be resolved with the Android Intl APIs so it needs an explicit string. -->
+  <string name="sports_widget_country_england">Англия</string>
+  <!-- Country name for Scotland in the sports widget. Scotland cannot be resolved with the Android Intl APIs so it needs an explicit string. -->
+  <string name="sports_widget_country_scotland">Шотландия</string>
+  <!-- Label shown on the sports widget scoreboard when a match is currently being played live. -->
+  <string name="sports_widget_match_live">ПАХШИ МУСТАҚИМ</string>
+  <!-- Title shown on the sports widget champion scoreboard row celebrating the soccer tournament winner. -->
+  <string name="sports_widget_champions_title">Ғолибони Ҷоми ҷаҳони 2026</string>
+  <!-- Title shown on the sports widget champion scoreboard celebrating the soccer tournament runners-up. Runners-up means second place. -->
+  <string name="sports_widget_runner_up_title" tools:ignore="UnusedResources">Ҷоизаҳои дуюм</string>
+  <!-- Title shown on the sports widget champion scoreboard celebrating the soccer tournament third place winners. -->
+  <string name="sports_widget_third_place_title">Ҷойи сеюм</string>
+  <!-- Round name shown on the sports widget for the Round of 32 stage in the soccer tournament. -->
+  <string name="sports_widget_round_of_32">Даври 32-юм</string>
+  <!-- Round name shown on the sports widget for the Round of 16 stage in the soccer tournament. -->
+  <string name="sports_widget_round_of_16">Даври 16-ум</string>
+  <!-- Round name shown on the sports widget for the quarter-finals stage in the soccer tournament. -->
+  <string name="sports_widget_quarter_final">Чорякниҳоӣ</string>
+  <!-- Round name shown on the sports widget for the semi-finals stage in the soccer tournament. -->
+  <string name="sports_widget_semi_final">Нимниҳоӣ</string>
+  <!-- Round name shown on the sports widget for the final stage in the soccer tournament. -->
+  <string name="sports_widget_final">Ниҳоӣ</string>
+  <!-- Round name shown on the sports widget for the bronze final stage in the soccer tournament. -->
+  <string name="sports_widget_bronze_final">Ниҳоии биринҷӣ</string>
+  <!-- Sports widget error card message shown when match data fails to load. -->
+  <string name="sports_widget_error_load_failed" tools:ignore="UnusedResources">Маълумот дар бораи бозӣ ҳоло дастрас нест. Пас аз чанд дақиқа навсозии маълумотро кӯшиш кунед.</string>
+  <!-- Sports widget error card message shown when the network connection is interrupted and live updates pause. -->
+  <string name="sports_widget_error_connection_interrupted" tools:ignore="UnusedResources">Пайвастшавӣ қатъ шуд — навсозиҳои нахши мустақим таваққуф карда шуданд.</string>
+  <!-- Sports widget action label to refresh match data after an error. -->
+  <string name="sports_widget_error_refresh">Нав кардан</string>
+  <!-- Sports widget group stage label for group A in the soccer tournament. -->
+  <string name="sports_widget_group_a">Гурӯҳи «A»</string>
+  <!-- Sports widget group stage label for group B in the soccer tournament. -->
+  <string name="sports_widget_group_b">Гурӯҳи «B»</string>
+  <!-- Sports widget group stage label for group C in the soccer tournament. -->
+  <string name="sports_widget_group_c">Гурӯҳи «C»</string>
+  <!-- Sports widget group stage label for group D in the soccer tournament. -->
+  <string name="sports_widget_group_d">Гурӯҳи «D»</string>
+  <!-- Sports widget group stage label for group E in the soccer tournament. -->
+  <string name="sports_widget_group_e">Гурӯҳи «E»</string>
+  <!-- Sports widget group stage label for group F in the soccer tournament. -->
+  <string name="sports_widget_group_f">Гурӯҳи «F»</string>
+  <!-- Sports widget group stage label for group G in the soccer tournament. -->
+  <string name="sports_widget_group_g">Гурӯҳи «G»</string>
+  <!-- Sports widget group stage label for group H in the soccer tournament. -->
+  <string name="sports_widget_group_h">Гурӯҳи «H»</string>
+  <!-- Sports widget group stage label for group I in the soccer tournament. -->
+  <string name="sports_widget_group_i">Гурӯҳи «I»</string>
+  <!-- Sports widget group stage label for group J in the soccer tournament. -->
+  <string name="sports_widget_group_j">Гурӯҳи «J»</string>
+  <!-- Sports widget group stage label for group K in the soccer tournament. -->
+  <string name="sports_widget_group_k">Гурӯҳи «K»</string>
+  <!-- Sports widget group stage label for group L in the soccer tournament. -->
+  <string name="sports_widget_group_l">Гурӯҳи «L»</string>
+  <!-- Sports widget button label to see match results. -->
+  <string name="sports_widget_see_results" tools:ignore="UnusedResources">Дидани натиҷаҳо</string>
+  <!-- Sports widget button label to view details of a soccer match results. -->
+  <string name="sports_widget_view_match_details" tools:ignore="UnusedResources">Дидани тафсилоти бозӣ</string>
+  <!-- Sports widget section header for related soccer matches in the same group. -->
+  <string name="sports_widget_related_matches" tools:ignore="UnusedResources">Бозиҳои марбут</string>
+  <!-- Sports widget section header for a list of upcoming soccer matches that have not yet started. -->
+  <string name="sports_widget_upcoming" tools:ignore="UnusedResources">Бозиҳои дарпешистода</string>
+  <!-- Sports widget match status suffix appended to match scores (e.g., "3 - 2 (Full time)") to indicate the match has been completed. -->
+  <string name="sports_widget_match_full_time_suffix">(Вақти пурра)</string>
+  <!-- Sports widget match status to indicate the match has been completed. -->
+  <string name="sports_widget_match_full_time_2">Вақти пурра</string>
+  <!--
+    Sports widget card title encouraging the user to follow the soccer tournament. “Keep tabs on” is an informal expression
+    meaning to stay updated on or regularly follow something (in this case, World Cup matches and updates).
+    It’s playfully related to Firefox in that “tabs” are a browser feature.
+    It suggests ongoing awareness rather than active monitoring or control. Not to be translated literally as physical “tabs”
+    or tracking in a technical sense; the meaning is about staying informed.
+  -->
+  <string name="sports_widget_card_title">Аз рӯйдодҳои Ҷоми ҷаҳон бохабар бошед</string>
+  <!-- Sports widget card description shown below the title on the homepage entry point. -->
+  <string name="sports_widget_card_description">Навсозиҳои зиндаи бозиҳо ва маълумоти бештарро ба даст оред.</string>
+  <!-- Sports widget menu item to change the selected team. -->
+  <string name="sports_widget_change_team">Иваз кардани даста</string>
+  <!-- Sports widget menu item to get a custom wallpaper for the widget. -->
+  <string name="sports_widget_get_custom_wallpaper">Гирифтани тасвири заминаи фармоишӣ</string>
+  <!-- Sports widget menu item to remove the widget from the homepage. -->
+  <string name="sports_widget_remove">Тоза кардан</string>
+  <!-- Sports widget card title shown after a team is eliminated, asking if the user still wants to continue following the soccer tournament. -->
+  <string name="sports_widget_still_want_to_follow">Ҳанӯз ҳам мехоҳед аз рӯйдодҳо бохабар бошед?</string>
+  <!-- Sports widget card description shown after a team is eliminated, suggesting to choose another team. -->
+  <string name="sports_widget_choose_another_team">Барои идома додани пайгирии Ҷоми ҷаҳон дастаи дигареро интихоб намоед.</string>
+  <!-- Sports widget button label to follow another team after the current team is eliminated. -->
+  <string name="sports_widget_follow_another_team">Дастаи дигареро пайгирӣ кунед</string>
+  <!-- Sports widget card title shown before the soccer tournament begins on top of a timer that is counting down. -->
+  <string name="sports_widget_countdown_to_world_cup">Вақти боқимонда то оғози Ҷоми ҷаҳон</string>
+  <!-- Sports widget button label that navigates the user to the full soccer tournament match schedule. -->
+  <string name="sports_widget_view_schedule">Намоиши ҷадвали бозиҳо</string>
+  <!-- Sports widget button label that dismisses the step of choosing a team to follow. -->
+  <string name="sports_widget_skip">Нодида гузарондан</string>
+  <!-- Sports widget match status label shown during halftime of a match. -->
+  <string name="sports_widget_halftime" tools:ignore="UnusedResources">Танаффус байни ду қисми бозӣ</string>
+  <!-- Sports widget match status label shown during extra time of a match. -->
+  <string name="sports_widget_extra_time">Вақти иловагӣ</string>
+  <!-- Sports widget match status label shown during penalties of a match. -->
+  <string name="sports_widget_penalties">Зарбаҳои пеналтӣ</string>
+  <!--
+    Sports widget countdown label for days. D is short for Day. The layout only allows for 1–2 characters:
+    if there is an equivalent single character for your language, use that (e.g. T for German).
+    Your translation will be automatically truncated at 2 characters to avoid layout issues.
+  -->
+  <string name="sports_widget_countdown_days">Р</string>
+  <!--
+    Sports widget countdown pill abbreviated label for hours. H is short for Hour. The layout only allows for 1–2 characters:
+    if there is an equivalent single character for your language, use that (e.g. S for German).
+    Your translation will be automatically truncated at 2 characters to avoid layout issues.
+  -->
+  <string name="sports_widget_countdown_hours">С</string>
+  <!--
+    Sports widget countdown pill abbreviated label for minutes. M is short for Minute. The layout only allows for 1–2 characters:
+    if there is an equivalent single character for your language, use that.
+    Your translation will be automatically truncated at 2 characters to avoid layout issues
+  -->
+  <string name="sports_widget_countdown_minutes">Д</string>
+  <!-- Content description (for accessibility, not displayed) for the close button on the sports widget team / country selector. -->
+  <string name="sports_widget_close_team_selection_sheet_content_description">Пӯшидани ҷадвали интихоби даста</string>
+  <!-- Content description (for accessibility, not displayed) for the close button on the sports widget card. -->
+  <string name="sports_widget_close_content_description">Пӯшидан</string>
+  <!-- Content description (for accessibility, not displayed) for the overflow (more options) menu button on the sports widget card. -->
+  <string name="sports_widget_more_options_content_description">Имконоти бештар</string>
+  <!--
+    Content description (for accessibility, not displayed) announcing the time remaining until the soccer tournament kickoff.
+    %1$d is the number of days, %2$d is the number of hours, and %3$d is the number of minutes.
+  -->
+  <string name="sports_widget_countdown_remaining_content_description">Вақти боқимонда. Рӯзҳо: %1$d. Соатҳо: %2$d. Дақиқаҳо: %3$d.</string>
+  <!-- Content description (for accessibility, not displayed)  for the action that navigates to the World Cup website. -->
+  <string name="sports_widget_go_to_world_cup_site_content_description" tools:ignore="UnusedResources">Гузариш ба сомонаи Ҷоми ҷаҳон</string>
+  <!--
+    Content description (for accessibility, not displayed)  announcing an upcoming soccer match.
+    %1$s is the home team name, %2$s is the away team name, %3$s is the match date, %4$s is the kickoff time.
+  -->
+  <string name="sports_widget_upcoming_match_content_description">Бозии дарпешистода: %1$s муқобили %2$s, %3$s соати %4$s</string>
+  <!--
+    Content description (for accessibility, not displayed) announcing a soccer match.
+    %1$s is the home team name, %2$s is the away team name, %3$s is trailing context
+    (e.g. formatted score "1 - 2 (Full time)", upcoming match info "Jun 19 5:00 PM",
+    or a match status like "Full time").
+  -->
+  <string name="sports_widget_match_content_description">%1$s муқобили %2$s, %3$s</string>
+  <!--
+    Content description (for accessibility, not displayed)  used for the sports widget card header announcing a live match for a group or stage.
+    %s is the soccer tournament group name or stage (e.g. Group A represented by sports_widget_group_a, Round of 32 represented by sports_widget_round_of_32,
+    or Final represented by sports_widget_final).
+  -->
+  <string name="sports_widget_live_game_content_description">%s, бозӣ дар пахши мустақим</string>
+  <!--
+    Content description (for accessibility, not displayed) announcing a live score.
+    %1$s is the home team name, %2$d is the home team score, %3$s is the away team name, %4$d is the away team score,
+    and %5$s is the match elapsed time (e.g. 72 minutes).
+  -->
+  <string name="sports_widget_live_score_content_description">%1$s %2$d, %3$s %4$d, %5$s, бозӣ дар пахши мустақим</string>
+  <!--
+    Content description (for accessibility, not displayed) announcing the elapsed minutes of a live match.
+    %1$s is the clock value, which may be a plain number (e.g. "72") or include extra time (e.g. "90+3").
+  -->
+  <string name="sports_widget_match_elapsed_minutes">Вақти гузаштаи бозӣ: %1$s дақиқа</string>
+  <!--
+    Content description (for accessibility, not displayed) for a paginated item.
+    %1$s is the soccer tournament group name or stage (e.g. Group A represented by sports_widget_group_a, Round of 32 represented by sports_widget_round_of_32),
+    %2$d is the current page number, and %3$d is the total number of pages.
+  -->
+  <string name="sports_widget_page_position_content_description">%1$s, саҳифаи %2$d аз %3$d</string>
+  <!--
+    Content description (for accessibility, not displayed) for a page within the World Cup final results carousel.
+    %1$d is the current page number, and %2$d is the total number of pages.
+  -->
+  <string name="sports_widget_final_results_page_content_description" tools:ignore="UnusedResources">Натиҷаҳои ниҳоии Ҷоми ҷаҳон, саҳифаи %1$d аз %2$d</string>
+  <!-- Content description (for accessibility, not displayed) for the World Cup final results page. -->
+  <string name="sports_widget_final_results_content_description">Натиҷаҳои ниҳоии Ҷоми ҷаҳон</string>
+  <!-- Content description (for accessibility, not displayed) for the remove button that removes the sports widget from the homepage. -->
+  <string name="sports_widget_remove_content_description" tools:ignore="UnusedResources">Тоза кардани пайванди «Ҷоми ҷаҳон» аз саҳифаи асосӣ</string>
+  <!-- Title shown on the sports widget immediately after the user has followed a team. %s is the selected team (e.g., "USA"). -->
+  <string name="sports_widget_team_followed_title">Дар ҳоли пайгирӣ: %s</string>
+  <!-- Description shown on the sports widget immediately after the user has followed a team -->
+  <string name="sports_widget_team_followed_description">Барои дидани маълумот дар бораи бозӣ ҳангоми наздик шудани мусобиқа сомонаро боз санҷед.</string>
+  <!-- Sports widget match status label shown during first half of a match. -->
+  <string name="sports_widget_first_half" tools:ignore="UnusedResources">Қисми якуми бозӣ</string>
+  <!-- Sports widget match status label shown during second half of a match. -->
+  <string name="sports_widget_second_half" tools:ignore="UnusedResources">Қисми дуюми бозӣ</string>
+  <!-- Sports widget error card title shown when the user is offline. -->
+  <string name="sports_widget_error_connection_offline_title">Чунин ба назар мерасад, ки шумо дар реҷаи офлайн ҳастед.</string>
+  <!-- Sports widget error card description shown when the user is offline. -->
+  <string name="sports_widget_error_connection_offline_description">Пайвасти интернети худро санҷед ва аз нав кӯшиш намоед.</string>
+  <!-- Sports widget general group stage label in the soccer tournament. -->
+  <string name="sports_widget_group_stage">Марҳилаи гурӯҳӣ</string>
+  <!-- Sports widget error card title shown when match data fails to load. -->
+  <string name="sports_widget_error_load_failed_title">Маълумот дар бораи бозӣ ҳоло дастрас нест.</string>
+  <!-- Sports widget error card description shown when match data fails to load. -->
+  <string name="sports_widget_error_load_failed_description">Пас аз чанд дақиқа кӯшиш кунед, ки маълумотро навсозӣ намоед.</string>
+  <!-- Content description (for accessibility, not displayed) for teams which have not yet been determined in the match schedule. -->
+  <string name="sports_widget_team_to_be_determined">Дастае, ки баъдтар муайян карда мешавад</string>
+  <!-- ==== End of Terms of use popup prompt. ==== -->
+
+  <!--
+    Privacy notice homepage banner
+
+    A message we show the user on the homepage when there is a new version of the privacy notice. 'Firefox' is intentionally hardcoded.
+    %1$s is replaced by an active link using privacy_notice_updated_homepage_message_privacy_notice as text (Privacy Notice)
+    %2$s is replaced by an active link using privacy_notice_updated_homepage_message_learn_more as text (Learn more)
+  -->
+  <string name="privacy_notice_updated_homepage_message" tools:ignore="BrandUsage,UnusedResources">Барои инъикос кардани хусусиятҳои навтарини «Firefox», мо «%1$s»-и худро нав кардем. %2$s</string>
+  <!-- The first active link used in privacy_notice_updated_homepage_message -->
+  <string name="privacy_notice_updated_homepage_message_privacy_notice" tools:ignore="UnusedResources">Огоҳномаи махфият</string>
+  <!-- The second active link used in privacy_notice_updated_homepage_message -->
+  <string name="privacy_notice_updated_homepage_message_learn_more" tools:ignore="UnusedResources">Маълумоти бештар</string>
+  <!-- Google Lens prototype related strings -->
+  <string name="preferences_debug_settings_google_lens_integration">Фаъол кардани ҳамгироии «Google Lens»</string>
+  <!-- Lens image search button content description -->
+  <string name="lens_search_content_description">Ҷустуҷӯ аз рӯйи тасвир</string>
+  <!-- Content description for the gallery picker button in the Lens camera screen -->
+  <string name="content_description_gallery">Барои фиристодан ба «Google Lens» аз нигористон интихоб намоед</string>
+  <!-- Content description for the shutter button in the Lens camera screen -->
+  <string name="content_description_take_photo">Барои фиристодан ба «Google Lens» акс гиред</string>
+  <!-- Image context menu entry that sends the long-pressed image to Google Lens -->
+  <string name="context_menu_open_image_with_google_lens">Ҷустуҷӯ ба воситаи «Google Lens»</string>
+  <!-- Toast shown when the user denies the camera permission requested by the Lens camera screen -->
+  <string name="lens_camera_permission_denied">Дастрасӣ манъ аст</string>
+  <!--
+    Title shown at the top of the camera screen, next to the close button, telling the
+    user that the photo they capture will be sent to Google Lens for a visual search.
+  -->
+  <string name="lens_camera_title_lens">Google Lens</string>
+  <!--
+    Title shown at the top of the camera screen, next to the close button, telling the
+    user that the camera is being used to scan a QR code.
+  -->
+  <string name="lens_camera_title_qr">Рамзи «QR»</string>
+  <!-- Title for the Google Lens Search Settings page feature toggle -->
+  <string name="search_settings_google_lens_title">Фаъол кардани ҷустуҷӯ ба воситаи «Google Lens»</string>
+  <!-- Description for the Google Lens Search Settings page feature toggle -->
+  <string name="search_settings_google_lens_description">Тасвирҳо ва аксҳоро барои ҷустуҷӯи дидорӣ ба «Google» ирсол мекунад.</string>
+  <!-- Caption shown under the Google Lens toggle clarifying when the feature is available -->
+  <string name="preferences_google_lens_availability_caption">Танҳо дар сурате дастрас аст, вақте ки «Google» дар боло фаъол мебошад ва ҳангоми тамошобинӣ ҳамчун низоми ҷустуҷӯии фаъоли шумо истифода мешавад.</string>
+  <!-- Title for the Google Lens AI feature toggle -->
+  <string name="ai_controls_google_lens_title">Google Lens</string>
+  <!-- Description for the Google Lens AI feature toggle -->
+  <string name="ai_controls_google_lens_description">Тасвирҳо ва аксҳоро барои ҷустуҷӯи дидорӣ ба «Google» ирсол мекунад.</string>
+  <!-- Content description for the Google Lens half of the camera mode toggle -->
+  <string name="lens_camera_mode_lens">Google Lens</string>
+  <!-- Content description for the QR scanner half of the camera mode toggle -->
+  <string name="lens_camera_mode_qr">Аксбардории «QR»</string>
+  <!-- Toast shown when the user picks an image from the gallery in QR mode but no QR code is found in it -->
+  <string name="lens_camera_qr_no_code_found">Дар тасвир ягон рамзи «QR» ёфт нашуд</string>
+  <!--
+    Firefox Labs
+
+    Firefox Labs is the name of a screen in Settings to allow users to learn about
+    experimental and in-development features, and turn those features on and off.
+    The "Labs" portion can be localized, "Firefox" must be treated as a brand and kept
+    in English.
+  -->
+  <string name="firefox_labs_title" tools:ignore="BrandUsage">Firefox Labs</string>
+  <!-- Banner title text on the Firefox Labs screen. -->
+  <string name="firefox_labs_banner_title_2">Хусусиятҳои таҷрибавии моро озмоед!</string>
+  <!--
+    Banner description text on the Firefox Labs screen. Provides information on what Firefox Labs does. %s is the name of the app (for example "Firefox Nightly").
+    Text will appear under the Firefox Labs banner title.
+  -->
+  <string name="firefox_labs_experimental_description">Онҳо дар ҳоли рушд ва такмил қарор доранд, ки ин метавонад ба тарзи кори «%s» таъсир расонад.</string>
+  <!-- The link text shown when a feedback URL for a Firefox Labs feature is available. The feedback URL page will allow users to provide opinions and suggestions. -->
+  <string name="firefox_labs_share_feedback">Изҳори назари худро мубодила кунед</string>
+  <!-- Content description for the share feedback link on a Firefox Labs feature. This text will be used by screen readers to provide more context on the feedback link. %s is the name of the Firefox Labs feature. -->
+  <string name="firefox_labs_share_feedback_content_description">Изҳори назари худро дар бораи «%s» мубодила кунед.</string>
+  <!-- Button text on the Firefox Labs screen for restoring all toggles back to the default settings. The button will turn off any experimental features. -->
+  <string name="firefox_labs_restore_default_button_text">Барқарор кардани ҳолатҳои пешфарз</string>
+  <!-- The title used in a confirmation dialog on the Firefox Labs screen when toggling "on" or "off" an experimental feature that requires a restart. -->
+  <string name="firefox_labs_feature_dialog_title">Бозоғозӣ лозим аст</string>
+  <!-- The text on the dialog on the Firefox Labs screen for the positive button when toggling "on" and "off" experimental features. This prompts the user to confirm that they want to restart the app. -->
+  <string name="firefox_labs_dialog_restart_button">Аз нав оғоз кардан</string>
+  <!-- The text on the dialog on the Firefox Labs screen for the negative button when toggling "on" and "off" experimental features. This is used to cancel the action and return to the previous screen. -->
+  <string name="firefox_labs_dialog_cancel_button">Бекор кардан</string>
+  <!-- The title used in a confirmation dialog on the Firefox Labs screen when restoring the application to its defaults by turning "off" any experimental features. -->
+  <string name="firefox_labs_restore_defaults_dialog_title">Бозоғозӣ лозим аст</string>
+  <!-- The description used in a confirmation dialog on the Firefox Labs screen when restoring the application to its defaults by turning "off" any experimental features. %s is the name of the app (for example "Firefox Nightly") -->
+  <string name="firefox_labs_restore_defaults_dialog_message">Барои барқарор кардани танзимоти пешфарз, «%s»-ро аз нав оғоз кунед.</string>
+  <!-- The description text that is displayed in the confirmation dialog on the Firefox Labs screen for toggling "on" experimental features. %s is the name of the app (for example "Firefox Nightly") -->
+  <string name="firefox_labs_feature_enable_dialog_message">Барои фаъол кардани ин хусусият, «%s»-ро аз нав оғоз кунед.</string>
+  <!-- The description text that is displayed in the confirmation dialog on the Firefox Labs screen for toggling "off" experimental features. %s is the name of the app (for example "Firefox Nightly") -->
+  <string name="firefox_labs_feature_disable_dialog_message">Барои хомӯш кардани ин хусусият, «%s»-ро аз нав оғоз кунед.</string>
+  <!-- Helper text shown beneath a Firefox Labs item when it is blocked from being turned on. -->
+  <string name="firefox_labs_feature_conflict">Ин хусусият барои санҷиш дастнорас аст.</string>
+  <!-- Text displayed on the Firefox Labs screen when there are no Labs experimental features present. -->
+  <string name="firefox_labs_no_labs_available_description">Дар айни замон ягон хусусияти озмоишӣ барои санҷиш дастрас нест</string>
+</resources>
