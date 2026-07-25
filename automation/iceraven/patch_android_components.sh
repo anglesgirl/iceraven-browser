@@ -13,6 +13,7 @@ done
 
 sed -i "s#gleanPythonEnvDir#// gleanPythonEnvDir#g" android-components/**/*.gradle
 sed -i "s#\.\./\.\./\.\./\.\./\.\./gradle/libs.versions.toml#../../../gradle/libs.versions.toml#g" android-components/**/*.gradle
+sed -i "s#\.\./\.\./\.\./\.\./\.\./gradle/libs.versions.toml#../../../gradle/libs.versions.toml#g" android-components/**/*.kts
 
 sed -i 's#mobile/android/version.txt#version.txt#g' android-components/plugins/config/src/main/java/ConfigPlugin.kt
 sed -i 's#mobile/android/##g' android-components/components/lib/crash/build.gradle
