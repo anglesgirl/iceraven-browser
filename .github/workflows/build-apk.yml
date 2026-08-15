@@ -63,10 +63,16 @@ jobs:
           curl -sL https://publicsuffix.org/list/effective_tld_names.dat -o netwerk/dns/effective_tld_names.dat
           head -3 netwerk/dns/effective_tld_names.dat
           ./gradlew :app:assembleDebug --stacktrace --no-daemon
+          echo "=== APK files ==="
+          find . -name "*.apk" -not -path "*/gradle/*" -exec ls -lh {} \;
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: iceraven-echdoh-debug
-          path: app/build/outputs/apk/**/*.apk
+          path: |
+            app/build/outputs/apk/**/*.apk
+            app/build/outputs/*.apk
+            **/build/outputs/apk/**/*.apk
+          if-no-files-found: error
           retention-days: 14
