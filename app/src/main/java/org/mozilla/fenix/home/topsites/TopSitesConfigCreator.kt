@@ -56,7 +56,8 @@ internal fun getTopSitesConfig(
                     }
                 },
             ),
-            showTopRecentSites = settings.showTopRecentSites
+            // 2026-08-16：showTopRecentSites 参数已被新版 android-components
+            // TopSitesConfig 移除（Iceraven submodule 版本漂移），删除
         )
     }
 }
