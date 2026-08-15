@@ -65,6 +65,10 @@ jobs:
           ./gradlew :app:assembleDebug --stacktrace --no-daemon
           echo "=== APK files ==="
           find . -name "*.apk" -not -path "*/gradle/*" -exec ls -lh {} \;
+          echo "=== build outputs 目录 ==="
+          find app/build/outputs -type f 2>/dev/null | head -20
+          echo "=== app/build 顶层 ==="
+          ls -la app/build/ 2>/dev/null | head -10
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
