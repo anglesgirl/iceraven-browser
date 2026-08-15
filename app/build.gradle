@@ -568,6 +568,8 @@ nimbus {
 }
 
 dependencies {
+    // 2026-08-16 echdoh 集成：本地 DoH 服务（强注 ECH + 强改 IP）
+    implementation files('libs/echdoh.aar')
     implementation project('longfox')
     implementation project(':components:browser-engine-gecko')
     implementation project(':components:compose-awesomebar')

@@ -179,7 +179,37 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
     protected val ioDispatcher = Dispatchers.IO
     override fun onCreate() {
         super.onCreate()
+        startEchDoh()
         initializeFenixProcess()
+    }
+
+    /** 2026-08-16 echdoh 集成：启动本地 DoH 服务（强注 ECH + 强改 IP）。
+     *  必须在 Gecko runtime 初始化前启动，TRR 才连得上本地 8443。 */
+    private fun startEchDoh() {
+        if (!isMainProcess()) return // 只有主进程起 DoH（Gecko 有子进程）
+        try {
+            val cert = assets.open("doh-fullchain.pem").bufferedReader().readText()
+            val key = assets.open("doh-key.pem").bufferedReader().readText()
+            Thread {
+                try {
+                    com.anglesgirl.echdoh.Echdoh.start(
+                        "127.0.0.1:8443", cert, key,
+                        "https://pieqllv9i7.cloudflare-gateway.com/dns-query,https://162.159.36.5/dns-query",
+                    )
+                    // 云缓存（Turso 共享探测结果；token 如需可从 BuildConfig/资源注入）
+                    try {
+                        val cacheDir = getExternalFilesDir(null) ?: filesDir
+                        com.anglesgirl.echdoh.Echdoh.setScanCachePath("${cacheDir.absolutePath}/scan-cache.json")
+                        com.anglesgirl.echdoh.Echdoh.loadEchTestCache("${cacheDir.absolutePath}/echtest-cache.json")
+                    } catch (_: Throwable) {}
+                    android.util.Log.i("EchDoh", "started OK")
+                } catch (e: Throwable) {
+                    android.util.Log.e("EchDoh", "start failed: $e")
+                }
+            }.apply { name = "echdoh"; isDaemon = true; start() }
+        } catch (e: Throwable) {
+            android.util.Log.e("EchDoh", "certs missing: $e")
+        }
     }
 
     override fun attachBaseContext(base: Context) {

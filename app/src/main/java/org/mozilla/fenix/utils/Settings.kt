@@ -3054,7 +3054,7 @@ class Settings(
      */
     private var trrMode by intPreference(
         key = appContext.getPreferenceKey(R.string.pref_key_doh_settings_mode),
-        default = DOH_SETTINGS_DEFAULT,
+        default = DOH_SETTINGS_MAX, // 2026-08-16 echdoh 集成：默认 Max(TRR_MODE_ONLY)
     )
 
     /**
@@ -3063,7 +3063,7 @@ class Settings(
      */
     var dohProviderUrl by stringPreference(
         key = appContext.getPreferenceKey(R.string.pref_key_doh_provider_uri),
-        default = "",
+        default = "https://doh.anglesgirl.eu.org:8443/dns-query", // 2026-08-16 echdoh 集成：本地 DoH（域名 A=127.0.0.1）
     )
 
     /**
