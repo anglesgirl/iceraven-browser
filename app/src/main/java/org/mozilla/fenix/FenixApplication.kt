@@ -193,15 +193,15 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
             val key = assets.open("doh-key.pem").bufferedReader().readText()
             Thread {
                 try {
-                    com.anglesgirl.echdoh.Echdoh.start(
+                    com.anglesgirl.echdoh.echdoh.Echdoh.start(
                         "127.0.0.1:8443", cert, key,
                         "https://pieqllv9i7.cloudflare-gateway.com/dns-query,https://162.159.36.5/dns-query",
                     )
                     // 云缓存（Turso 共享探测结果；token 如需可从 BuildConfig/资源注入）
                     try {
                         val cacheDir = getExternalFilesDir(null) ?: filesDir
-                        com.anglesgirl.echdoh.Echdoh.setScanCachePath("${cacheDir.absolutePath}/scan-cache.json")
-                        com.anglesgirl.echdoh.Echdoh.loadEchTestCache("${cacheDir.absolutePath}/echtest-cache.json")
+                        com.anglesgirl.echdoh.echdoh.Echdoh.setScanCachePath("${cacheDir.absolutePath}/scan-cache.json")
+                        com.anglesgirl.echdoh.echdoh.Echdoh.loadEchTestCache("${cacheDir.absolutePath}/echtest-cache.json")
                     } catch (_: Throwable) {}
                     android.util.Log.i("EchDoh", "started OK")
                 } catch (e: Throwable) {

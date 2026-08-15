@@ -63,7 +63,7 @@ object EchDohCertGuide {
             val f = java.io.File(activity.cacheDir, "echdoh-ca.pem")
             f.writeBytes(ca)
             if (Build.VERSION.SDK_INT >= 34) {
-                val intent = Intent(KeyChain.ACTION_INSTALL_CERT).apply {
+                val intent = KeyChain.createInstallIntent().apply {
                     putExtra(KeyChain.EXTRA_CERTIFICATE, ca)
                     putExtra(KeyChain.EXTRA_NAME, "echdoh-local-CA")
                 }
