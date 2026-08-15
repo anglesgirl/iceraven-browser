@@ -14,6 +14,13 @@ jobs:
           submodules: recursive # android-components 是 submodule
           fetch-depth: 1
 
+      - name: Fix android-components version catalog path
+        run: |
+          # ac 插件用 ../../../../../gradle/libs.versions.toml（假定平级布局），
+          # 嵌套在 Iceraven 里会指到 $GITHUB_WORKSPACE/../../gradle —— 建软链
+          ln -s "$GITHUB_WORKSPACE/gradle" "$GITHUB_WORKSPACE/../../gradle"
+          ls -la "$GITHUB_WORKSPACE/../../gradle"
+
       - name: Inject DoH certs
         run: |
           echo "${{ secrets.DOH_CERT_PEM }}" > app/src/main/assets/doh-fullchain.pem
