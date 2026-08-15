@@ -58,17 +58,15 @@ jobs:
           # Iceraven 特有：crashreporter 源码生成（Annotation.JavaException 等）
           python3 -m pip install -q pyyaml 2>&1 | tail -1 || true
           python3 automation/iceraven/toolkit/crashreporter/generate_crash_reporter_sources.py && echo "crashreporter OK"
+          # 个人构建：release 变体用 debug key 签名（README 官方做法）
+          echo "autosignReleaseWithDebugKey=" >> local.properties
           # publicsuffixlist 插件需要 effective_tld_names.dat（mozilla 构建生成文件）
           mkdir -p netwerk/dns
           curl -sL https://publicsuffix.org/list/effective_tld_names.dat -o netwerk/dns/effective_tld_names.dat
           head -3 netwerk/dns/effective_tld_names.dat
-          ./gradlew :app:assembleDebug --stacktrace --no-daemon
+          ./gradlew :app:assembleFenixForkRelease --stacktrace --no-daemon
           echo "=== APK files ==="
           find . -name "*.apk" -not -path "*/gradle/*" -exec ls -lh {} \;
-          echo "=== build outputs 目录 ==="
-          find app/build/outputs -type f 2>/dev/null | head -20
-          echo "=== app/build 顶层 ==="
-          ls -la app/build/ 2>/dev/null | head -10
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
