@@ -66,7 +66,9 @@ jobs:
           head -3 netwerk/dns/effective_tld_names.dat
           ./gradlew :app:assembleForkDebug --stacktrace --no-daemon
           echo "=== APK files ==="
-          find . -name "*.apk" -not -path "*/gradle/*" -exec ls -lh {} \;
+          find . -name "*.apk" -exec ls -lh {} \;
+          echo "=== outputs 目录 ==="
+          find . -type d -name outputs -exec ls {} \;
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
@@ -76,5 +78,6 @@ jobs:
             app/build/outputs/apk/**/*.apk
             app/build/outputs/*.apk
             **/build/outputs/apk/**/*.apk
+            gradle/**/*.apk
           if-no-files-found: error
           retention-days: 14
