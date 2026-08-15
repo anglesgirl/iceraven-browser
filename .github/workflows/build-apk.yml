@@ -52,6 +52,10 @@ jobs:
         env:
           GRADLE_OPTS: '-Dorg.gradle.jvmargs=-Xmx5g -XX:MaxMetaspaceSize=1g'
         run: |
+          # glean 插件需要预建 python venv（glean_parser 生成 metrics 源码）
+          python3 -m venv build/glean_venv
+          build/glean_venv/bin/pip install -q glean_parser 2>&1 | tail -1 || true
+          build/glean_venv/bin/python -c "import glean_parser; print('glean_parser OK')" || true
           ./gradlew :app:assembleDebug --stacktrace --no-daemon
 
       - name: Upload APK
