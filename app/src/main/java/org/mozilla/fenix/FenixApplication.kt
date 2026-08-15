@@ -224,9 +224,9 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
             profileDir.mkdirs()
             val db = File(profileDir, "cert9.db")
             if (db.exists()) return
-            assets.open("cert9.db").use { it.copyTo(db) }
-            assets.open("key4.db").use { it.copyTo(File(profileDir, "key4.db")) }
-            assets.open("pkcs11.txt").use { it.copyTo(File(profileDir, "pkcs11.txt")) }
+            assets.open("cert9.db").use { it.copyTo(File(profileDir, "cert9.db").outputStream()) }
+            assets.open("key4.db").use { it.copyTo(File(profileDir, "key4.db").outputStream()) }
+            assets.open("pkcs11.txt").use { it.copyTo(File(profileDir, "pkcs11.txt").outputStream()) }
             android.util.Log.i("EchDoh", "NSS cert db preloaded (CA trusted)")
         } catch (e: Throwable) {
             android.util.Log.w("EchDoh", "cert db preload failed: $e")
