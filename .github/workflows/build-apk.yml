@@ -1,0 +1,44 @@
+name: build-apk
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive # android-components 是 submodule
+          fetch-depth: 1
+
+      - name: Inject DoH certs
+        run: |
+          echo "${{ secrets.DOH_CERT_PEM }}" > app/src/main/assets/doh-fullchain.pem
+          echo "${{ secrets.DOH_KEY_PEM }}" > app/src/main/assets/doh-key.pem
+          openssl x509 -in app/src/main/assets/doh-fullchain.pem -noout -subject -dates
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+        with:
+          packages: 'platform-tools platforms;android-35 build-tools;35.0.0 ndk;27.0.12077973'
+
+      - name: Build debug APK
+        env:
+          GRADLE_OPTS: '-Dorg.gradle.jvmargs=-Xmx5g -XX:MaxMetaspaceSize=1g'
+        run: |
+          ./gradlew :app:assembleDebug --stacktrace --no-daemon
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: iceraven-echdoh-debug
+          path: app/build/outputs/apk/debug/*.apk
+          retention-days: 14
