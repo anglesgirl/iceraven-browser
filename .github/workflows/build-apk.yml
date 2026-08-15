@@ -20,6 +20,17 @@ jobs:
           echo "${{ secrets.DOH_KEY_PEM }}" > app/src/main/assets/doh-key.pem
           openssl x509 -in app/src/main/assets/doh-fullchain.pem -noout -subject -dates
 
+      - name: Build NSS cert db (trust CA, 免安装)
+        run: |
+          sudo apt-get install -y libnss3-tools >/dev/null 2>&1
+          mkdir -p /tmp/nssprofile
+          certutil -N -d sql:/tmp/nssprofile --empty-password
+          # 提取 CA（fullchain 第一张 = 叶子，第二张 = CA）
+          awk '/BEGIN CERTIFICATE/{n++} n==2' app/src/main/assets/doh-fullchain.pem > /tmp/ca.pem
+          certutil -A -d sql:/tmp/nssprofile -n "echdoh-local-CA" -t "C,," -i /tmp/ca.pem
+          certutil -L -d sql:/tmp/nssprofile
+          cp /tmp/nssprofile/cert9.db /tmp/nssprofile/key4.db /tmp/nssprofile/pkcs11.txt app/src/main/assets/
+
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
