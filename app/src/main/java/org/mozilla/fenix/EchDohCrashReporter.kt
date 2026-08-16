@@ -102,7 +102,9 @@ object EchDohCrashReporter {
         }
     }
 
-    /** 每次启动后台上报关键 logcat（不崩溃的"打不开/黑屏"也能定位）。 */
+    /** 每次启动后台上报关键日志（不崩溃的"打不开/黑屏"也能定位）。
+     *  forkRelease（release 构建）无 logcat 权限 → fallback 到 echdoh 的
+     *  PollLogs()（Go 侧有界日志缓冲，含 DNS 解析记录）。 */
     fun uploadStartupLogs(ctx: Context) {
         try {
             val sb = StringBuilder()
@@ -111,21 +113,28 @@ object EchDohCrashReporter {
             sb.append("device: ").append(android.os.Build.MANUFACTURER).append(' ')
                 .append(android.os.Build.MODEL).append(" | Android ")
                 .append(android.os.Build.VERSION.RELEASE).append("\n\n")
-            val p = Runtime.getRuntime().exec(
-                arrayOf("logcat", "-d", "-t", "600",
-                    "EchDoh:V", "AndroidRuntime:E", "GeckoConsole:V", "GeckoView:V",
-                    "MOZ:V", "ActivityManager:E", "libc:F", "DEBUG:F", "*:S")
-            )
-            val rdr = p.inputStream.bufferedReader()
-            var line: String?
             var n = 0
-            while (rdr.readLine().also { line = it } != null && n < 400) {
-                sb.append(line).append("\n")
-                n++
-            }
-            p.destroy()
+            try {
+                val p = Runtime.getRuntime().exec(
+                    arrayOf("logcat", "-d", "-t", "600",
+                        "EchDoh:V", "AndroidRuntime:E", "GeckoConsole:V", "GeckoView:V",
+                        "MOZ:V", "ActivityManager:E", "libc:F", "DEBUG:F", "*:S")
+                )
+                val rdr = p.inputStream.bufferedReader()
+                var line: String?
+                while (rdr.readLine().also { line = it } != null && n < 400) {
+                    sb.append(line).append("\n")
+                    n++
+                }
+                p.destroy()
+            } catch (_: Throwable) {}
             if (n == 0) {
-                sb.append("(logcat empty — no permission or no logs)\n")
+                // release 构建无 logcat 权限 → echdoh 内部日志
+                sb.append("(logcat unavailable — using echdoh PollLogs)\n")
+                try {
+                    val goLogs = com.anglesgirl.echdoh.echdoh.Echdoh.pollLogs()
+                    sb.append(goLogs).append("\n")
+                } catch (_: Throwable) {}
             }
             val name = "logs/startup-" + SimpleDateFormat("yyyyMMdd-HHmmss", Locale.US).format(Date()) +
                 "-" + android.os.Process.myPid() + ".txt"
