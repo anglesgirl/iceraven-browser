@@ -188,7 +188,6 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
      *  必须在 Gecko runtime 初始化前启动，TRR 才连得上本地 8443。 */
     private fun startEchDoh() {
         if (!isMainProcess()) return // 只有主进程起 DoH（Gecko 有子进程）
-        preloadNssCertDb() // 免安装：预置信任 CA 的 cert9.db 到 GeckoView profile
         try {
             val cert = assets.open("doh-fullchain.pem").bufferedReader().readText()
             val key = assets.open("doh-key.pem").bufferedReader().readText()
@@ -214,24 +213,9 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
         }
     }
 
-    /** 免安装证书方案（2026-08-16）：把 CI 生成的 NSS cert9.db（信任
-     *  echdoh-local-CA）预置到 GeckoView profile（filesDir/geckoview）。
-     *  Gecko 初始化 NSS 时读到已信任的 CA → 自签 DoH 证书直接通过校验。
-     *  只在 profile 不存在 cert9.db 时写入（不覆盖 Gecko 后续变更）。 */
-    private fun preloadNssCertDb() {
-        try {
-            val profileDir = File(filesDir, "geckoview")
-            profileDir.mkdirs()
-            val db = File(profileDir, "cert9.db")
-            if (db.exists()) return
-            assets.open("cert9.db").use { it.copyTo(File(profileDir, "cert9.db").outputStream()) }
-            assets.open("key4.db").use { it.copyTo(File(profileDir, "key4.db").outputStream()) }
-            assets.open("pkcs11.txt").use { it.copyTo(File(profileDir, "pkcs11.txt").outputStream()) }
-            android.util.Log.i("EchDoh", "NSS cert db preloaded (CA trusted)")
-        } catch (e: Throwable) {
-            android.util.Log.w("EchDoh", "cert db preload failed: $e")
-        }
-    }
+    /** 免安装证书方案（cert9.db 预置）已废弃 —— 2026-08-16 实测与
+     *  GeckoView profile 初始化冲突（App 弹"需要重新启动"）。
+     *  改回引导安装：EchDohCertGuide 首次启动弹窗装 CA（100 年，装一次）。 */
 
     override fun attachBaseContext(base: Context) {
         // Sets the locale information. Other threads do not have locale aware needs
