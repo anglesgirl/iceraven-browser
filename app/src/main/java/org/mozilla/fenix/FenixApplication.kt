@@ -194,18 +194,23 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
         if (!isMainProcess()) return // 只有主进程起 DoH（Gecko 有子进程）
         Thread {
             try {
-                // 证书 OTA（2026-08-16）：优先 R2 拉最新 LE 证书（续期零重装），
-                // 失败用 APK 内置兜底
+                // 证书 OTA（2026-08-16）：优先种子 TXT 的 R2 配置（远程可改），
+                // 失败用内置 R2 凭证兜底；再失败用 APK 内置证书
                 var cert: String
                 var key: String
+                val certPass = "MwfJA5tmdpS5WQwVWmmJnnRglRwGAuoh" // 32 位，内置唯一机密
                 try {
-                    val r2 = com.anglesgirl.echdoh.echdoh.Echdoh.fetchCertFromR2(
-                        "https://cce6c3a3b595692f6041a278411fb20e.r2.cloudflarestorage.com",
-                        "echdoh-certs", "echdoh-cert.b64",
-                        "81b656e3afd8f3dc3a9a24a2864da3f2",
-                        "922cd9103f0baa391e026a5fd4f5f5361b0da9b9ffd85b32403f2c7ca9130ae4",
-                        "anglesgirl-echdoh-2026",
-                    )
+                    var r2 = com.anglesgirl.echdoh.echdoh.Echdoh.fetchCertFromR2Auto(certPass)
+                    if (r2.isNullOrEmpty()) {
+                        // 种子 TXT 无 r2 配置 → 内置凭证兜底
+                        r2 = com.anglesgirl.echdoh.echdoh.Echdoh.fetchCertFromR2(
+                            "https://cce6c3a3b595692f6041a278411fb20e.r2.cloudflarestorage.com",
+                            "echdoh-certs", "echdoh-cert.b64",
+                            "81b656e3afd8f3dc3a9a24a2864da3f2",
+                            "922cd9103f0baa391e026a5fd4f5f5361b0da9b9ffd85b32403f2c7ca9130ae4",
+                            certPass,
+                        )
+                    }
                     if (r2.isNotEmpty() && r2.contains("===KEY===")) {
                         val parts = r2.split("\n===KEY===\n", limit = 2)
                         cert = parts[0]; key = parts[1]
