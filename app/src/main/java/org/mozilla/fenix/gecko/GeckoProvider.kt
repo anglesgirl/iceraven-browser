@@ -134,19 +134,20 @@ object GeckoProvider {
             )
             .isolatedProcessEnabled(context.settings().isIsolatedProcessEnabled)
             .appZygoteProcessEnabled(context.settings().isAppZygoteEnabled)
-            // 2026-08-16 echdoh 集成：ECH 强制（禁止降级明文）
-            // fallback_to_origin_when_all_failed=false → ECH 失败不降级明文
-            // → 不产生 24h 降级缓存 → 不会"坏一次就一直是重置/挂起"
-            // （我们强注 CF 公共 ECH，明文降级只会被墙，毫无意义）
-            .setPreference("network.dns.echconfig.enabled", true)
-            .setPreference("network.dns.echconfig.fallback_to_origin_when_all_failed", false)
-            .setPreference("network.dns.echconfig.enable_draft", true)
 
         if (FxNimbus.features.fission.value().shouldUseNimbus) {
             builder
                 .fissionEnabled(FxNimbus.features.fission.value().enabled)
         }
 
-        return builder.build()
+        val settings = builder.build()
+        // 2026-08-16 echdoh 集成：ECH 强制（禁止降级明文）
+        // fallback_to_origin_when_all_failed=false → ECH 失败不降级明文
+        // → 不产生降级缓存 → 不会"坏一次就一直是重置/挂起"
+        settings.setPreference("network.dns.echconfig.enabled", true)
+        settings.setPreference("network.dns.echconfig.fallback_to_origin_when_all_failed", false)
+        settings.setPreference("network.dns.echconfig.enable_draft", true)
+
+        return settings
     }
 }
