@@ -140,14 +140,9 @@ object GeckoProvider {
                 .fissionEnabled(FxNimbus.features.fission.value().enabled)
         }
 
-        val settings = builder.build()
-        // 2026-08-16 echdoh 集成：ECH 强制（禁止降级明文）
-        // fallback_to_origin_when_all_failed=false → ECH 失败不降级明文
-        // → 不产生降级缓存 → 不会"坏一次就一直是重置/挂起"
-        settings.setPreference("network.dns.echconfig.enabled", true)
-        settings.setPreference("network.dns.echconfig.fallback_to_origin_when_all_failed", false)
-        settings.setPreference("network.dns.echconfig.enable_draft", true)
-
-        return settings
+        // 2026-08-16 注：ECH prefs 无需显式设置 —— Gecko 源码默认值即
+        // network.dns.echconfig.enabled=true + fallback_to_origin_when_all_failed=false
+        // （GeckoView 152 无 setPreference API；默认值已符合要求）
+        return builder.build()
     }
 }
