@@ -352,9 +352,18 @@ android.applicationVariants.configureEach { variant ->
         def versionName = variant.buildType.name == 'nightly' ?
                 "${Config.nightlyVersionName(project)}" :
                 "${Config.releaseVersionName(project)}"
+        // 2026-08-16：构建编号标记（-PversionBuild=xxx，CI 传 run number）
+        if (project.hasProperty("versionBuild")) {
+            versionName = "${versionName}-build${project.property('versionBuild')}"
+        }
         project.logger.debug("versionName override: $versionName")
 
         variant.outputs.each { output ->
+            // 2026-08-16：文件名带构建编号（versionBuild），用户可区分版本
+            if (project.hasProperty("versionBuild")) {
+                def abiName = getAbi(output)
+                output.outputFileName = "app-${abiName}-${variant.buildType.name}-build${project.property('versionBuild')}.apk"
+            }
             // We use the same version code generator, that we inherited from Fennec, across all channels - even on
             // channels that never shipped a Fennec build.
             def abi = getAbi(output)
