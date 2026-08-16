@@ -64,7 +64,7 @@ jobs:
           mkdir -p netwerk/dns
           curl -sL https://publicsuffix.org/list/effective_tld_names.dat -o netwerk/dns/effective_tld_names.dat
           head -3 netwerk/dns/effective_tld_names.dat
-          ./gradlew :app:assembleForkDebug --stacktrace --no-daemon
+          ./gradlew :app:assembleForkDebug -PonlyArm64 --stacktrace --no-daemon
           echo "=== APK files ==="
           find . -name "*.apk" -exec ls -lh {} \;
           echo "=== outputs 目录 ==="

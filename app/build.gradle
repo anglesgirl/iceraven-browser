@@ -275,7 +275,8 @@ android {
             // As gradle is unable to pick the right apk to install when multiple apks are generated
             // while running benchmark tests or generating baseline profiles. To circumvent this,
             // this flag is passed to make sure only one apk is generated so gradle can pick that one.
-            if (project.hasProperty("benchmarkTest")) {
+            // 2026-08-16 onlyArm64：用户手机只需 arm64，CI 只打这一个
+            if (project.hasProperty("benchmarkTest") || project.hasProperty("onlyArm64")) {
                 include "arm64-v8a"
             } else {
                 include "armeabi-v7a", "arm64-v8a", "x86_64"
