@@ -861,7 +861,7 @@ class Settings(
 
     var allowThirdPartyRootCerts by booleanPreference(
         appContext.getPreferenceKey(R.string.pref_key_allow_third_party_root_certs),
-        default = true, // 2026-08-16 echdoh 集成：信任用户安装的 CA（自签名本地 DoH 证书）
+        default = false, // 2026-08-16：正式 LE 证书（公网 CA 默认信任），无需第三方根
     )
 
     var nimbusUsePreview by booleanPreference(

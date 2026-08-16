@@ -180,7 +180,11 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
     protected val ioDispatcher = Dispatchers.IO
     override fun onCreate() {
         super.onCreate()
+        CrashReporter.install(this) // 崩溃日志自动上报 R2（2026-08-16）
         startEchDoh()
+        Thread { CrashReporter.uploadStartupLogs(this) }.apply {
+            name = "startup-logs"; isDaemon = true; start()
+        }
         initializeFenixProcess()
     }
 
@@ -188,29 +192,47 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
      *  必须在 Gecko runtime 初始化前启动，TRR 才连得上本地 8443。 */
     private fun startEchDoh() {
         if (!isMainProcess()) return // 只有主进程起 DoH（Gecko 有子进程）
-        try {
-            val cert = assets.open("doh-fullchain.pem").bufferedReader().readText()
-            val key = assets.open("doh-key.pem").bufferedReader().readText()
-            Thread {
+        Thread {
+            try {
+                // 证书 OTA（2026-08-16）：优先 R2 拉最新 LE 证书（续期零重装），
+                // 失败用 APK 内置兜底
+                var cert: String
+                var key: String
                 try {
-                    com.anglesgirl.echdoh.echdoh.Echdoh.start(
-                        "127.0.0.1:8443", cert, key,
-                        "https://pieqllv9i7.cloudflare-gateway.com/dns-query,https://162.159.36.5/dns-query",
+                    val r2 = com.anglesgirl.echdoh.echdoh.Echdoh.fetchCertFromR2(
+                        "https://cce6c3a3b595692f6041a278411fb20e.r2.cloudflarestorage.com",
+                        "echdoh-certs", "echdoh-cert.b64",
+                        "81b656e3afd8f3dc3a9a24a2864da3f2",
+                        "922cd9103f0baa391e026a5fd4f5f5361b0da9b9ffd85b32403f2c7ca9130ae4",
+                        "anglesgirl-echdoh-2026",
                     )
-                    // 云缓存（Turso 共享探测结果；token 如需可从 BuildConfig/资源注入）
-                    try {
-                        val cacheDir = getExternalFilesDir(null) ?: filesDir
-                        com.anglesgirl.echdoh.echdoh.Echdoh.setScanCachePath("${cacheDir.absolutePath}/scan-cache.json")
-                        com.anglesgirl.echdoh.echdoh.Echdoh.loadEchTestCache("${cacheDir.absolutePath}/echtest-cache.json")
-                    } catch (_: Throwable) {}
-                    android.util.Log.i("EchDoh", "started OK")
+                    if (r2.isNotEmpty() && r2.contains("===KEY===")) {
+                        val parts = r2.split("\n===KEY===\n", limit = 2)
+                        cert = parts[0]; key = parts[1]
+                        android.util.Log.i("EchDoh", "cert loaded from R2 OTA (${cert.length}B/${key.length}B)")
+                    } else {
+                        throw RuntimeException("R2 cert fetch returned empty")
+                    }
                 } catch (e: Throwable) {
-                    android.util.Log.e("EchDoh", "start failed: $e")
+                    android.util.Log.w("EchDoh", "R2 OTA failed, use built-in: $e")
+                    cert = assets.open("doh-fullchain.pem").bufferedReader().readText()
+                    key = assets.open("doh-key.pem").bufferedReader().readText()
                 }
-            }.apply { name = "echdoh"; isDaemon = true; start() }
-        } catch (e: Throwable) {
-            android.util.Log.e("EchDoh", "certs missing: $e")
-        }
+                com.anglesgirl.echdoh.echdoh.Echdoh.start(
+                    "127.0.0.1:8443", cert, key,
+                    "https://pieqllv9i7.cloudflare-gateway.com/dns-query,https://162.159.36.5/dns-query",
+                )
+                // 云缓存（Turso 共享探测结果；token 如需可从 BuildConfig/资源注入）
+                try {
+                    val cacheDir = getExternalFilesDir(null) ?: filesDir
+                    com.anglesgirl.echdoh.echdoh.Echdoh.setScanCachePath("${cacheDir.absolutePath}/scan-cache.json")
+                    com.anglesgirl.echdoh.echdoh.Echdoh.loadEchTestCache("${cacheDir.absolutePath}/echtest-cache.json")
+                } catch (_: Throwable) {}
+                android.util.Log.i("EchDoh", "started OK")
+            } catch (e: Throwable) {
+                android.util.Log.e("EchDoh", "start failed: $e")
+            }
+        }.apply { name = "echdoh"; isDaemon = true; start() }
     }
 
     /** 免安装证书方案（cert9.db 预置）已废弃 —— 2026-08-16 实测与
