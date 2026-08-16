@@ -193,6 +193,9 @@ android {
             matchingFallbacks = ['debug']
         }
         forkRelease releaseTemplate >> {
+            // 2026-08-16：个人构建用 debug key 签名（官方 CI 签名只给发布渠道，
+            // 自编译无签名装不上；debug key 签名 release 优化 + 可安装）
+            signingConfig = signingConfigs.debug
             buildConfigField "boolean", "USE_RELEASE_VERSIONING", "true"
             applicationIdSuffix ".iceraven"
             def deepLinkSchemeValue = "iceraven"
