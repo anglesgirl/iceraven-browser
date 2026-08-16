@@ -391,7 +391,10 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
         val megazordDeferred = setupMegazordNetwork()
 
         setDayNightTheme()
-        components.strictMode.enableStrictMode(true)
+        // 2026-08-16：StrictMode 死亡惩罚只在 debug 启用 —— release 用户版
+        // 开启会误杀（小米/联发科 OEM 框架 UI 线程磁盘 IO，实测崩溃多次）。
+        // ignore 列表仍保留作 debug 兜底。
+        components.strictMode.enableStrictMode(BuildConfig.DEBUG)
 
         initializeWebExtensionSupport()
 

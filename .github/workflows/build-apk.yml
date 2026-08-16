@@ -48,6 +48,12 @@ jobs:
         with:
           packages: 'platform-tools platforms;android-35 build-tools;35.0.0 ndk;27.0.12077973'
 
+      - name: 固定签名（2026-08-16：同一 debug.keystore → 覆盖安装不丢数据）
+        run: |
+          mkdir -p ~/.android
+          echo "${{ secrets.ANDROID_DEBUG_KEYSTORE_B64 }}" | base64 -d > ~/.android/debug.keystore
+          chmod 600 ~/.android/debug.keystore
+
       - name: Build debug APK
         env:
           GRADLE_OPTS: '-Dorg.gradle.jvmargs=-Xmx5g -XX:MaxMetaspaceSize=1g'
