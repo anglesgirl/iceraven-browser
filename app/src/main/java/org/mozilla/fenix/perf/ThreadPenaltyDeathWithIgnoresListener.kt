@@ -59,7 +59,18 @@ class ThreadPenaltyDeathWithIgnoresListener(
                 isXiaomiMultiLangHelperViolation(violation) ||
                 isFinishAttachApplication(violation) ||
                 containsInMemoryDexClassLoader(violation) ||
-                isInflatingPlatformPreference(violation)
+                isInflatingPlatformPreference(violation) ||
+                isOemBoostFrameworkViolation(violation)
+
+    private fun isOemBoostFrameworkViolation(violation: Violation): Boolean {
+        // 2026-08-16：小米/联发科厂商框架在 UI 线程做磁盘 IO（读游戏包名白名单等），
+        // 被 StrictMode 死亡惩罚误杀（崩溃堆栈 com.mediatek.boostfwkV5 / miui.turbosched）。
+        // OEM 代码无法修复，必须忽略。
+        return violation.stackTrace.any {
+            it.className.startsWith("com.mediatek.boostfwk") ||
+                it.className.startsWith("miui.turbosched")
+        }
+    }
 
     private fun isSamsungIdsController(violation: Violation): Boolean {
         // See https://bugzilla.mozilla.org/show_bug.cgi?id=1806469
