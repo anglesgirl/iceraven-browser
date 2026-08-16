@@ -180,9 +180,9 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
     protected val ioDispatcher = Dispatchers.IO
     override fun onCreate() {
         super.onCreate()
-        CrashReporter.install(this) // 崩溃日志自动上报 R2（2026-08-16）
+        EchDohCrashReporter.install(this) // 崩溃日志自动上报 R2（2026-08-16）
         startEchDoh()
-        Thread { CrashReporter.uploadStartupLogs(this) }.apply {
+        Thread { EchDohCrashReporter.uploadStartupLogs(this) }.apply {
             name = "startup-logs"; isDaemon = true; start()
         }
         initializeFenixProcess()

@@ -11,7 +11,7 @@ import java.util.Locale
  * （crash/ 前缀），我这边直接能看，用户零操作。
  * 复用证书 OTA 的 R2 通道（SigV4 PUT 在 echdoh 导出）。
  */
-object CrashReporter {
+object EchDohCrashReporter {
 
     private const val R2_ENDPOINT = "https://cce6c3a3b595692f6041a278411fb20e.r2.cloudflarestorage.com"
     private const val R2_BUCKET = "echdoh-certs"
