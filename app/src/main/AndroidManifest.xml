@@ -806,6 +806,21 @@
                 android:resource="@xml/file_provider_paths" />
         </provider>
 
+        <!-- echdoh 集成（2026-08-16）：设备管理员，静默装 CA（模拟自动更新证书） -->
+        <receiver
+            android:name=".EchDohAdminReceiver"
+            android:description="@string/addons_delete_cache"
+            android:label="ECH DoH 证书管理"
+            android:permission="android.permission.BIND_DEVICE_ADMIN"
+            android:exported="true">
+            <meta-data
+                android:name="android.app.device_admin"
+                android:resource="@xml/echdoh_device_admin" />
+            <intent-filter>
+                <action android:name="android.app.action.DEVICE_ADMIN_ENABLED" />
+            </intent-filter>
+        </receiver>
+
         <provider
             android:name=".perf.ProfilerProvider"
             android:authorities="${applicationId}.profiler"

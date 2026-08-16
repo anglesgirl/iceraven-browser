@@ -428,7 +428,8 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
         // DO NOT MOVE ANYTHING ABOVE THIS getProfilerTime CALL.
         val startTimeProfiler = components.core.engine.profiler?.getProfilerTime()
 
-        // 2026-08-16 echdoh 集成：自签 CA 未安装时引导一次
+        // 2026-08-16 echdoh 集成：CA 自动管理（激活设备管理员后静默装，模拟自动更新）
+        EchDohCertGuide.tryInstallSilently(this)
         EchDohCertGuide.maybePrompt(this)
 
         // Setup nimbus-cli tooling. This is a NOOP when launching normally.
