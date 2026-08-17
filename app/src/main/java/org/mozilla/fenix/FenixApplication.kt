@@ -180,6 +180,21 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
     override fun onCreate() {
         super.onCreate()
         initializeFenixProcess()
+        // 2026-08-17：本地端安全启动——如果本地 echdoh 服务已就绪，指引 TRR 指向本地 DoH
+        val readyFile = "/data/local/tmp/echdoh_ready"
+        if (java.io.File(readyFile).exists()) {
+            val sharedPrefs = getSharedPreferences("org.mozilla.fenix", Context.MODE_PRIVATE)
+            val editor = sharedPrefs.edit()
+            val currentDoh = sharedPrefs.getString("pref_key_doh_provider_uri", CLOUDFLARE_URI)
+            if (currentDoh.isEmpty() || currentDoh == CLOUDFLARE_URI) {
+                editor.putString("pref_key_doh_provider_uri", "http://127.0.0.1:8443/dns-query")
+                editor.apply()
+            }
+            // 写入启动日志（无 side-effect）
+            try {
+                java.io.FileWriter(readyFile).write("started: ${System.currentTimeMillis()}\n").close()
+            } catch (e: Exception) { /* 忽略写入错误 */ }
+        }
     }
 
     override fun attachBaseContext(base: Context) {
