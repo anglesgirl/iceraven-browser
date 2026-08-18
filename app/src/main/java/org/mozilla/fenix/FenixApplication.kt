@@ -138,6 +138,8 @@ import org.mozilla.fenix.theme.ThemeProvider
 import org.mozilla.fenix.utils.Settings
 import org.mozilla.fenix.utils.isLargeScreenSize
 import org.mozilla.fenix.wallpapers.Wallpaper
+import echdoh.Echdoh
+import java.io.File
 import java.util.Date
 import java.util.concurrent.TimeUnit
 import kotlin.math.roundToLong
@@ -177,6 +179,9 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
     protected val ioDispatcher = Dispatchers.IO
     override fun onCreate() {
         super.onCreate()
+        // 2026-08-18: 在 Fenix 网络初始化之前同步启动内嵌 echdoh DoH 服务，
+        // 确保 TRR 指向本地 DoH 时服务已经在监听，消除旧实现的启动竞态。
+        startEchDohService()
         initializeFenixProcess()
     }
 
@@ -1296,6 +1301,52 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
             )
 
             EmojiCompat.init(config)
+        }
+    }
+
+    // ---- 内嵌 echdoh DoH 服务 ----
+    // 设计要点（修复旧版"启动不来/偶发丢回"）：
+    // 1. 同步调用：在 onCreate 里直接同步启动，Fenix 网络初始化前服务已就绪，无竞态。
+    // 2. 启动去重：@Volatile 守卫，避免进程重建时重复 start。
+    // 3. 异常隔离(fail-open)：start 失败只记日志、回退系统 DNS，绝不崩溃或卡死启动。
+    // 4. 不依赖 onTerminate 停服务（Android 几乎不调用），Go 侧端口复用保证幂等。
+    @Volatile
+    private var echdohStarted = false
+
+    private fun startEchDohService() {
+        if (echdohStarted) return
+        try {
+            val cert = assets.open("doh-fullchain.pem").bufferedReader().readText()
+            val key = assets.open("doh-key.pem").bufferedReader().readText()
+            // 恢复上次保存的覆盖规则（IPv4 / IPv6）
+            val prefs = getSharedPreferences("org.mozilla.fenix", MODE_PRIVATE)
+            prefs.getString("echdoh_override", "")?.takeIf { it.isNotBlank() }?.let {
+                Echdoh.setOverride(it.replace("\n", ","))
+            }
+            prefs.getString("echdoh_override_v6", "")?.takeIf { it.isNotBlank() }?.let {
+                Echdoh.setOverrideV6(it.replace("\n", ","))
+            }
+            // 加载探针/ECH 缓存（失败忽略）
+            runCatching { Echdoh.loadProbeCache(File(filesDir, "probe-cache.json").absolutePath) }
+            runCatching { Echdoh.loadEchTestCache(File(filesDir, "echtest-cache.json").absolutePath) }
+            // 监听 0.0.0.0:8443（非 127.0.0.1，解决进程间隔离）
+            Echdoh.start(
+                "0.0.0.0:8443",
+                cert,
+                key,
+                "https://pieqllv9i7.cloudflare-gateway.com/dns-query,https://162.159.36.5/dns-query",
+            )
+            // 确认真正在监听再写 ready 标记（供 TRR 读取），而非 sleep 碰运气
+            if (Echdoh.isRunning()) {
+                File("/data/local/tmp/echdoh_ready").writeText("started: ${System.currentTimeMillis()}\n")
+                echdohStarted = true
+                Log.log(tag = "EchDoh", message = "DoH service started and listening on 0.0.0.0:8443")
+            } else {
+                Log.log(tag = "EchDoh", message = "DoH start() returned but isRunning()=false: ${Echdoh.lastError()}")
+            }
+        } catch (e: Throwable) {
+            // fail-open：启动失败不阻断浏览器启动，回退系统 DNS
+            Log.log(tag = "EchDoh", message = "startEchDohService failed (fallback to system DNS): ${e.message}", throwable = e)
         }
     }
 }

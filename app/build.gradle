@@ -492,6 +492,8 @@ nimbus {
 }
 
 dependencies {
+    // 2026-08-18: 内嵌 echdoh DoH 服务（监听 0.0.0.0:8443）
+    implementation fileTree(dir: 'libs', include: ['*.aar'])
     implementation project('longfox')
     implementation project(':components:browser-engine-gecko')
     implementation project(':components:compose-awesomebar')
