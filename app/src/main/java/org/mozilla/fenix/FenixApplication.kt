@@ -139,6 +139,7 @@ import org.mozilla.fenix.utils.Settings
 import org.mozilla.fenix.utils.isLargeScreenSize
 import org.mozilla.fenix.wallpapers.Wallpaper
 import echdoh.Echdoh
+import mozilla.components.concept.engine.Engine
 import java.io.File
 import java.util.Date
 import java.util.concurrent.TimeUnit
