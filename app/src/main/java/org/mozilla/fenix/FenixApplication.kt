@@ -140,6 +140,7 @@ import org.mozilla.fenix.utils.isLargeScreenSize
 import org.mozilla.fenix.wallpapers.Wallpaper
 import com.anglesgirl.echdoh.echdoh.Echdoh
 import mozilla.components.concept.engine.Engine
+import kotlinx.coroutines.delay
 import java.io.File
 import java.util.Date
 import java.util.concurrent.TimeUnit
