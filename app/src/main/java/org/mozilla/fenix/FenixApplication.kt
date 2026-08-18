@@ -180,23 +180,29 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
     protected val ioDispatcher = Dispatchers.IO
     override fun onCreate() {
         super.onCreate()
-        // 2026-08-18: 同步启动内嵌 echdoh DoH 服务（先于 Fenix 网络初始化，
-        // 确保本地 8443 已在监听，消除旧实现的启动竞态）。
+        // 2026-08-18: 在 Fenix 组件/engine 初始化之前，用 SharedPreferences 直接写入
+        // TRR 配置（避免触发 components 提前初始化）。engine 创建时会读取这些值，
+        // 自动把 DoH 指向本地 echdoh（域名解析到 127.0.0.1，LE 证书 Gecko 信任）。
+        // 必须在 initializeFenixProcess() 之前设好，否则 engine 用了默认值(TRR OFF)。
+        applyLocalDohPrefs()
+        // 同步启动内嵌 echdoh DoH 服务（先于 Fenix 网络初始化，确保 8443 已在监听）。
         startEchDohService()
         initializeFenixProcess()
-        // Fenix 组件就绪后，把 TRR 默认指向本地 echdoh（域名解析到 127.0.0.1，
-        // 本地 8443 用该域名 LE 证书，Gecko 信任、无需用户装证书）。
-        applyLocalDohToSettings()
     }
 
-    private fun applyLocalDohToSettings() {
+    private fun applyLocalDohPrefs() {
         try {
-            val prefs = components.settings
-            prefs.dohProviderUrl = "https://doh.anglesgirl.eu.org:8443/dns-query"
-            prefs.setDohSettingsMode(Engine.DohSettingsMode.MAX)
-            Log.log(tag = "EchDoh", message = "TRR set to local echdoh (https://doh.anglesgirl.eu.org:8443/dns-query)")
+            val prefs = getSharedPreferences("org.mozilla.fenix", MODE_PRIVATE)
+            val modeKey = getPreferenceKey(R.string.pref_key_doh_settings_mode)
+            val uriKey = getPreferenceKey(R.string.pref_key_doh_provider_uri)
+            prefs.edit().apply {
+                putInt(modeKey, 3) // DOH_SETTINGS_MAX = TRR ONLY
+                putString(uriKey, "https://doh.anglesgirl.eu.org:8443/dns-query")
+                apply()
+            }
+            Log.log(tag = "EchDoh", message = "TRR prefs set to local echdoh (https://doh.anglesgirl.eu.org:8443/dns-query, mode=3)")
         } catch (e: Throwable) {
-            Log.log(tag = "EchDoh", message = "set TRR failed: ${e.message}")
+            Log.log(tag = "EchDoh", message = "set TRR prefs failed: ${e.message}")
         }
     }
 
