@@ -46,11 +46,11 @@ jobs:
             ~/.gradle/wrapper
           key: gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
 
-      - name: Build Debug APK
-        run: ./gradlew assembleDebug --no-daemon
+      - name: Build forkRelease APK
+        run: ./gradlew assembleForkRelease --no-daemon
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: iceraven-debug-apk
-          path: app/build/outputs/apk/debug/*.apk
+          name: iceraven-forkRelease-apk
+          path: app/build/outputs/apk/forkRelease/*.apk
