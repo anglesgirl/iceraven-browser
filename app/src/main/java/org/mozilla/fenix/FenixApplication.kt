@@ -138,7 +138,7 @@ import org.mozilla.fenix.theme.ThemeProvider
 import org.mozilla.fenix.utils.Settings
 import org.mozilla.fenix.utils.isLargeScreenSize
 import org.mozilla.fenix.wallpapers.Wallpaper
-import echdoh.Echdoh
+import com.anglesgirl.echdoh.echdoh.Echdoh
 import mozilla.components.concept.engine.Engine
 import java.io.File
 import java.util.Date
@@ -1362,12 +1362,33 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
                 File("/data/local/tmp/echdoh_ready").writeText("started: ${System.currentTimeMillis()}\n")
                 echdohStarted = true
                 Log.log(tag = "EchDoh", message = "DoH service started and listening on 0.0.0.0:8443")
+                // 启动日志上报协程：每 30s 把 echdoh 运行日志增量上传 R2
+                // → 甲骨文日志管道拉取→分析→推 Telegram（无需用户操作）。
+                startEchDohLogReporter()
             } else {
                 Log.log(tag = "EchDoh", message = "DoH start() returned but isRunning()=false: ${Echdoh.lastError()}")
             }
         } catch (e: Throwable) {
             // fail-open：启动失败不阻断浏览器启动，回退系统 DNS
             Log.log(tag = "EchDoh", message = "startEchDohService failed (fallback to system DNS): ${e.message}", throwable = e)
+        }
+    }
+
+    // 每 30s 把 echdoh 增量日志上传 R2（logs/echdoh-*.txt），
+    // 甲骨文 log-pipeline 拉取→异常分析→推 Telegram。
+    private fun startEchDohLogReporter() {
+        applicationScope.launch(ioDispatcher) {
+            while (true) {
+                try {
+                    val n = Echdoh.flushLogsToR2()
+                    if (n > 0) {
+                        Log.log(tag = "EchDoh", message = "logs flushed to R2: $n bytes")
+                    }
+                } catch (e: Throwable) {
+                    // 上报失败不影响浏览器，下个周期重试
+                }
+                delay(30_000)
+            }
         }
     }
 }
