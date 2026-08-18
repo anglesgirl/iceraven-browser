@@ -179,10 +179,24 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
     protected val ioDispatcher = Dispatchers.IO
     override fun onCreate() {
         super.onCreate()
-        // 2026-08-18: 在 Fenix 网络初始化之前同步启动内嵌 echdoh DoH 服务，
-        // 确保 TRR 指向本地 DoH 时服务已经在监听，消除旧实现的启动竞态。
+        // 2026-08-18: 同步启动内嵌 echdoh DoH 服务（先于 Fenix 网络初始化，
+        // 确保本地 8443 已在监听，消除旧实现的启动竞态）。
         startEchDohService()
         initializeFenixProcess()
+        // Fenix 组件就绪后，把 TRR 默认指向本地 echdoh（域名解析到 127.0.0.1，
+        // 本地 8443 用该域名 LE 证书，Gecko 信任、无需用户装证书）。
+        applyLocalDohToSettings()
+    }
+
+    private fun applyLocalDohToSettings() {
+        try {
+            val prefs = components.settings
+            prefs.dohProviderUrl = "https://doh.anglesgirl.eu.org:8443/dns-query"
+            prefs.setDohSettingsMode(Engine.DohSettingsMode.MAX)
+            Log.log(tag = "EchDoh", message = "TRR set to local echdoh (https://doh.anglesgirl.eu.org:8443/dns-query)")
+        } catch (e: Throwable) {
+            Log.log(tag = "EchDoh", message = "set TRR failed: ${e.message}")
+        }
     }
 
     override fun attachBaseContext(base: Context) {
