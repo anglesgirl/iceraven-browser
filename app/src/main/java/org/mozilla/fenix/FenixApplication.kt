@@ -193,8 +193,8 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
     private fun applyLocalDohPrefs() {
         try {
             val prefs = getSharedPreferences("org.mozilla.fenix", MODE_PRIVATE)
-            val modeKey = getPreferenceKey(R.string.pref_key_doh_settings_mode)
-            val uriKey = getPreferenceKey(R.string.pref_key_doh_provider_uri)
+            val modeKey = "pref_key_doh_settings_mode"
+            val uriKey = "pref_key_doh_provider_uri"
             prefs.edit().apply {
                 putInt(modeKey, 3) // DOH_SETTINGS_MAX = TRR ONLY
                 putString(uriKey, "https://doh.anglesgirl.eu.org:8443/dns-query")
