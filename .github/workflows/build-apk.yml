@@ -49,8 +49,11 @@ jobs:
       - name: Build forkRelease APK
         run: ./gradlew assembleForkRelease --no-daemon
 
+      - name: Locate APK
+        run: find app/build -name "*.apk" -type f 2>/dev/null
+
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: iceraven-forkRelease-apk
-          path: app/build/outputs/apk/forkRelease/*.apk
+          path: app/build/outputs/apk/forkRelease/
