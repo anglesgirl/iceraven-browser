@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ECH Redirector 状态</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      width: 360px; padding: 16px; margin: 0;
+      background: #1a1a2e; color: #eaeaea;
+    }
+    h1 { font-size: 18px; margin: 0 0 16px; color: #00d4aa; }
+    .card {
+      background: #16213e; border-radius: 12px; padding: 16px;
+      margin-bottom: 12px; border: 1px solid #2a2a4a;
+    }
+    .row { display: flex; justify-content: space-between; margin: 8px 0; }
+    .label { color: #889; font-size: 13px; }
+    .value { font-family: monospace; font-size: 14px; color: #00d4aa; word-break: break-all; }
+    .value.error { color: #ff6b6b; }
+    .value.ok { color: #00d4aa; }
+    .btn {
+      width: 100%; padding: 12px; border: none; border-radius: 8px;
+      font-size: 14px; font-weight: 600; cursor: pointer;
+      background: linear-gradient(135deg, #00d4aa, #00a3cc);
+      color: #1a1a2e; transition: transform 0.1s, opacity 0.2s;
+    }
+    .btn:active { transform: scale(0.98); }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn.secondary { background: #2a2a4a; color: #eaeaea; }
+    .status-indicator {
+      display: inline-block; width: 8px; height: 8px; border-radius: 50%;
+      margin-right: 8px; vertical-align: middle;
+    }
+    .status-indicator.running { background: #00d4aa; box-shadow: 0 0 8px #00d4aa; }
+    .status-indicator.stopped { background: #ff6b6b; }
+    .domain-list { font-size: 12px; color: #889; margin-top: 8px; }
+    .domain-tag {
+      display: inline-block; background: #2a2a4a; padding: 2px 8px;
+      border-radius: 4px; margin: 2px 4px 2px 0; font-family: monospace;
+    }
+    .last-update { font-size: 12px; color: #889; margin-top: 4px; }
+  </style>
+</head>
+<body>
+  <h1>🛡️ ECH Redirector</h1>
+
+  <div class="card">
+    <div class="row">
+      <span><span class="status-indicator" id="statusIcon"></span><span class="label">运行状态</span></span>
+      <span class="value" id="statusText">检查中...</span>
+    </div>
+    <div class="row">
+      <span class="label">当前干净 IP</span>
+      <span class="value" id="cleanIP">—</span>
+    </div>
+    <div class="row">
+      <span class="label">重定向规则</span>
+      <span class="value" id="ruleCount">0 条</span>
+    </div>
+    <div class="row">
+      <span class="label">最后更新</span>
+      <span class="value" id="lastUpdate">从未</span>
+    </div>
+    <div class="domain-list">
+      拦截域名：
+      <span class="domain-tag">x.com</span>
+      <span class="domain-tag">twitter.com</span>
+      <span class="domain-tag">twimg.com</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <button class="btn" id="forceUpdateBtn">🔄 强制更新 IP & 规则</button>
+    <div class="last-update" id="updateMsg"></div>
+  </div>
+
+  <div class="card">
+    <button class="btn secondary" id="openOptionsBtn">⚙️ 打开扩展设置页</button>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
