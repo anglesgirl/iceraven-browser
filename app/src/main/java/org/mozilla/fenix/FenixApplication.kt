@@ -183,10 +183,10 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
         super.onCreate()
         // 2026-08-18: 在 Fenix 组件/engine 初始化之前，用 SharedPreferences 直接写入
         // TRR 配置（避免触发 components 提前初始化）。engine 创建时会读取这些值，
-        // 自动把 DoH 指向本地 echdoh（域名解析到 127.0.0.1，LE 证书 Gecko 信任）。
+        // 自动把 DoH 指向手机本地 echdoh。
         // 必须在 initializeFenixProcess() 之前设好，否则 engine 用了默认值(TRR OFF)。
         applyLocalDohPrefs()
-        // 同步启动内嵌 echdoh DoH 服务（先于 Fenix 网络初始化，确保 8443 已在监听）。
+        // 同步启动内嵌 echdoh DoH 服务（先于 Fenix 网络初始化）。
         startEchDohService()
         initializeFenixProcess()
     }
@@ -198,10 +198,10 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
             val uriKey = "pref_key_doh_provider_uri"
             prefs.edit().apply {
                 putInt(modeKey, 3) // DOH_SETTINGS_MAX = TRR ONLY
-                putString(uriKey, "https://doh.anglesgirl.eu.org:8443/dns-query")
+                putString(uriKey, "https://127.0.0.1:18443/dns-query")
                 apply()
             }
-            Log.log(tag = "EchDoh", message = "TRR prefs set to local echdoh (https://doh.anglesgirl.eu.org:8443/dns-query, mode=3)")
+            Log.log(tag = "EchDoh", message = "TRR prefs set to local echdoh (https://127.0.0.1:18443/dns-query, mode=3)")
         } catch (e: Throwable) {
             Log.log(tag = "EchDoh", message = "set TRR prefs failed: ${e.message}")
         }
@@ -1338,8 +1338,7 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
     private fun startEchDohService() {
         if (echdohStarted) return
         try {
-            val cert = assets.open("doh-fullchain.pem").bufferedReader().readText()
-            val key = assets.open("doh-key.pem").bufferedReader().readText()
+
             // 恢复上次保存的覆盖规则（IPv4 / IPv6）
             val prefs = getSharedPreferences("org.mozilla.fenix", MODE_PRIVATE)
             prefs.getString("echdoh_override", "")?.takeIf { it.isNotBlank() }?.let {
@@ -1351,18 +1350,18 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
             // 加载探针/ECH 缓存（失败忽略）
             runCatching { Echdoh.loadProbeCache(File(filesDir, "probe-cache.json").absolutePath) }
             runCatching { Echdoh.loadEchTestCache(File(filesDir, "echtest-cache.json").absolutePath) }
-            // 监听 0.0.0.0:8443（非 127.0.0.1，解决进程间隔离）
+            // 空证书参数使 Go 层在内存中生成含 127.0.0.1 SAN 的本地证书。
             Echdoh.start(
-                "0.0.0.0:8443",
-                cert,
-                key,
+                "127.0.0.1:18443",
+                "",
+                "",
                 "https://pieqllv9i7.cloudflare-gateway.com/dns-query,https://162.159.36.5/dns-query",
             )
             // 确认真正在监听再写 ready 标记（供 TRR 读取），而非 sleep 碰运气
             if (Echdoh.isRunning()) {
                 File("/data/local/tmp/echdoh_ready").writeText("started: ${System.currentTimeMillis()}\n")
                 echdohStarted = true
-                Log.log(tag = "EchDoh", message = "DoH service started and listening on 0.0.0.0:8443")
+                Log.log(tag = "EchDoh", message = "DoH service started and listening on 127.0.0.1:18443")
                 // 启动日志上报协程：每 30s 把 echdoh 运行日志增量上传 R2
                 // → 甲骨文日志管道拉取→分析→推 Telegram（无需用户操作）。
                 startEchDohLogReporter()
