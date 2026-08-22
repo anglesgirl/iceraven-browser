@@ -25,9 +25,7 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
         with:
-          api-level: 37
-          ndk-version: r27b
-          build-tools-version: 36.0.0
+          packages: 'platforms;android-37 build-tools;36.0.0 ndk;27.0.12077973'
 
       - name: Patch android-components paths (official upstream fix)
         run: bash automation/iceraven/patch_android_components.sh
