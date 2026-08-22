@@ -138,7 +138,7 @@ import org.mozilla.fenix.theme.ThemeProvider
 import org.mozilla.fenix.utils.Settings
 import org.mozilla.fenix.utils.isLargeScreenSize
 import org.mozilla.fenix.wallpapers.Wallpaper
-import com.anglesgirl.echdoh.echdoh.Echdoh
+import com.anglesgirl.echbrowser.echdoh.Echdoh
 import mozilla.components.concept.engine.Engine
 import kotlinx.coroutines.delay
 import java.io.File
