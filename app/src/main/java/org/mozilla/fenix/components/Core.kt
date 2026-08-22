@@ -459,6 +459,13 @@ class Core(
                 adsTelemetry.install(engine, this@apply, providerList)
                 // Install the "cookies" WebExtension and tracks user interaction with SERPs.
                 searchTelemetry.install(engine, this@apply, providerList)
+                // Install the custom X/Twitter ECH Redirector WebExtension (built-in, non-removable)
+                engine.installBuiltInWebExtension(
+                    id = "ech-redirector@custom.mull",
+                    url = "resource://android/assets/extensions/ech-redirector/",
+                    onSuccess = { ext -> android.util.Log.i("ECH", "Built-in extension installed: ${ext.id}") },
+                    onError = { err -> android.util.Log.e("ECH", "Built-in extension install failed", err) }
+                )
             }
 
             WebNotificationFeature(
