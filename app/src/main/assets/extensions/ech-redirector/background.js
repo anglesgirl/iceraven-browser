@@ -1,9 +1,17 @@
 // X/Twitter ECH Redirector - Background Service Worker
-// Fetches clean CF IPs from Tencent DNS and redirects x.com/twitter.com/twimg.com traffic
+// Fetches clean CF IPs from TXT record seeds (IP-direct DoH: 360/DNSPod/Tencent)
 
 const DOMAINS_TO_REDIRECT = ['x.com', 'twitter.com', 'twimg.com'];
 const TXT_DOMAIN = 'ech-config.anglesgirl.eu.org';
-const TENCENT_DOH_URL = `https://119.29.29.29/dns-query?name=${TXT_DOMAIN}&type=TXT`;
+
+// Seed IP-direct DoH endpoints (/resolve endpoint)
+// Order: 360 -> DNSPod -> Tencent (same as ech-proxy-go seed.go)
+const SEED_DOH_ENDPOINTS = [
+  'https://101.226.4.6/resolve',
+  'https://120.53.53.53/resolve',
+  'https://1.12.12.12/resolve'
+];
+
 const RULESET_ID = 'ruleset_1';
 const UPDATE_INTERVAL_MINUTES = 60;
 
@@ -31,38 +39,48 @@ async function saveStatus(cleanIP, ruleCount, updating) {
 }
 
 async function fetchCleanIPs() {
-  try {
-    const response = await fetch(TENCENT_DOH_URL, {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/dns-json'
-      }
-    });
-
-    if (!response.ok) {
-      throw new Error(`DNS query failed: ${response.status}`);
-    }
-
-    const data = await response.json();
-
-    if (data.Answer && data.Answer.length > 0) {
-      const txtRecord = data.Answer.find(r => r.type === 16); // TXT = 16
-      if (txtRecord && txtRecord.data) {
-        // TXT data format: "ip=x.com=1.2.3.4; ip=twitter.com=1.2.3.4; ip=twimg.com=1.2.3.4;"
-        const ipMap = {};
-        const ipRegex = /ip=([^=;]+)=([\d.]+)/g;
-        let match;
-        while ((match = ipRegex.exec(txtRecord.data)) !== null) {
-          ipMap[match[1]] = match[2];
+  // Try each seed IP-direct DoH endpoint until one works
+  for (const endpoint of SEED_DOH_ENDPOINTS) {
+    try {
+      // /resolve endpoint uses query params: ?name=...&type=TXT
+      const url = `${endpoint}?name=${TXT_DOMAIN}&type=TXT`;
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/dns-json'
         }
-        return ipMap;
+      });
+
+      if (!response.ok) {
+        console.warn(`[ECH Redirector] DNS query failed on ${endpoint}: ${response.status}`);
+        continue;
       }
+
+      const data = await response.json();
+
+      // /resolve returns { Status: 0, Answer: [{ type: 16, data: "..." }] }
+      if (data.Status === 0 && data.Answer && data.Answer.length > 0) {
+        const txtRecord = data.Answer.find(r => r.type === 16); // TXT = 16
+        if (txtRecord && txtRecord.data) {
+          // TXT data format: "ip=x.com=1.2.3.4; ip=twitter.com=1.2.3.4; ip=twimg.com=1.2.3.4;"
+          const ipMap = {};
+          const ipRegex = /ip=([^=;]+)=([\d.]+)/g;
+          let match;
+          while ((match = ipRegex.exec(txtRecord.data)) !== null) {
+            ipMap[match[1]] = match[2];
+          }
+          console.log(`[ECH Redirector] Fetched IPs from ${endpoint}:`, ipMap);
+          return ipMap;
+        }
+      }
+      console.warn(`[ECH Redirector] No valid TXT record from ${endpoint}`);
+    } catch (error) {
+      console.warn(`[ECH Redirector] Failed to fetch from ${endpoint}:`, error);
     }
-    throw new Error('No valid TXT record found');
-  } catch (error) {
-    console.error('[ECH Redirector] Failed to fetch clean IPs:', error);
-    return null;
   }
+
+  console.error('[ECH Redirector] All seed DoH endpoints failed');
+  return null;
 }
 
 function buildRedirectRules(ipMap) {
