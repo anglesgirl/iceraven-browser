@@ -30,7 +30,7 @@ async function saveStatus(cleanIP, ruleCount, updating) {
   await chrome.storage.local.set(data);
 }
 
-async function fetchCleanIP() {
+async function fetchCleanIPs() {
   try {
     const response = await fetch(TENCENT_DOH_URL, {
       method: 'GET',
@@ -46,33 +46,35 @@ async function fetchCleanIP() {
     const data = await response.json();
 
     if (data.Answer && data.Answer.length > 0) {
-      // TXT record contains the clean IP
       const txtRecord = data.Answer.find(r => r.type === 16); // TXT = 16
       if (txtRecord && txtRecord.data) {
-        // TXT data format: "ip=x.com=1.2.3.4; ip=twitter.com=1.2.3.4; ..."
-        const match = txtRecord.data.match(/ip=x\.com=([\d.]+)/);
-        if (match) {
-          return match[1];
+        // TXT data format: "ip=x.com=1.2.3.4; ip=twitter.com=1.2.3.4; ip=twimg.com=1.2.3.4;"
+        const ipMap = {};
+        const ipRegex = /ip=([^=;]+)=([\d.]+)/g;
+        let match;
+        while ((match = ipRegex.exec(txtRecord.data)) !== null) {
+          ipMap[match[1]] = match[2];
         }
-        // Fallback: maybe just the IP directly
-        const ipMatch = txtRecord.data.match(/^[\d.]+$/);
-        if (ipMatch) {
-          return txtRecord.data;
-        }
+        return ipMap;
       }
     }
     throw new Error('No valid TXT record found');
   } catch (error) {
-    console.error('[ECH Redirector] Failed to fetch clean IP:', error);
+    console.error('[ECH Redirector] Failed to fetch clean IPs:', error);
     return null;
   }
 }
 
-function buildRedirectRules(cleanIP) {
+function buildRedirectRules(ipMap) {
   const rules = [];
   let ruleId = 1;
 
   for (const domain of DOMAINS_TO_REDIRECT) {
+    const cleanIP = ipMap[domain];
+    if (!cleanIP) {
+      console.warn(`[ECH Redirector] No IP found for ${domain}, skipping`);
+      continue;
+    }
     // Match all subdomains and paths
     rules.push({
       id: ruleId++,
@@ -117,21 +119,30 @@ async function updateRedirectRules() {
   console.log('[ECH Redirector] Updating redirect rules...');
   await saveStatus(currentCleanIP, 0, true);
 
-  const cleanIP = await fetchCleanIP();
-  if (!cleanIP) {
-    console.error('[ECH Redirector] Could not fetch clean IP, keeping existing rules');
+  const ipMap = await fetchCleanIPs();
+  if (!ipMap) {
+    console.error('[ECH Redirector] Could not fetch clean IPs, keeping existing rules');
     await saveStatus(currentCleanIP, rulesInitialized ? DOMAINS_TO_REDIRECT.length * 2 : 0, false);
     return false;
   }
 
-  if (cleanIP === currentCleanIP && rulesInitialized) {
-    console.log('[ECH Redirector] IP unchanged, skipping update');
+  // Check if any IP changed
+  let changed = false;
+  for (const domain of DOMAINS_TO_REDIRECT) {
+    if (ipMap[domain] !== currentCleanIP?.[domain]) {
+      changed = true;
+      break;
+    }
+  }
+
+  if (!changed && rulesInitialized) {
+    console.log('[ECH Redirector] IPs unchanged, skipping update');
     await saveStatus(currentCleanIP, DOMAINS_TO_REDIRECT.length * 2, false);
     return true;
   }
 
-  currentCleanIP = cleanIP;
-  const rules = buildRedirectRules(cleanIP);
+  currentCleanIP = ipMap;
+  const rules = buildRedirectRules(ipMap);
 
   try {
     // Update dynamic rules
@@ -141,8 +152,8 @@ async function updateRedirectRules() {
     });
 
     rulesInitialized = true;
-    console.log(`[ECH Redirector] Updated ${rules.length} redirect rules for IP: ${cleanIP}`);
-    await saveStatus(cleanIP, rules.length, false);
+    console.log(`[ECH Redirector] Updated ${rules.length} redirect rules`);
+    await saveStatus(ipMap, rules.length, false);
     return true;
   } catch (error) {
     console.error('[ECH Redirector] Failed to update rules:', error);

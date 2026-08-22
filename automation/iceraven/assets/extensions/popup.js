@@ -17,15 +17,15 @@ async function loadStatus() {
     STATUS_KEYS.UPDATING
   ]);
 
-  const cleanIP = result[STATUS_KEYS.CLEAN_IP] || null;
+  const ipMap = result[STATUS_KEYS.CLEAN_IP] || null;
   const lastUpdate = result[STATUS_KEYS.LAST_UPDATE] || null;
   const ruleCount = result[STATUS_KEYS.RULE_COUNT] || 0;
   const updating = result[STATUS_KEYS.UPDATING] || false;
 
-  updateUI(cleanIP, lastUpdate, ruleCount, updating);
+  updateUI(ipMap, lastUpdate, ruleCount, updating);
 }
 
-function updateUI(cleanIP, lastUpdate, ruleCount, updating) {
+function updateUI(ipMap, lastUpdate, ruleCount, updating) {
   const statusIcon = document.getElementById('statusIcon');
   const statusText = document.getElementById('statusText');
   const cleanIPEl = document.getElementById('cleanIP');
@@ -44,11 +44,13 @@ function updateUI(cleanIP, lastUpdate, ruleCount, updating) {
     return;
   }
 
-  if (cleanIP) {
+  if (ipMap) {
     statusIcon.className = 'status-indicator running';
     statusText.textContent = '运行正常';
     statusText.className = 'value ok';
-    cleanIPEl.textContent = cleanIP;
+    // Show all domain IPs
+    const ipLines = DOMAINS_TO_REDIRECT.map(d => `${d}: ${ipMap[d] || '—'}`).join('\n');
+    cleanIPEl.textContent = ipLines;
     cleanIPEl.className = 'value ok';
   } else {
     statusIcon.className = 'status-indicator stopped';
