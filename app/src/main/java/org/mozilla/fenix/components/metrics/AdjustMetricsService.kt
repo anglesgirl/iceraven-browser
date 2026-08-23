@@ -21,16 +21,7 @@ class AdjustMetricsService(private val application: Application) : MetricsServic
 
     override fun start() {}
 
-    override fun stop() {
-        logger.info("Stopped")
-
-        // Persist the forget-me synchronously (durable), then init Adjust to flush it.
-        // No attribution listener: opting out must not record attribution.
-        adjustSdk.gdprForgetMe(application.applicationContext)
-        CoroutineScope(dispatcher).launch {
-            ensureInitialized(application.components.settings, shouldRegisterAttributionListener = false)
-        }
-    }
+    override fun stop() {}
 
     // We're not currently sending events directly to Adjust
     override fun track(event: Event) { /* noop */ }
