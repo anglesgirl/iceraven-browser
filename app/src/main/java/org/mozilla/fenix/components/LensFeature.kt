@@ -149,7 +149,7 @@ class LensFeature(
                         url = resultUrl,
                         selectTab = true,
                         startLoading = true,
-                        private = isPrivate,
+                        private = appStore.state.mode.isPrivate,
                     )
                     appStore.dispatch(LensAction.LensResultAvailable(resultUrl))
                 }
