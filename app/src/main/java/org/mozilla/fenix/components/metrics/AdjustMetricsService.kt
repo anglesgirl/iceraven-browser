@@ -24,8 +24,12 @@ class AdjustMetricsService(private val application: Application) : MetricsServic
     override fun stop() {
         logger.info("Stopped")
 
-        Adjust.disable()
-        Adjust.gdprForgetMe(application.applicationContext)
+        // Persist the forget-me synchronously (durable), then init Adjust to flush it.
+        // No attribution listener: opting out must not record attribution.
+        adjustSdk.gdprForgetMe(application.applicationContext)
+        CoroutineScope(dispatcher).launch {
+            ensureInitialized(application.components.settings, shouldRegisterAttributionListener = false)
+        }
     }
 
     // We're not currently sending events directly to Adjust
@@ -58,6 +62,7 @@ class AdjustMetricsService(private val application: Application) : MetricsServic
         /**
          * Sets third party sharing settings based on distribution and attribution.
          */
+        @Suppress("LongParameterList")
         @VisibleForTesting
         internal fun applyThirdPartySharingSettings(
             distribution: DistributionIdManager.Distribution,
@@ -65,6 +70,9 @@ class AdjustMetricsService(private val application: Application) : MetricsServic
             isUserTikTokAttributed: Boolean,
             isUserRedditAttributed: Boolean,
             isUserXTwitterAttributed: Boolean,
+            isUserMolocoAttributed: Boolean,
+            isUserRakutenAttributed: Boolean,
+            isUserSkyflagAttributed: Boolean,
             controller: ThirdPartySharingController = AdjustThirdPartySharingController(),
         ) {
             /* noop */

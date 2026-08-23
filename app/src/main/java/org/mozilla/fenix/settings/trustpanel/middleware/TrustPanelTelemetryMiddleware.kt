@@ -37,6 +37,7 @@ class TrustPanelTelemetryMiddleware : Middleware<TrustPanelState, TrustPanelActi
             is TrustPanelAction.Navigate.SecurityCertificate -> {
                 TrustPanel.securityCertificate.record(NoExtras())
             }
+
             is TrustPanelAction.Navigate.QWAC -> {
                 TrustPanel.qwac.record(NoExtras())
             }
@@ -48,10 +49,25 @@ class TrustPanelTelemetryMiddleware : Middleware<TrustPanelState, TrustPanelActi
                 )
             }
 
+            is TrustPanelAction.Navigate.TrackersProtectionDashboard -> {
+                TrackingProtection.privacyReportTapped.record(
+                    TrackingProtection.PrivacyReportTappedExtra(
+                        source = ProtectionsDashboardFragment.SOURCE_TRUST_PANEL,
+                    ),
+                )
+            }
+
+            is TrustPanelAction.Navigate.PrivacySecuritySettings -> {
+                TrackingProtection.panelSettings.record(NoExtras())
+            }
+
+            is TrustPanelAction.UpdateDetailedTrackerCategory -> {
+                TrackingProtection.etpTrackerList.record(NoExtras())
+            }
+
             is TrustPanelAction.ClearSiteData,
             is TrustPanelAction.RequestClearSiteDataDialog,
             is TrustPanelAction.UpdateBaseDomain,
-            is TrustPanelAction.UpdateDetailedTrackerCategory,
             is TrustPanelAction.UpdateNumberOfTrackersBlocked,
             is TrustPanelAction.UpdateTrackersBlocked,
             is TrustPanelAction.TogglePermission,
@@ -61,7 +77,6 @@ class TrustPanelTelemetryMiddleware : Middleware<TrustPanelState, TrustPanelActi
             is TrustPanelAction.WebsitePermissionAction,
             is TrustPanelAction.RequestQWAC,
             is TrustPanelAction.UpdateQWAC,
-            TrustPanelAction.Navigate.PrivacySecuritySettings,
             is TrustPanelAction.Navigate.ManagePhoneFeature,
             is TrustPanelAction.Navigate.IPProtectionSettings,
             -> Unit

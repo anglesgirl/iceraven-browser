@@ -198,13 +198,6 @@ class LensImageUploaderTest {
         )
     }
 
-    private fun createUploaderWithMetrics(): LensImageUploader =
-        LensImageUploader(
-            context = metricsContext(),
-            client = mockk<Client>(),
-            userAgent = "test",
-        )
-
     private fun metricsContext(jpegBytes: ByteArray? = null): Context {
         val context = mockk<Context>()
         val resources = mockk<Resources>()

@@ -36,6 +36,7 @@ import org.mozilla.fenix.ext.isTallWindow
 import org.mozilla.fenix.ext.isWideWindow
 import org.mozilla.fenix.ext.requireComponents
 import org.mozilla.fenix.ext.showToolbar
+import org.mozilla.fenix.translations.TranslationsEnabledSettings
 import org.mozilla.fenix.utils.Settings
 import org.mozilla.fenix.utils.view.addToRadioGroup
 
@@ -51,13 +52,19 @@ class CustomizationFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFrag
     private lateinit var radioFollowDeviceTheme: RadioButtonPreference
     private val args by navArgs<CustomizationFragmentArgs>()
 
+    // Cached reactive feature state used when (re)building preferences.
+    // Defaults match the DataStore defaults (summarization off, translations on)
+    private var dynamicFeaturesStatus = DynamicFeaturesStatus(
+        isSummarizationFeatureEnabled = false,
+        isSummarizationGestureEnabled = false,
+        isTranslationsFeatureEnabled = true,
+        isTranslationsFeatureSupported = false,
+    )
+
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.customization_preferences, rootKey)
 
-        setupPreferences(
-            isSummarizationEnabled = false,
-            isSummarizationGestureEnabled = false,
-        )
+        setupPreferences(dynamicFeaturesStatus)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -65,19 +72,25 @@ class CustomizationFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFrag
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
-                val dataStore = SummarizationSettings.dataStore(requireContext())
+                val summarizationDataStore = SummarizationSettings.dataStore(requireContext())
+                val translationsDataStore = TranslationsEnabledSettings.dataStore(requireContext())
+                val browserStore = requireComponents.core.store
                 combine(
-                    dataStore.getFeatureEnabledUserStatus(),
-                    dataStore.getGestureEnabledUserStatus(),
-                ) { isFeatureEnabled, isGestureEnabled ->
-                    isFeatureEnabled to isGestureEnabled
+                    summarizationDataStore.getFeatureEnabledUserStatus(),
+                    summarizationDataStore.getGestureEnabledUserStatus(),
+                    translationsDataStore.isEnabled,
+                    browserStore.stateFlow,
+                ) { isSummarizationEnabled, isSummarizationGestureEnabled, areTranslationsEnabled, browserState ->
+                    DynamicFeaturesStatus(
+                        isSummarizationFeatureEnabled = isSummarizationEnabled == true,
+                        isSummarizationGestureEnabled = isSummarizationGestureEnabled,
+                        isTranslationsFeatureEnabled = areTranslationsEnabled,
+                        isTranslationsFeatureSupported = browserState.translationEngine.isEngineSupported ?: false,
+                    )
                 }
                     .distinctUntilChanged()
-                    .collect { (isFeatureEnabled, isGestureEnabled) ->
-                        setupPreferences(
-                            isSummarizationEnabled = isFeatureEnabled ?: false,
-                            isSummarizationGestureEnabled = isGestureEnabled,
-                        )
+                    .collect { status ->
+                        setupPreferences(status)
                     }
             }
         }
@@ -91,10 +104,9 @@ class CustomizationFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFrag
         }
     }
 
-    private fun setupPreferences(
-        isSummarizationEnabled: Boolean,
-        isSummarizationGestureEnabled: Boolean,
-    ) {
+    private fun setupPreferences(status: DynamicFeaturesStatus) {
+        dynamicFeaturesStatus = status
+
         bindFollowDeviceTheme()
         bindDarkTheme()
         bindLightTheme()
@@ -110,8 +122,8 @@ class CustomizationFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFrag
         // preference is not shown
         setupGesturesCategory(
             isSwipeToolbarToSwitchTabsVisible = !tabletAndTabStripEnabled,
-            isSummarizationEnabled = isSummarizationEnabled,
-            isSummarizationGestureEnabled = isSummarizationGestureEnabled,
+            isSummarizationEnabled = status.isSummarizationFeatureEnabled,
+            isSummarizationGestureEnabled = status.isSummarizationGestureEnabled,
         )
 
         setupDownloadCustomizationCategory()
@@ -149,6 +161,12 @@ class CustomizationFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFrag
 
         val shortcutPreference = if (isExpandedToolbarEnabled) {
             buildExpandedToolbarCustomButtonSetting()
+        } else if (settings.isTabStripEnabled) {
+            if (settings.toolbarTabStripShortcutKey != ShortcutType.NONE.value) {
+                buildTabStripToolbarWithCustomButtonSelectedSetting()
+            } else {
+                buildTabStripToolbarWithNoCustomButtonSelectedSetting()
+            }
         } else if (isAnyShortcutSelectedForSimpleToolbar) {
             buildSimpleToolbarWithCustomButtonSelectedSetting()
         } else {
@@ -166,12 +184,14 @@ class CustomizationFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFrag
         ToolbarExpandedShortcutPreference(requireContext()).apply {
             key = getString(R.string.pref_key_toolbar_expanded_shortcut)
             layoutResource = R.layout.preference_toolbar_shortcut
+            isTranslationsFeatureEnabled = dynamicFeaturesStatus.isTranslationsFeatureEnabled
         }
 
     private fun buildSimpleToolbarWithCustomButtonSelectedSetting() =
         ToolbarSimpleShortcutPreference(requireContext()).apply {
             key = getString(R.string.pref_key_toolbar_simple_shortcut)
             layoutResource = R.layout.preference_toolbar_shortcut
+            isTranslationsFeatureEnabled = dynamicFeaturesStatus.isTranslationsFeatureEnabled
             optionChangedListener = { newOption ->
                 if (newOption == null || newOption.key.value == ShortcutType.NONE.value) {
                     updateToolbarShortcut()
@@ -183,6 +203,31 @@ class CustomizationFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFrag
         ToolbarSimpleNoShortcutPreference(requireContext()).apply {
             key = getString(R.string.pref_key_toolbar_simple_no_shortcut)
             layoutResource = R.layout.preference_toolbar_shortcut
+            isTranslationsFeatureEnabled = dynamicFeaturesStatus.isTranslationsFeatureEnabled
+            optionChangedListener = { newOption ->
+                if (newOption == null || newOption.key.value != ShortcutType.NONE.value) {
+                    updateToolbarShortcut()
+                }
+            }
+        }
+
+    private fun buildTabStripToolbarWithCustomButtonSelectedSetting() =
+        ToolbarTabStripShortcutPreference(requireContext()).apply {
+            key = getString(R.string.pref_key_toolbar_tab_strip_shortcut)
+            layoutResource = R.layout.preference_toolbar_shortcut
+            isTranslationsFeatureEnabled = dynamicFeaturesStatus.isTranslationsFeatureEnabled
+            optionChangedListener = { newOption ->
+                if (newOption == null || newOption.key.value == ShortcutType.NONE.value) {
+                    updateToolbarShortcut()
+                }
+            }
+        }
+
+    private fun buildTabStripToolbarWithNoCustomButtonSelectedSetting() =
+        ToolbarTabStripNoShortcutPreference(requireContext()).apply {
+            key = getString(R.string.pref_key_toolbar_tab_strip_no_shortcut)
+            layoutResource = R.layout.preference_toolbar_shortcut
+            isTranslationsFeatureEnabled = dynamicFeaturesStatus.isTranslationsFeatureEnabled
             optionChangedListener = { newOption ->
                 if (newOption == null || newOption.key.value != ShortcutType.NONE.value) {
                     updateToolbarShortcut()
@@ -299,6 +344,7 @@ class CustomizationFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFrag
             context.components.settings.isTabStripEnabled = enabled
             updateToolbarCategoryBasedOnTabStrip(enabled)
             setupToolbarLayout()
+            updateToolbarShortcut()
             true
         }
     }
@@ -424,4 +470,11 @@ class CustomizationFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFrag
         // Used to send telemetry data about toolbar position changes
         enum class Position { TOP, BOTTOM }
     }
+
+    private data class DynamicFeaturesStatus(
+        val isSummarizationFeatureEnabled: Boolean,
+        val isSummarizationGestureEnabled: Boolean,
+        val isTranslationsFeatureEnabled: Boolean,
+        val isTranslationsFeatureSupported: Boolean,
+    )
 }

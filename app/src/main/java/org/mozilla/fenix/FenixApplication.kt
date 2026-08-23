@@ -509,7 +509,10 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
                         components.fxSuggest.ingestionScheduler.stopPeriodicIngestion()
                     }
                 }
+
                 components.core.fileUploadsDirCleaner.cleanUploadsDirectory()
+                components.settings.deletePocketDatabaseIfNeeded()
+                components.settings.deleteReportSiteDomainsDataStoreIfNeeded()
             }
             // Account manager initialization needs to happen on the main thread.
             GlobalScope.launch(Dispatchers.Main) {
@@ -668,7 +671,6 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
     private fun handleCaughtException() {
         if (
             isMainProcess() &&
-            components.settings.useNewCrashReporterFlow &&
             !components.performance.visualCompletenessQueue.isReady()
         ) {
             val intent = Intent(applicationContext, StartupCrashActivity::class.java)
@@ -1097,6 +1099,9 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
             bookmarksSuggestion.set(settings.shouldShowBookmarkSuggestions)
             clipboardSuggestionsEnabled.set(settings.shouldShowClipboardSuggestions)
             voiceSearchEnabled.set(settings.shouldShowVoiceSearch)
+            googleLensEnabled.set(
+                settings.googleLensIntegrationEnabled && settings.googleLensIntegrationUserEnabled,
+            )
             openLinksInAppEnabled.set(settings.openLinksInExternalApp)
             signedInSync.set(settings.signedInFxaAccount)
             isolatedContentProcessesEnabled.set(settings.isIsolatedProcessEnabled)
@@ -1125,6 +1130,7 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
 
             toolbarSimpleShortcut.set(settings.toolbarSimpleShortcutKey)
             toolbarExpandedShortcut.set(settings.toolbarExpandedShortcutKey)
+            toolbarTabStripShortcut.set(settings.toolbarTabStripShortcutKey)
 
             enhancedTrackingProtection.set(
                 when {
