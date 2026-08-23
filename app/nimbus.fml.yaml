@@ -34,7 +34,7 @@ import:
               "ampMobile": false,
               "wikipedia": true,
             }
-  - path: ../../android-components/components/feature/media/media.fml.yaml
+  - path: ../android-components/components/feature/media/media.fml.yaml
     channel: default
     features:
       media-notification-improvements:
