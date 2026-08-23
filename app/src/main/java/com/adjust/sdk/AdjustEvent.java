@@ -40,7 +40,7 @@ public class AdjustEvent {
     }
 
     public Double getRevenue() {
-        return 0;
+        return 0.0;
     }
 
     public String getCurrency() {
