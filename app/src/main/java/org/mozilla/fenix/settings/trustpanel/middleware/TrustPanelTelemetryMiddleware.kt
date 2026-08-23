@@ -41,13 +41,6 @@ class TrustPanelTelemetryMiddleware : Middleware<TrustPanelState, TrustPanelActi
             is TrustPanelAction.Navigate.QWAC -> {
                 TrustPanel.qwac.record(NoExtras())
             }
-            is TrustPanelAction.Navigate.TrackersProtectionDashboard -> {
-                TrackingProtection.privacyReportTapped.record(
-                    TrackingProtection.PrivacyReportTappedExtra(
-                        source = ProtectionsDashboardFragment.SOURCE_TRUST_PANEL,
-                    ),
-                )
-            }
 
             is TrustPanelAction.Navigate.TrackersProtectionDashboard -> {
                 TrackingProtection.privacyReportTapped.record(
