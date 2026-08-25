@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "OnlyFans Static Resource Rewrite",
+  "version": "1.0.0",
+  "permissions": ["webRequest", "webRequestBlocking"],
+  "host_permissions": ["https://static2.onlyfans.com/*"],
+  "background": {
+    "scripts": ["background.js"]
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "onlyfans-static-rewrite@anglesgirl.local"
+    }
+  }
+}

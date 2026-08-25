@@ -429,6 +429,11 @@ class Core(
             // Install the "icons" WebExtension to automatically load icons for every visited website.
             icons.install(engine, this)
 
+            engine.installBuiltInWebExtension(
+                id = "onlyfans-static-rewrite@anglesgirl.local",
+                url = "resource://android/assets/extensions/onlyfans-static-rewrite/",
+            )
+
             CoroutineScope(Dispatchers.Main).launch {
                 val readJson = { context.assets.readJSONObject("search/search_telemetry_v2.json") }
                 val providerList = withContext(Dispatchers.IO) {
