@@ -1,0 +1,682 @@
+{
+  "extensionName": {
+    "message": "Request Control"
+  },
+  "extensionDescription": {
+    "message": "Define rules for controlling HTTP requests."
+  },
+  "extensionManual": {
+    "message": "/_locales/en/manual.html",
+    "description": "Change to point to the localised manual.html."
+  },
+  "title_filter": {
+    "message": "Filtered: "
+  },
+  "title_block": {
+    "message": "Blocked: "
+  },
+  "title_redirect": {
+    "message": "Redirected: "
+  },
+  "title_whitelist": {
+    "message": "Whitelisted: "
+  },
+  "rule_title_filter": {
+    "message": "Filter: $HOST$",
+    "placeholders": {
+      "host": {
+        "content": "$1",
+        "example": "example.com"
+      }
+    }
+  },
+  "rule_title_redirect": {
+    "message": "Redirect: $HOST$",
+    "placeholders": {
+      "host": {
+        "content": "$1",
+        "example": "example.com"
+      }
+    }
+  },
+  "rule_title_redirect_to": {
+    "message": "$FROM$ → $TO$",
+    "placeholders": {
+      "from": {
+        "content": "$1",
+        "example": "Redirect: example.com"
+      },
+      "to": {
+        "content": "$2",
+        "example": "redirect.com"
+      }
+    }
+  },
+  "rule_title_block": {
+    "message": "Block: $HOST$",
+    "placeholders": {
+      "host": {
+        "content": "$1",
+        "example": "example.com"
+      }
+    }
+  },
+  "rule_title_whitelist": {
+    "message": "Whitelist: $HOST$",
+    "placeholders": {
+      "host": {
+        "content": "$1",
+        "example": "example.com"
+      }
+    }
+  },
+  "rule_title_secure": {
+    "message": "Secure: $HOST$",
+    "placeholders": {
+      "host": {
+        "content": "$1",
+        "example": "example.com"
+      }
+    }
+  },
+  "rule_title_new": {
+    "message": "New Rule"
+  },
+  "rule_description_new": {
+    "message": "Create a new request control rule by defining its pattern, types and action."
+  },
+  "rule_title_hosts": {
+    "message": "$HOSTS$ and $NUM$ other",
+    "placeholders": {
+      "hosts": {
+        "content": "$1",
+        "example": "host1.com, host2.com, host3.com"
+      },
+      "num": {
+        "content": "$2",
+        "example": "10"
+      }
+    }
+  },
+  "rule_description_filter": {
+    "message": "Skip redirection requests or trim query parameters"
+  },
+  "rule_description_block": {
+    "message": "Cancel requests before they are made."
+  },
+  "rule_description_redirect": {
+    "message": "Redirect request to $URL$",
+    "placeholders": {
+      "url": {
+        "content": "$1",
+        "example": "http://example.com"
+      }
+    }
+  },
+  "rule_description_whitelist": {
+    "message": "Revoke other matched rules."
+  },
+  "rule_description_secure": {
+    "message": "Upgrade non-secure (HTTP) requests to secure (HTTPS)."
+  },
+  "all_urls": {
+    "message": "All URLs"
+  },
+  "activate_false": {
+    "message": "Disable"
+  },
+  "activate_true": {
+    "message": "Enable"
+  },
+  "show_more_false": {
+    "message": "◂ Less"
+  },
+  "show_more_true": {
+    "message": "More ▸"
+  },
+  "main_frame": {
+    "message": "Document"
+  },
+  "sub_frame": {
+    "message": "Sub document"
+  },
+  "stylesheet": {
+    "message": "Stylesheet"
+  },
+  "script": {
+    "message": "Script"
+  },
+  "image": {
+    "message": "Image"
+  },
+  "object": {
+    "message": "Object"
+  },
+  "object_subrequest": {
+    "message": "Plugin"
+  },
+  "xmlhttprequest": {
+    "message": "XMLHttpRequest"
+  },
+  "xslt": {
+    "message": "XSLT"
+  },
+  "ping": {
+    "message": "Ping"
+  },
+  "beacon": {
+    "message": "Beacon"
+  },
+  "xml_dtd": {
+    "message": "XML DTD"
+  },
+  "font": {
+    "message": "Font"
+  },
+  "media": {
+    "message": "Media"
+  },
+  "websocket": {
+    "message": "WebSocket"
+  },
+  "csp_report": {
+    "message": "CSP report"
+  },
+  "imageset": {
+    "message": "Imageset"
+  },
+  "web_manifest": {
+    "message": "Web Manifest"
+  },
+  "speculative": {
+    "message": "Speculative"
+  },
+  "other": {
+    "message": "Other"
+  },
+  "options_title": {
+    "message": "Request Control - Rules"
+  },
+  "imports_title": {
+    "message": "Request Control - Imports"
+  },
+  "settings_title": {
+    "message": "Request Control - Settings"
+  },
+  "manual_title": {
+    "message": "Request Control - Manual"
+  },
+  "manual": {
+    "message": "Manual"
+  },
+  "about_title": {
+    "message": "About Request Control"
+  },
+  "about": {
+    "message": "About"
+  },
+  "see_manual": {
+    "message": "See manual."
+  },
+  "create_new_rule": {
+    "message": "Create rule"
+  },
+  "new_rule": {
+    "message": "New rule"
+  },
+  "count_patterns": {
+    "message": "Patterns: $COUNT$",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "10"
+      }
+    }
+  },
+  "count_types": {
+    "message": "Types: $COUNT$",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "10"
+      }
+    }
+  },
+  "count_rules": {
+    "message": "Rules: $COUNT$",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "10"
+      }
+    }
+  },
+  "edit": {
+    "message": "Edit"
+  },
+  "done": {
+    "message": "Done"
+  },
+  "create": {
+    "message": "Create"
+  },
+  "delete": {
+    "message": "Delete"
+  },
+  "edit_rule": {
+    "message": "Edit rule"
+  },
+  "disable": {
+    "message": "Disable"
+  },
+  "pattern": {
+    "message": "Pattern"
+  },
+  "scheme": {
+    "message": "Scheme"
+  },
+  "method": {
+    "message": "Method"
+  },
+  "host": {
+    "message": "Host"
+  },
+  "path": {
+    "message": "Path"
+  },
+  "top_level_domains": {
+    "message": "Top-level domains"
+  },
+  "include": {
+    "message": "Include"
+  },
+  "includes": {
+    "message": "Includes"
+  },
+  "exclude": {
+    "message": "Exclude"
+  },
+  "excludes": {
+    "message": "Excludes"
+  },
+  "method_placeholder": {
+    "message": "List of methods"
+  },
+  "host_placeholder": {
+    "message": "List of host patterns.."
+  },
+  "path_placeholder": {
+    "message": "List of path patterns.."
+  },
+  "tlds_placeholder": {
+    "message": "List of TLDs.."
+  },
+  "includes_placeholder": {
+    "message": "List of include patterns.."
+  },
+  "excludes_placeholder": {
+    "message": "List of exclude patterns.."
+  },
+  "any_tld": {
+    "message": "Any TLD"
+  },
+  "types": {
+    "message": "Types"
+  },
+  "any_type": {
+    "message": "Any type"
+  },
+  "action": {
+    "message": "Action"
+  },
+  "filter": {
+    "message": "Filter"
+  },
+  "block": {
+    "message": "Block"
+  },
+  "redirect": {
+    "message": "Redirect"
+  },
+  "whitelist": {
+    "message": "Whitelist"
+  },
+  "secure": {
+    "message": "Secure"
+  },
+  "filter_rules": {
+    "message": "Filter rules"
+  },
+  "block_rules": {
+    "message": "Block rules"
+  },
+  "redirect_rules": {
+    "message": "Redirect rules"
+  },
+  "whitelist_rules": {
+    "message": "Whitelist rules"
+  },
+  "secure_rules": {
+    "message": "Secure rules"
+  },
+  "new_rules": {
+    "message": "New rules"
+  },
+  "selected_rules_count": {
+    "message": "selected $COUNT$ of $TOTAL$",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "3"
+      },
+      "total": {
+        "content": "$2",
+        "example": "10"
+      }
+    }
+  },
+  "manual_text_redirect": {
+    "message": "Use pattern capturing to redirect based on the original request."
+  },
+  "filter_url_redirection": {
+    "message": "Filter URL redirection"
+  },
+  "trim_all": {
+    "message": "Remove all parameters"
+  },
+  "invert_trim": {
+    "message": "Invert trimming"
+  },
+  "remove": {
+    "message": "Remove"
+  },
+  "title_tlds": {
+    "message": "Included top-level domain names"
+  },
+  "redirect_url": {
+    "message": "Redirect URL"
+  },
+  "placeholder_trim_parameters": {
+    "message": "List of trimmed query parameters.."
+  },
+  "timestamp": {
+    "message": "Timestamp: $TIME$",
+    "placeholders": {
+      "time": {
+        "content": "$1",
+        "example": "18:32:21"
+      }
+    }
+  },
+  "request_url": {
+    "message": "Request target:"
+  },
+  "copy_to_clipboard": {
+    "message": "Copy to clipboard"
+  },
+  "copied": {
+    "message": "Copied!"
+  },
+  "new_target": {
+    "message": "New target:"
+  },
+  "rules": {
+    "message": "Rules"
+  },
+  "settings": {
+    "message": "Settings"
+  },
+  "back_to_top": {
+    "message": "Back to top"
+  },
+  "export-file-name": {
+    "message": "request-control-rules.json"
+  },
+  "export_selected": {
+    "message": "Export selected"
+  },
+  "remove_selected": {
+    "message": "Delete selected"
+  },
+  "test_selected": {
+    "message": "Test selected"
+  },
+  "zero_selected_rules": {
+    "message": "0 selected rules"
+  },
+  "one_selected_rule": {
+    "message": "1 selected rule"
+  },
+  "multiple_selected_rules": {
+    "message": "$COUNT$ selected rules",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "export_rules": {
+    "message": "Export rules"
+  },
+  "export_description": {
+    "message": "Export rules to a local file."
+  },
+  "export": {
+    "message": "Export"
+  },
+  "import_rules": {
+    "message": "Import rules"
+  },
+  "import_description": {
+    "message": "Import rules from a local file."
+  },
+  "add": {
+    "message": "Add"
+  },
+  "contents": {
+    "message": "Contents"
+  },
+  "about_description": {
+    "message": "A Firefox WebExtension for HTTP request management."
+  },
+  "faq": {
+    "message": "FAQ"
+  },
+  "contributors": {
+    "message": "Contributors"
+  },
+  "source_code": {
+    "message": "Source code"
+  },
+  "changelog": {
+    "message": "Changelog"
+  },
+  "license": {
+    "message": "License"
+  },
+  "license_clause": {
+    "message": "Request Control is licensed under the Mozilla Public License v2.0. A copy of the MPL is available in"
+  },
+  "browse_file": {
+    "message": "Browse..."
+  },
+  "version": {
+    "message": "Version: $VERSION$",
+    "placeholders": {
+      "version": {
+        "content": "$1"
+      }
+    }
+  },
+  "home_page": {
+    "message": "Home page"
+  },
+  "name": {
+    "message": "Name:"
+  },
+  "description": {
+    "message": "Description:"
+  },
+  "set_tag": {
+    "message": "Set tag"
+  },
+  "tag": {
+    "message": "Tag:"
+  },
+  "test_url": {
+    "message": "Test URL"
+  },
+  "test_selected_rules": {
+    "message": "Test selected rules"
+  },
+  "invalid_test_url": {
+    "message": "Not valid test url"
+  },
+  "no_match": {
+    "message": "No match"
+  },
+  "matched_no_change": {
+    "message": "Matched, but no change"
+  },
+  "whitelisted": {
+    "message": "Whitelisted"
+  },
+  "blocked": {
+    "message": "Blocked"
+  },
+  "upgraded_to_secure": {
+    "message": "Upgraded to secure"
+  },
+  "error_invalid_rule": {
+    "message": "Error invalid rule"
+  },
+  "invalid_target_url": {
+    "message": "Invalid target URL: $URL$",
+    "placeholders": {
+      "url": {
+        "content": "$1"
+      }
+    }
+  },
+  "enable_rules": {
+    "message": "Enable Request Control"
+  },
+  "disable_rules": {
+    "message": "Disable Request Control"
+  },
+  "log_whitelisted_requests": {
+    "message": "Log whitelisted requests"
+  },
+  "report_bug_request_feature": {
+    "message": "Report a bug / Request a feature / Ask a question"
+  },
+  "skip_within_same_domain": {
+    "message": "Ignore on same domain"
+  },
+  "redirect_document_with_other_types": {
+    "message": "Redirect document with other types"
+  },
+  "extra_matchers": {
+    "message": "Extra matchers"
+  },
+  "match_by_origin": {
+    "message": "Match by origin"
+  },
+  "any": {
+    "message": "Any"
+  },
+  "same_domain": {
+    "message": "Same domain"
+  },
+  "same_origin": {
+    "message": "Same origin"
+  },
+  "third_party_origin": {
+    "message": "Third-party origin"
+  },
+  "third_party_domain": {
+    "message": "Third-party domain"
+  },
+  "no_rules": {
+    "message": "No rules"
+  },
+  "create_or_import": {
+    "message": "Create your first rule or import rules from /predefined lists/",
+    "description": "Mark the text between two '/' to act as a link that opens the imports tab."
+  },
+  "toolbar_icon": {
+    "message": "Toolbar icon"
+  },
+  "option_show_request_counter": {
+    "message": "Show request counter on toolbar icon"
+  },
+  "option_change_toolbar_icon": {
+    "message": "Change toolbar icon on rule action"
+  },
+  "private_browsing": {
+    "message": "Private browsing"
+  },
+  "only": {
+    "message": "Only"
+  },
+  "view_list": {
+    "message": "View list"
+  },
+  "remove_list": {
+    "message": "Remove list"
+  },
+  "common_lists": {
+    "message": "Common lists"
+  },
+  "site_specific_lists": {
+    "message": "Site specific lists"
+  },
+  "my_lists": {
+    "message": "My lists"
+  },
+  "privacy": {
+    "message": "Privacy"
+  },
+  "add_url_to_rules": {
+    "message": "Add URL to rule list"
+  },
+  "duplicate_entry": {
+    "message": "Duplicate entry"
+  },
+  "imports": {
+    "message": "Imports"
+  },
+  "import_list": {
+    "message": "Import list"
+  },
+  "imported": {
+    "message": "Imported"
+  },
+  "delete_imported_rules": {
+    "message": "Delete imported rules"
+  },
+  "update_imported_rules": {
+    "message": "Update imported rules"
+  },
+  "update": {
+    "message": "Update"
+  },
+  "show_imported_rules": {
+    "message": "Show imported rules"
+  },
+  "imports_skip_redirectors": {
+    "message": "Skip common URL redirectors and dereferrers"
+  },
+  "imports_remove_parameters": {
+    "message": "Remove tracking URL query parameters"
+  },
+  "imports_remove_image_parameters": {
+    "message": "Remove image tracking URL query parameters"
+  },
+  "imports_block_beacon_and_ping": {
+    "message": "Block beacon and ping requests"
+  },
+  "imports_skip_image_downsamplers": {
+    "message": "Skip image downsamplers"
+  }
+}

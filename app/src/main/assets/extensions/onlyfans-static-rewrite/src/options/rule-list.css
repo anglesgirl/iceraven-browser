@@ -1,0 +1,60 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+rule-list * + * {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+rule-list .list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+}
+
+rule-list .list.collapsed {
+    height: 0;
+}
+
+rule-list .list > * {
+    position: relative;
+    margin: 0;
+}
+
+rule-list .header:not(.d-none) {
+    display: flex;
+    align-items: center;
+    padding: 0.2em 0;
+    font-size: 0.9em;
+}
+
+rule-list .header > * {
+    margin-right: 0.5em;
+}
+
+rule-list .header > * + * {
+    margin-top: 0.2em;
+    margin-bottom: 0.2em;
+}
+
+rule-list .select-all {
+    margin: 0 0.8rem;
+    display: flex;
+}
+
+rule-list .header > .collapse-button {
+    margin-left: auto;
+    margin-right: 1em;
+}
+
+rule-list .header > .collapse-button:before {
+    vertical-align: middle;
+}
+
+@media (max-width: 35em) {
+    rule-list .select-all {
+        display: none;
+    }
+}

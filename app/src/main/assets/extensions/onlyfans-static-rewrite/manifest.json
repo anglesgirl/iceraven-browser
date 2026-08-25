@@ -1,15 +1,39 @@
 {
-  "manifest_version": 3,
-  "name": "OnlyFans Static Resource Rewrite",
-  "version": "1.0.0",
-  "permissions": ["webRequest", "webRequestBlocking"],
-  "host_permissions": ["https://static2.onlyfans.com/*"],
-  "background": {
-    "scripts": ["background.js"]
-  },
-  "browser_specific_settings": {
-    "gecko": {
-      "id": "onlyfans-static-rewrite@anglesgirl.local"
+    "name": "Request Control (Iceraven)",
+    "description": "Request Control with a built-in static resource rewrite rule.",
+    "default_locale": "en",
+    "version": "1.16.0",
+    "manifest_version": 2,
+    "icons": {
+        "48": "icons/icon.svg",
+        "96": "icons/icon.svg"
+    },
+    "browser_specific_settings": {
+        "gecko": {
+            "id": "requestcontrol-iceraven@anglesgirl.local",
+
+            "strict_min_version": "79.0a01"
+        }
+    },
+    "permissions": [
+        "<all_urls>",
+        "storage",
+        "webNavigation",
+        "webRequest",
+        "webRequestBlocking"
+    ],
+    "options_ui": {
+        "page": "src/options/options.html",
+        "open_in_tab": true,
+        "browser_style": false
+    },
+    "browser_action": {
+        "browser_style": false,
+        "default_icon": "icons/icon.svg",
+        "default_title": "__MSG_extensionName__",
+        "default_popup": "src/popup/browser-action.html"
+    },
+    "background": {
+        "page": "src/background.html"
     }
-  }
 }

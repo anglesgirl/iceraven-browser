@@ -26,6 +26,14 @@ jobs:
       - name: Install Android SDK with pieces Gradle skips
         run: ./automation/iceraven/install-sdk.sh
 
+      - name: Install Glean parser
+        run: |
+          python3 -m venv .gradle/glean-parser-venv
+          .gradle/glean-parser-venv/bin/python -m pip install --disable-pip-version-check 'glean_parser==20.0.0'
+
+      - name: Prepare android-components catalog paths
+        run: ./automation/iceraven/prepare_android_components_catalog.sh
+
       - name: Inspect memory
         run: free -h
 
