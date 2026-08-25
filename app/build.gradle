@@ -176,6 +176,7 @@ android {
             matchingFallbacks = ['debug']
         }
         forkRelease releaseTemplate >> {
+            signingConfig signingConfigs.debug
             buildConfigField "boolean", "USE_RELEASE_VERSIONING", "true"
             applicationIdSuffix ".iceraven"
             def deepLinkSchemeValue = "iceraven"
