@@ -2899,6 +2899,7 @@
   -->
   <string name="about_debug_menu_toast_progress">再点 %1$d 下即可打开调试菜单</string>
   <string name="about_debug_menu_toast_done">已启用调试菜单</string>
+  <string name="about_network_diagnostics">网络访问诊断</string>
   <!--
     Browser long press popup menu
 

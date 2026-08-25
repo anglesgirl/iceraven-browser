@@ -246,14 +246,10 @@ class AboutFragment(
             ),
         )
 
-        return if (context.components.settings.showSecretDebugMenuThisSession) {
-            items + AboutPageItem(
-                AboutItem.NetworkDiagnostics,
-                getString(R.string.about_network_diagnostics),
-            )
-        } else {
-            items
-        }
+        return items + AboutPageItem(
+            AboutItem.NetworkDiagnostics,
+            getString(R.string.about_network_diagnostics),
+        )
     }
 
     private fun openLinkInNormalTab(url: String) {
