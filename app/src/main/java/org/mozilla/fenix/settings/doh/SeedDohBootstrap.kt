@@ -19,7 +19,7 @@ import org.minidns.hla.DnssecResolverApi
 import org.minidns.record.Record
 import org.minidns.record.TXT
 import org.mozilla.fenix.utils.Settings
-import java.net.HttpsURLConnection
+import javax.net.ssl.HttpsURLConnection
 import java.net.URI
 import java.time.Instant
 import kotlin.random.Random
