@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - iceraven
+  workflow_dispatch: {}
 
 jobs:
   release-automation:
@@ -52,7 +53,7 @@ jobs:
         with:
           gradle-home-cache-cleanup: true
           gradle-executable: /usr/bin/time
-          arguments: -v ./gradlew app:assembleForkRelease -PversionName=${{ env.VERSION_NAME }} --stacktrace --no-daemon
+          arguments: -v ./gradlew app:assembleForkRelease -PonlyArm64 -PversionName=${{ env.VERSION_NAME }} --stacktrace --no-daemon
 
       - name: Setup build tool version variable
         shell: bash
@@ -80,15 +81,3 @@ jobs:
         with:
           path: gradle/build/app/outputs/apk/forkRelease/app-arm64-v8a-forkRelease.apk
           name: ${{ env.VERSION_NAME }}-browser-arm64-v8a-forkRelease.apk
-
-      - name: Upload armeabi apk
-        uses: actions/upload-artifact@v4
-        with:
-          path: gradle/build/app/outputs/apk/forkRelease/app-armeabi-v7a-forkRelease.apk
-          name: ${{ env.VERSION_NAME }}-browser-armeabi-v7a-forkRelease.apk
-
-      - name: Upload x86_64 apk
-        uses: actions/upload-artifact@v4
-        with:
-          path: gradle/build/app/outputs/apk/forkRelease/app-x86_64-forkRelease.apk
-          name: ${{ env.VERSION_NAME }}-browser-x86_64-forkRelease.apk

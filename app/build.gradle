@@ -631,6 +631,7 @@ dependencies {
     implementation libs.google.material
     implementation libs.kotlinx.coroutines
     implementation libs.kotlinx.serialization.json
+    implementation "org.minidns:minidns-hla:1.1.1"
     implementation libs.mozilla.glean
     implementation libs.protobuf.javalite
     implementation libs.sentry

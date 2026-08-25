@@ -130,6 +130,7 @@ import org.mozilla.fenix.push.WebPushEngineIntegration
 import org.mozilla.fenix.session.VisibilityLifecycleCallback
 import org.mozilla.fenix.settings.doh.DefaultDohSettingsProvider
 import org.mozilla.fenix.settings.doh.DohSettingsProvider
+import org.mozilla.fenix.settings.doh.SeedDohBootstrap
 import org.mozilla.fenix.startupCrash.StartupCrashActivity
 import org.mozilla.fenix.theme.DefaultThemeProvider
 import org.mozilla.fenix.theme.Theme
@@ -238,6 +239,9 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
             applicationScope.launch(IO) {
                 applicationContext.getSharedPreferences(Settings.FENIX_PREFERENCES, MODE_PRIVATE)
             }
+
+            // This must run before Components creates Gecko so MAX mode receives a verified provider.
+            SeedDohBootstrap.resolveAndApply(Settings(applicationContext))
 
             // Initialization is split into two phases based on if libmegazord is fully initialized.
             setupEarlyMain()
