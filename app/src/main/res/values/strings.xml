@@ -2637,6 +2637,9 @@
         %1$d is number of long clicks left to enable the menu -->
     <string name="about_debug_menu_toast_progress">Debug menu: %1$d click(s) left to enable</string>
     <string name="about_debug_menu_toast_done">Debug menu enabled</string>
+    <string name="about_network_diagnostics">Network access diagnostics</string>
+    <string name="network_diagnostics_empty">No diagnostic events in this app session.</string>
+    <string name="network_diagnostics_clear">Clear</string>
 
     <!-- Browser long press popup menu -->
     <!-- Copy the current url -->

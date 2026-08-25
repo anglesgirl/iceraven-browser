@@ -8,6 +8,7 @@ sealed class AboutItem {
     data class ExternalLink(val type: AboutItemType, val url: String) : AboutItem()
     object Libraries : AboutItem()
     object Crashes : AboutItem()
+    object NetworkDiagnostics : AboutItem()
 }
 
 enum class AboutItemType {

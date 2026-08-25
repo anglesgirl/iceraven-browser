@@ -12,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.annotation.VisibleForTesting
 import androidx.core.content.pm.PackageInfoCompat
 import androidx.fragment.app.Fragment
@@ -23,6 +24,8 @@ import org.mozilla.fenix.BuildConfig
 import org.mozilla.fenix.GleanMetrics.Events
 import org.mozilla.fenix.R
 import org.mozilla.fenix.databinding.FragmentAboutBinding
+import org.mozilla.fenix.diagnostics.NetworkDiagnosticEvent
+import org.mozilla.fenix.diagnostics.NetworkDiagnostics
 import org.mozilla.fenix.e2e.SystemInsetsPaddedFragment
 import org.mozilla.fenix.ext.components
 import org.mozilla.fenix.ext.openToBrowser
@@ -148,6 +151,7 @@ class AboutFragment(
     @VisibleForTesting
     internal fun onDebugMenuActivated(context: Context, settings: Settings) {
         settings.showSecretDebugMenuThisSession = true
+        aboutPageAdapter?.submitList(populateAboutList())
         toastHandler.showToast(
             context,
             context.getString(R.string.about_debug_menu_toast_done),
@@ -198,7 +202,7 @@ class AboutFragment(
     private fun populateAboutList(): List<AboutPageItem> {
         val context = requireContext()
 
-        return listOf(
+        val items = listOf(
             AboutPageItem(
                 AboutItem.ExternalLink(
                     WHATS_NEW,
@@ -241,6 +245,15 @@ class AboutFragment(
                 getString(R.string.about_other_open_source_libraries),
             ),
         )
+
+        return if (context.components.settings.showSecretDebugMenuThisSession) {
+            items + AboutPageItem(
+                AboutItem.NetworkDiagnostics,
+                getString(R.string.about_network_diagnostics),
+            )
+        } else {
+            items
+        }
     }
 
     private fun openLinkInNormalTab(url: String) {
@@ -276,7 +289,30 @@ class AboutFragment(
                 val navController = findNavController()
                 navController.navigate(R.id.action_aboutFragment_to_crashListFragment)
             }
+            is AboutItem.NetworkDiagnostics -> showNetworkDiagnostics()
         }
+    }
+
+    private fun showNetworkDiagnostics() {
+        val message = NetworkDiagnostics.store.events().joinToString("\n\n") { event ->
+            when (event) {
+                is NetworkDiagnosticEvent.Rewrite -> {
+                    "Rewrite (${event.resourceType})\n${event.sourceUrl}\n-> ${event.targetUrl}"
+                }
+                is NetworkDiagnosticEvent.NavigationError -> {
+                    "Navigation error\n${event.url}\n${event.error}"
+                }
+            }
+        }.ifEmpty { getString(R.string.network_diagnostics_empty) }
+
+        AlertDialog.Builder(requireContext())
+            .setTitle(R.string.about_network_diagnostics)
+            .setMessage(message)
+            .setNegativeButton(android.R.string.cancel, null)
+            .setNeutralButton(R.string.network_diagnostics_clear) { _, _ ->
+                NetworkDiagnostics.store.clear()
+            }
+            .show()
     }
 
     companion object {

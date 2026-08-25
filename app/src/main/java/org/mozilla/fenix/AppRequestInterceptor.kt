@@ -16,6 +16,7 @@ import mozilla.components.concept.engine.request.RequestInterceptor
 import mozilla.components.concept.engine.utils.ABOUT_HOME_URL
 import mozilla.components.support.ktx.kotlin.isContentUrl
 import org.mozilla.fenix.GleanMetrics.ErrorPage
+import org.mozilla.fenix.diagnostics.NetworkDiagnostics
 import org.mozilla.fenix.ext.components
 import org.mozilla.fenix.ext.isOnline
 import java.lang.ref.WeakReference
@@ -72,6 +73,7 @@ class AppRequestInterceptor(
         uri: String?,
     ): RequestInterceptor.ErrorResponse {
         val improvedErrorType = improveErrorType(errorType)
+        uri?.let { NetworkDiagnostics.store.recordNavigationError(it, improvedErrorType.name) }
         val riskLevel = getRiskLevel(improvedErrorType)
 
         ErrorPage.visitedError.record(ErrorPage.VisitedErrorExtra(improvedErrorType.name))
