@@ -20,6 +20,28 @@ jobs:
           java-version: 17
           distribution: temurin
 
+      - name: Restore Android SDK cache
+        uses: actions/cache@v4
+        with:
+          path: ~/android-sdk/android-sdk-linux
+          key: ${{ runner.os }}-android-sdk-${{ hashFiles('automation/iceraven/install-sdk.sh') }}
+
+      - name: Restore Glean parser cache
+        uses: actions/cache@v4
+        with:
+          path: .gradle/glean-parser-venv
+          key: ${{ runner.os }}-glean-parser-20.0.0
+
+      - name: Restore Gradle cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties', 'gradle/libs.versions.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
       - name: Install Android SDK with pieces Gradle skips
         run: ./automation/iceraven/install-sdk.sh
 
@@ -49,7 +71,7 @@ jobs:
 
 
       - name: Build forkRelease variant of app
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/gradle-build-action@v3
         env:
           # Try to stop the daemon from magically vanishing by adding random memory-related arguments.
           # See <https://stackoverflow.com/a/70010526> and <https://stackoverflow.com/a/70756876>
@@ -57,7 +79,6 @@ jobs:
           # We have Java 11 so we don't have a perm size anymore.
           GRADLE_OPTS: -Dorg.gradle.jvmargs="-XX:MaxMetaspaceSize=4g -Xms1g -Xmx7g -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/dev/stderr"
         with:
-          gradle-home-cache-cleanup: true
           gradle-executable: /usr/bin/time
           arguments: -v ./gradlew app:assembleForkRelease -PversionName=${{ env.VERSION_NAME }} --stacktrace --no-daemon
 
