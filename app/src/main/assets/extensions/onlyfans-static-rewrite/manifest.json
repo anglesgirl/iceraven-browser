@@ -2,7 +2,7 @@
     "name": "Request Control (Iceraven)",
     "description": "Request Control with a built-in static resource rewrite rule.",
     "default_locale": "en",
-    "version": "1.16.0",
+    "version": "1.16.1",
     "manifest_version": 2,
     "icons": {
         "48": "icons/icon.svg",

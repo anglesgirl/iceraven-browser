@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="profiler_stop">停止性能分析</string>
+    <string name="profiler_active_notification" translatable="false">性能分析正在运行</string>
+    <string name="profiler_notification_text" translatable="false">正在采集性能数据，点按可停止。</string>
+    <string name="profiler_settings_title">性能分析设置</string>
+    <string name="profiler_filter_firefox">浏览器</string>
+    <string name="profiler_running">性能分析正在运行</string>
+    <string name="profiler_filter_firefox_explain">用于分析浏览器的推荐预设</string>
+    <string name="profiler_filter_graphics">图形</string>
+    <string name="profiler_filter_graphics_explain">用于排查浏览器图形问题的预设</string>
+    <string name="profiler_filter_media">媒体</string>
+    <string name="profiler_filter_media_explain">用于排查音频和视频问题的预设</string>
+    <string name="profiler_filter_networking">网络</string>
+    <string name="profiler_filter_networking_explain">用于排查网络问题的预设</string>
+    <string name="profiler_filter_debug">调试</string>
+    <string name="profiler_filter_debug_explain">用于定位浏览器行为的调试预设。开销较高，不适合性能分析。</string>
+    <string name="profiler_filter_web_compat">网页兼容性</string>
+    <string name="profiler_filter_web_compat_explain">用于排查网站兼容性问题的推荐预设，不用于性能分析。</string>
+    <string name="profiler_start_dialog_started">性能分析已启动</string>
+    <string name="profiler_start_cancel">取消</string>
+    <string name="profiler_gathering">正在收集性能数据</string>
+    <string name="profiler_uploaded_url_to_clipboard">性能分析链接已复制</string>
+    <string name="preferences_start_profiler">启动性能分析</string>
+</resources>

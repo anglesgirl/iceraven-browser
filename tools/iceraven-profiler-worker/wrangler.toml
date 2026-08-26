@@ -1,0 +1,20 @@
+name = "iceraven-profiler"
+main = "src/index.ts"
+compatibility_date = "2026-08-26"
+workers_dev = true
+
+[[r2_buckets]]
+binding = "PROFILES"
+bucket_name = "iceraven-profiles"
+
+[[ratelimits]]
+name = "PROFILE_UPLOAD_LIMIT"
+namespace_id = "1001"
+
+[ratelimits.simple]
+limit = 3
+period = 60
+
+[vars]
+MAX_PROFILE_BYTES = "52428800"
+PROFILE_TTL_DAYS = "30"
