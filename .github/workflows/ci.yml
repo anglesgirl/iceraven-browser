@@ -60,7 +60,7 @@ jobs:
         run: free -h
 
       - name: Create version name
-        run: echo "VERSION_NAME=$(git describe --tags HEAD)" >> $GITHUB_ENV
+        run: echo "VERSION_NAME=$(git describe --tags --always HEAD)" >> $GITHUB_ENV
 
       - name: Patch on the fly
         run: |
@@ -80,23 +80,23 @@ jobs:
           printf '%s' "$ANDROID_DEBUG_KEYSTORE_B64" | base64 --decode > "$HOME/.android/debug.keystore"
 
       - name: Build forkRelease variant of app
-        uses: gradle/gradle-build-action@v3
         env:
           # Try to stop the daemon from magically vanishing by adding random memory-related arguments.
           # See <https://stackoverflow.com/a/70010526> and <https://stackoverflow.com/a/70756876>
           # The runner seems to have ~6 gigs of memory, so we make sure to stay under that.
           # We have Java 11 so we don't have a perm size anymore.
           GRADLE_OPTS: -Dorg.gradle.jvmargs="-XX:MaxMetaspaceSize=4g -Xms1g -Xmx7g -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/dev/stderr"
-        with:
-          gradle-executable: /usr/bin/time
-          arguments: -v ./gradlew app:assembleForkRelease -PonlyArm64 -PversionName=${{ env.VERSION_NAME }} --stacktrace --no-daemon
+        run: ./gradlew app:assembleForkRelease -PonlyArm64 -PversionName=${{ env.VERSION_NAME }} --stacktrace --no-daemon
 
-      - name: Debug
+      - name: Locate arm64 apk
         run: |
-          /usr/bin/ls -alh gradle/build/app/outputs/apk/forkRelease/
+          apk=$(find app/build/outputs/apk/forkRelease -type f -name 'app-arm64-v8a-forkRelease.apk' -print -quit)
+          test -n "$apk"
+          echo "ARM64_APK=$apk" >> "$GITHUB_ENV"
+          ls -alh "$apk"
 
       - name: Upload arm64 apk
         uses: actions/upload-artifact@v4
         with:
-          path: gradle/build/app/outputs/apk/forkRelease/app-arm64-v8a-forkRelease.apk
+          path: ${{ env.ARM64_APK }}
           name: ${{ env.VERSION_NAME }}-browser-arm64-v8a-forkRelease.apk
