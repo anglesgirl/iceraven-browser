@@ -1,9 +1,8 @@
 {
-    "name": "Request Control (Iceraven)",
-    "description": "Request Control with a built-in static resource rewrite rule.",
-    "default_locale": "en",
-    "version": "1.16.1",
-    "manifest_version": 2,
+    "name": "OnlyFans static URL rewrite",
+    "description": "Redirects static2.onlyfans.com requests to onlyfans.com.",
+    "version": "1.0.1",
+    "manifest_version": 3,
     "icons": {
         "48": "icons/icon.svg",
         "96": "icons/icon.svg"
@@ -11,29 +10,12 @@
     "browser_specific_settings": {
         "gecko": {
             "id": "requestcontrol-iceraven@anglesgirl.local",
-
-            "strict_min_version": "79.0a01"
+            "strict_min_version": "140.0"
         }
     },
-    "permissions": [
-        "<all_urls>",
-        "storage",
-        "webNavigation",
-        "webRequest",
-        "webRequestBlocking"
-    ],
-    "options_ui": {
-        "page": "src/options/options.html",
-        "open_in_tab": true,
-        "browser_style": false
-    },
-    "browser_action": {
-        "browser_style": false,
-        "default_icon": "icons/icon.svg",
-        "default_title": "__MSG_extensionName__",
-        "default_popup": "src/popup/browser-action.html"
-    },
+    "permissions": ["webRequest", "webRequestBlocking"],
+    "host_permissions": ["*://static2.onlyfans.com/*"],
     "background": {
-        "page": "src/background.html"
+        "scripts": ["src/background.js"]
     }
 }

@@ -434,11 +434,11 @@ class Core(
                 id = "requestcontrol-iceraven@anglesgirl.local",
                 url = "resource://android/assets/extensions/onlyfans-static-rewrite/",
                 onSuccess = {
-                    Log.i("BundledRewrite", "Request Control installed: ${it.id}")
+                    Log.i("BundledRewrite", "OnlyFans URL rewrite installed: ${it.id}")
                     context.components.addonUpdater.registerForFutureUpdates(it.id)
                 },
                 onError = {
-                    Log.e("BundledRewrite", "Request Control installation failed", it)
+                    Log.e("BundledRewrite", "OnlyFans URL rewrite installation failed", it)
                 },
             )
 
