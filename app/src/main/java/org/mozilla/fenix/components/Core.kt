@@ -6,7 +6,6 @@ package org.mozilla.fenix.components
 
 import android.content.Context
 import android.content.res.Configuration
-import android.util.Log
 import androidx.core.content.ContextCompat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -434,11 +433,7 @@ class Core(
                 id = "requestcontrol-iceraven@anglesgirl.local",
                 url = "resource://android/assets/extensions/onlyfans-static-rewrite/",
                 onSuccess = {
-                    Log.i("BundledRewrite", "OnlyFans URL rewrite installed: ${it.id}")
                     context.components.addonUpdater.registerForFutureUpdates(it.id)
-                },
-                onError = {
-                    Log.e("BundledRewrite", "OnlyFans URL rewrite installation failed", it)
                 },
             )
 
