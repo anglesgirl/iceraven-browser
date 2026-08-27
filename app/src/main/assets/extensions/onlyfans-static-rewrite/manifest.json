@@ -16,7 +16,8 @@
     "permissions": [
         "webRequest",
         "webRequestBlocking",
-        "*://static2.onlyfans.com/*"
+        "*://static2.onlyfans.com/*",
+        "*://onlyfans.com/*"
     ],
     "background": {
         "page": "src/background.html"
