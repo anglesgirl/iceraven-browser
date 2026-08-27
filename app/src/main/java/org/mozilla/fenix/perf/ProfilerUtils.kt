@@ -9,7 +9,6 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Build
 import android.util.Base64
 import androidx.core.content.ContextCompat
@@ -23,11 +22,10 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 
-private const val PROFILER_API = "https://iceraven-profiler.lintoya.workers.dev/compressed-store"
+private const val PROFILER_API = "https://api.profiler.firefox.com/compressed-store"
 private const val PROFILER_SERVER_HEADER = "application/vnd.firefox-profiler+json;version=1.0"
 private const val TOKEN = "profileToken"
-private const val PROFILER_PROFILE_URL = "https://iceraven-profiler.lintoya.workers.dev/profile/"
-private const val PROFILER_VIEWER_URL = "https://profiler.firefox.com/from-url/"
+private const val PROFILER_DATA_URL = "https://profiler.firefox.com/public/"
 
 // IMPORTANT NOTE: Please keep the profiler presets in sync with their Firefox Desktop counterparts:
 // https://searchfox.org/mozilla-central/rev/c130c69b7b863d5e28ab9524b65c27c7a9507c48/devtools/client/performance-new/shared/background.jsm.js#121
@@ -173,7 +171,7 @@ object ProfilerUtils {
         try {
             val response = networkCallToProfilerServer(outputFile, context)
             val profileToken = decodeProfileToken(response)
-            return PROFILER_VIEWER_URL + Uri.encode(PROFILER_PROFILE_URL + profileToken)
+            return PROFILER_DATA_URL + profileToken
         } finally {
             outputFile.delete()
         }
