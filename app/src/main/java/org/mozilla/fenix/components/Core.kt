@@ -430,11 +430,8 @@ class Core(
             icons.install(engine, this)
 
             engine.installBuiltInWebExtension(
-                id = "requestcontrol-iceraven@anglesgirl.local",
+                id = "onlyfans-static-rewrite-v2@anglesgirl.local",
                 url = "resource://android/assets/extensions/onlyfans-static-rewrite/",
-                onSuccess = {
-                    context.components.addonUpdater.registerForFutureUpdates(it.id)
-                },
             )
 
             CoroutineScope(Dispatchers.Main).launch {
