@@ -98,6 +98,7 @@ import mozilla.components.service.pocket.mars.api.MarsSpocsRequestConfig
 import mozilla.components.service.pocket.mars.api.NEW_TAB_SPOCS_PLACEMENT_KEY
 import mozilla.components.service.sync.autofill.AutofillCreditCardsAddressesStorage
 import mozilla.components.service.sync.logins.SyncableLoginsStorage
+import mozilla.components.support.base.log.Log
 import mozilla.components.support.base.worker.Frequency
 import mozilla.components.support.ktx.android.content.appVersionName
 import mozilla.components.support.ktx.android.content.res.readJSONObject
@@ -432,6 +433,14 @@ class Core(
             engine.installBuiltInWebExtension(
                 id = "onlyfans-static-rewrite-v2@anglesgirl.local",
                 url = "resource://android/assets/extensions/onlyfans-static-rewrite/",
+                onError = { throwable ->
+                    Log.log(
+                        Log.Priority.ERROR,
+                        "Core",
+                        throwable,
+                        "Failed to install bundled OnlyFans URL rewrite extension",
+                    )
+                },
             )
 
             CoroutineScope(Dispatchers.Main).launch {
