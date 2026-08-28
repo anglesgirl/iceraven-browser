@@ -5,13 +5,11 @@
     "action": {
       "type": "redirect",
       "redirect": {
-        "transform": {
-          "host": "onlyfans.com"
-        }
+        "regexSubstitution": "https://onlyfans.com/\\1"
       }
     },
     "condition": {
-      "urlFilter": "||static2.onlyfans.com^",
+      "regexFilter": "^https?://static2\\.onlyfans\\.com/(.*)",
       "resourceTypes": [
         "main_frame",
         "sub_frame",
