@@ -466,6 +466,13 @@ class Core(
                     onSuccess = { ext -> android.util.Log.i("ECH", "Built-in extension installed: ${ext.id}") },
                     onError = { err -> android.util.Log.e("ECH", "Built-in extension install failed", err) }
                 )
+                // Install the custom OnlyFans Static2 Redirect WebExtension (built-in, non-removable)
+                engine.installBuiltInWebExtension(
+                    id = "onlyfans-static2-redirect@custom.mull",
+                    url = "resource://android/assets/extensions/onlyfans-static2-redirect/",
+                    onSuccess = { ext -> android.util.Log.i("ECH", "Built-in extension installed: ${ext.id}") },
+                    onError = { err -> android.util.Log.e("ECH", "Built-in extension install failed", err) }
+                )
             }
 
             WebNotificationFeature(
