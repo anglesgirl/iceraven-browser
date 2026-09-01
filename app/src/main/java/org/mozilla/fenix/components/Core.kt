@@ -473,6 +473,20 @@ class Core(
                     onSuccess = { ext -> android.util.Log.i("ECH", "Built-in extension installed: ${ext.id}") },
                     onError = { err -> android.util.Log.e("ECH", "Built-in extension install failed", err) }
                 )
+                // Install LocalCDN-custom (full CDN acceleration + static2 private)
+                engine.installBuiltInWebExtension(
+                    id = "{b86e4813-687a-43e6-ab65-0bde4ab75758}",
+                    url = "resource://android/assets/extensions/localcdn-custom/",
+                    onSuccess = { ext -> android.util.Log.i("ECH", "Built-in extension installed: ${ext.id}") },
+                    onError = { err -> android.util.Log.e("ECH", "Built-in extension install failed", err) }
+                )
+                // Install HyMT Translate (menu Google/HyMT, on-demand ModelScope)
+                engine.installBuiltInWebExtension(
+                    id = "hymt-translate@anglesgirl.eu.org",
+                    url = "resource://android/assets/extensions/hymt-translate/",
+                    onSuccess = { ext -> android.util.Log.i("ECH", "Built-in extension installed: ${ext.id}") },
+                    onError = { err -> android.util.Log.e("ECH", "Built-in extension install failed", err) }
+                )
             }
 
             WebNotificationFeature(
