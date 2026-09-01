@@ -74,13 +74,16 @@ class TranslationsDialogMiddleware(
             }
 
             is TranslationsDialogAction.TranslateAction -> {
-                // HyMT 劫持：原生 Bergamot 改走 hymt-translate 扩展（按需 ModelScope，失败回退 Google）
+                // HyMT 劫持：不再走 Bergamot，用扩展 content.js 接管（CSP安全：通过自定义事件，非 javascript: URL）
                 val from = store.state.initialFrom?.code ?: "auto"
                 val to = store.state.initialTo?.code ?: "zh"
                 val tab = browserStore.state.selectedTab
-                val js = "javascript:(function(){window.dispatchEvent(new CustomEvent('hymt-trigger',{detail:{from:'$from',to:'$to'}}));})()"
-                tab?.engineState?.engineSession?.loadUrl(js)
-                // 关闭原生对话框，由 HyMT 接管
+                // 用 evaluateJS 更可靠，避免 javascript: 被 CSP 拦截
+                tab?.engineState?.engineSession?.let { session ->
+                    // 触发 content.js 监听的 hymt-trigger
+                    session.loadUrl("javascript:void(window.dispatchEvent(new CustomEvent('hymt-trigger',{detail:{from:'$from',to:'$to'}})))")
+                    android.util.Log.i("HyMT", "hijack translate $from->$to injected")
+                }
                 store.dispatch(TranslationsDialogAction.DismissDialog(DismissDialogState.Dismiss))
                 return
             }

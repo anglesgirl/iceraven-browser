@@ -123,7 +123,7 @@ object GeckoProvider {
             .aboutConfigEnabled(true)
             .extensionsProcessEnabled(true)
             .extensionsWebAPIEnabled(true)
-            .translationsOfferPopup(context.components.settings.offerTranslation)
+            .translationsOfferPopup(false)
             .crashPullNeverShowAgain(context.components.settings.crashPullNeverShowAgain)
             .setSameDocumentNavigationOverridesLoadType(
                 FxNimbus.features.sameDocumentNavigationOverridesLoadType.value().enabled,
