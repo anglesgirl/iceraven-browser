@@ -1,0 +1,15 @@
+{
+  "manifest_version": 2,
+  "name": "HyMT 混元翻译",
+  "version": "0.1.4",
+  "description": "替换自带 Bergamot，菜单里选 谷歌译/AI混元，AI按需从 ModelScope 拉 1.25bit/2bit",
+  "browser_specific_settings": {
+    "gecko": { "id": "hymt-translate@anglesgirl.eu.org", "strict_min_version": "115.0" },
+    "gecko_android": { "id": "hymt-translate@anglesgirl.eu.org", "strict_min_version": "115.0" }
+  },
+  "permissions": ["storage", "activeTab", "*://*/*"],
+  "background": { "scripts": ["background.js"] },
+  "content_scripts": [{ "matches": ["<all_urls>"], "js": ["content.js"], "run_at": "document_idle" }],
+  "browser_action": { "default_title": "翻译", "default_popup": "popup.html", "default_icon": "icon.png" },
+  "icons": { "48": "icon.png", "96": "icon.png" }
+}
