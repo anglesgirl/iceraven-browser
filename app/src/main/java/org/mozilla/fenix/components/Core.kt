@@ -460,33 +460,41 @@ class Core(
                 // Install the "cookies" WebExtension and tracks user interaction with SERPs.
                 searchTelemetry.install(engine, this@apply, providerList)
                 // Install the custom X/Twitter ECH Redirector WebExtension (built-in, non-removable)
-                engine.installBuiltInWebExtension(
-                    id = "ech-redirector@custom.mull",
-                    url = "resource://android/assets/extensions/ech-redirector/",
-                    onSuccess = { ext -> android.util.Log.i("ECH", "Built-in extension installed: ${ext.id}") },
-                    onError = { err -> android.util.Log.e("ECH", "Built-in extension install failed", err) }
-                )
+                try {
+                    engine.installBuiltInWebExtension(
+                        id = "ech-redirector@custom.mull",
+                        url = "resource://android/assets/extensions/ech-redirector/",
+                        onSuccess = { ext -> android.util.Log.i("ECH", "Built-in extension installed: ${ext.id}") },
+                        onError = { err -> android.util.Log.e("ECH", "Built-in extension install failed ech-redirector", err) }
+                    )
+                } catch(e: Exception) { android.util.Log.e("ECH", "ech-redirector exception", e) }
                 // Install the custom OnlyFans Static2 Redirect WebExtension (built-in, non-removable)
-                engine.installBuiltInWebExtension(
-                    id = "onlyfans-static2-redirect@custom.mull",
-                    url = "resource://android/assets/extensions/onlyfans-static2-redirect/",
-                    onSuccess = { ext -> android.util.Log.i("ECH", "Built-in extension installed: ${ext.id}") },
-                    onError = { err -> android.util.Log.e("ECH", "Built-in extension install failed", err) }
-                )
+                try {
+                    engine.installBuiltInWebExtension(
+                        id = "onlyfans-static2-redirect@custom.mull",
+                        url = "resource://android/assets/extensions/onlyfans-static2-redirect/",
+                        onSuccess = { ext -> android.util.Log.i("ECH", "Built-in extension installed: ${ext.id}") },
+                        onError = { err -> android.util.Log.e("ECH", "Built-in extension install failed onlyfans", err) }
+                    )
+                } catch(e: Exception) { android.util.Log.e("ECH", "onlyfans exception", e) }
                 // Install LocalCDN-custom (full CDN acceleration + static2 private)
-                engine.installBuiltInWebExtension(
-                    id = "{b86e4813-687a-43e6-ab65-0bde4ab75758}",
-                    url = "resource://android/assets/extensions/localcdn-custom/",
-                    onSuccess = { ext -> android.util.Log.i("ECH", "Built-in extension installed: ${ext.id}") },
-                    onError = { err -> android.util.Log.e("ECH", "Built-in extension install failed", err) }
-                )
+                try {
+                    engine.installBuiltInWebExtension(
+                        id = "{b86e4813-687a-43e6-ab65-0bde4ab75758}",
+                        url = "resource://android/assets/extensions/localcdn-custom/",
+                        onSuccess = { ext -> android.util.Log.i("ECH", "Built-in extension installed: ${ext.id}") },
+                        onError = { err -> android.util.Log.e("ECH", "Built-in extension install failed localcdn", err) }
+                    )
+                } catch(e: Exception) { android.util.Log.e("ECH", "localcdn exception", e) }
                 // Install HyMT Translate (menu Google/HyMT, on-demand ModelScope)
-                engine.installBuiltInWebExtension(
-                    id = "hymt-translate@anglesgirl.eu.org",
-                    url = "resource://android/assets/extensions/hymt-translate/",
-                    onSuccess = { ext -> android.util.Log.i("ECH", "Built-in extension installed: ${ext.id}") },
-                    onError = { err -> android.util.Log.e("ECH", "Built-in extension install failed", err) }
-                )
+                try {
+                    engine.installBuiltInWebExtension(
+                        id = "hymt-translate@anglesgirl.eu.org",
+                        url = "resource://android/assets/extensions/hymt-translate/",
+                        onSuccess = { ext -> android.util.Log.i("ECH", "Built-in extension installed: ${ext.id}") },
+                        onError = { err -> android.util.Log.e("ECH", "Built-in extension install failed hymt", err) }
+                    )
+                } catch(e: Exception) { android.util.Log.e("ECH", "hymt exception", e) }
             }
 
             WebNotificationFeature(
