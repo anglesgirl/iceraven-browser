@@ -59,6 +59,22 @@ jobs:
       - name: Locate APK
         run: find gradle/build -name "*.apk" -type f 2>/dev/null
 
+      - name: Sign APKs with debug key
+        run: |
+          set -e
+          BT=$(ls /usr/local/lib/android/sdk/build-tools/ | tail -1)
+          ZIPALIGN=/usr/local/lib/android/sdk/build-tools/$BT/zipalign
+          APKSIGNER=/usr/local/lib/android/sdk/build-tools/$BT/apksigner
+          for apk in $(find gradle/build -name "*-unsigned.apk"); do
+            signed="${apk%-unsigned.apk}.apk"
+            echo "Signing $apk -> $signed"
+            $ZIPALIGN -f 4 "$apk" "$signed"
+            $APKSIGNER sign --ks ~/.android/debug.keystore \
+              --ks-pass pass:android --ks-key-alias androiddebugkey --key-pass pass:android \
+              "$signed"
+            rm "$apk"
+          done
+
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
