@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
   "name": "HyMT 混元翻译",
-  "version": "0.1.4",
-  "description": "替换自带 Bergamot，菜单里选 谷歌译/AI混元，AI按需从 ModelScope 拉 1.25bit/2bit",
+  "version": "0.2.0",
+  "description": "在线翻译扩展（替代自带 Bergamot）：谷歌译走 MyMemory 免费接口，AI 混元可配置 OpenAI 兼容 API",
   "browser_specific_settings": {
     "gecko": { "id": "hymt-translate@anglesgirl.eu.org", "strict_min_version": "115.0" },
     "gecko_android": { "id": "hymt-translate@anglesgirl.eu.org", "strict_min_version": "115.0" }

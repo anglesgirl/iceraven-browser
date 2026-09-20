@@ -1,32 +1,66 @@
-// HyMT 接管原生翻译入口 + 常驻悬浮按钮
+// HyMT 在线翻译 - 接管翻译入口 + 常驻悬浮按钮
 (function(){
+  function showPanel(title, body, isError) {
+    let panel = document.getElementById("hymt-panel");
+    if (!panel) {
+      panel = document.createElement("div");
+      panel.id = "hymt-panel";
+      panel.style = "position:fixed;bottom:90px;right:20px;z-index:2147483646;width:min(320px,80vw);max-height:55vh;overflow:auto;background:#fff;color:#111;border-radius:14px;box-shadow:0 8px 24px rgba(0,0,0,.35);padding:14px;font-size:14px;line-height:1.6;font-family:system-ui";
+      panel.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><b id="hymt-panel-title"></b><button id="hymt-panel-close" style="border:none;background:none;font-size:18px;cursor:pointer">✕</button></div><div id="hymt-panel-body" style="white-space:pre-wrap;word-break:break-word"></div>';
+      document.documentElement.appendChild(panel);
+      panel.querySelector("#hymt-panel-close").onclick = () => panel.style.display = "none";
+    }
+    panel.querySelector("#hymt-panel-title").textContent = title;
+    const bodyEl = panel.querySelector("#hymt-panel-body");
+    bodyEl.textContent = body;
+    bodyEl.style.color = isError ? "#c62828" : "#111";
+    panel.style.display = "block";
+  }
+
+  async function doTranslate(engine, from, to, text) {
+    if (!text || !text.trim()) { showPanel("翻译", "没有可翻译的内容（请先选中文字）", true); return; }
+    showPanel("翻译", "翻译中…", false);
+    try {
+      const res = await browser.runtime.sendMessage({action:"translate", engine, from, to, text});
+      if (res && res.ok) {
+        showPanel(engine === "hymt" ? "AI 翻译" : "谷歌译", res.translated, false);
+      } else if (res && res.needConfig) {
+        showPanel("AI 翻译", "未配置 AI API。请在扩展 storage 中设置 hymt_api_url / hymt_api_key（OpenAI 兼容格式，可接腾讯混元）。", true);
+      } else if (res && res.error) {
+        showPanel("翻译", "翻译失败: " + res.error, true);
+      } else {
+        showPanel("翻译", "翻译失败: 未知错误", true);
+      }
+    } catch(e) {
+      showPanel("翻译", "翻译失败: " + e, true);
+    }
+  }
+
   // 监听 Kotlin 注入的 hymt-trigger
   window.addEventListener("hymt-trigger", async (e) => {
     const detail = e.detail || {};
     const from = detail.from || document.documentElement.lang || "auto";
     const to = detail.to || "zh";
-    console.log("[HyMT] trigger", from, "->", to);
-    try {
-      const res = await browser.runtime.sendMessage({action:"translate", engine:"hymt", from, to, text: document.body.innerText.slice(0,4000)});
-      if (res && res.needDownload) {
-        if (confirm("HyMT 模型未下载，是否现在下载？(1.25bit ~800MB / 2bit ~1.2GB 走 ModelScope 国内CDN)")) {
-          browser.runtime.sendMessage({action:"download", model:"1.25bit"});
-        }
-        return;
-      }
-      if (res && res.note) console.log("[HyMT]", res.note);
-    } catch(e){ console.log("[HyMT] bg error", e); }
-    document.body.style.border = "2px solid #00c853";
-    setTimeout(()=>document.body.style.border="", 1500);
+    const text = detail.text || document.body.innerText.slice(0, 4000);
+    doTranslate(detail.engine || "google", from, to, text);
   });
 
-  // 常驻悬浮翻译按钮（不依赖选中，永远可见）
+  // 响应 popup / 扩展消息
+  browser.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+    if (msg && msg.action === "translate-page") {
+      const selected = window.getSelection().toString().trim();
+      const text = msg.text || selected || document.body.innerText.slice(0, 4000);
+      doTranslate(msg.engine || "google", msg.from || "auto", msg.to || "zh", text);
+    }
+  });
+
+  // 常驻悬浮翻译按钮
   function ensureBar(){
     if (document.getElementById("hymt-bar")) return;
     const bar = document.createElement("div");
     bar.id = "hymt-bar";
     bar.style = "position:fixed;bottom:20px;right:20px;z-index:2147483647;display:block";
-    bar.innerHTML = '<button id="hymt-float" style="padding:12px 18px;border-radius:24px;background:#111;color:#fff;border:none;box-shadow:0 4px 12px rgba(0,0,0,.4);font-size:14px;font-weight:600">🌐 翻译</button><div id="hymt-menu" style="display:none;margin-top:8px;background:#fff;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,.2);overflow:hidden"><button data-e="google" style="display:block;width:100%;padding:10px 16px;border:none;background:#fff;text-align:left">谷歌译 (阿里云)</button><button data-e="hymt" style="display:block;width:100%;padding:10px 16px;border:none;background:#fff;text-align:left">AI 混元翻译</button></div>';
+    bar.innerHTML = '<button id="hymt-float" style="padding:12px 18px;border-radius:24px;background:#111;color:#fff;border:none;box-shadow:0 4px 12px rgba(0,0,0,.4);font-size:14px;font-weight:600">🌐 翻译</button><div id="hymt-menu" style="display:none;margin-top:8px;background:#fff;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,.2);overflow:hidden"><button data-e="google" style="display:block;width:100%;padding:10px 16px;border:none;background:#fff;text-align:left">谷歌译</button><button data-e="hymt" style="display:block;width:100%;padding:10px 16px;border:none;background:#fff;text-align:left">AI 混元翻译</button></div>';
     document.documentElement.appendChild(bar);
     const btn = bar.querySelector("#hymt-float");
     const menu = bar.querySelector("#hymt-menu");
@@ -35,7 +69,10 @@
       const engine = e.target.dataset.e;
       if (!engine) return;
       menu.style.display="none";
-      browser.runtime.sendMessage({action:"translate", engine, text: window.getSelection().toString() || document.body.innerText.slice(0,4000)});
+      const selected = window.getSelection().toString().trim();
+      const text = selected || document.body.innerText.slice(0, 4000);
+      const from = selected ? "auto" : (document.documentElement.lang || "auto");
+      doTranslate(engine, from, "zh", text);
     };
     // 选中文字时高亮按钮
     document.addEventListener("selectionchange", () => {
