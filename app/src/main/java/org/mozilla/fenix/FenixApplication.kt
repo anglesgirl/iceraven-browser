@@ -188,6 +188,10 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
         applyLocalDohPrefs()
         // 同步启动内嵌 echdoh DoH 服务（先于 Fenix 网络初始化，确保 8443 已在监听）。
         startEchDohService()
+        // 启动本机 HyMT 翻译桥（127.0.0.1:18911，OpenAI 兼容，供沉浸式翻译调用）。
+        // 模型加载在后台线程，不阻塞启动；模型未下载时 server 仍起，/v1/models 可查状态。
+        org.mozilla.fenix.hymt.HymtLocalServer.start(this)
+        org.mozilla.fenix.hymt.HymtManager.init(this)
         initializeFenixProcess()
     }
 

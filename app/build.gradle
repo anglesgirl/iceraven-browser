@@ -52,6 +52,17 @@ android {
 
     compileSdk { version = release(config.compileSdkMajorVersion) { minorApiLevel = config.compileSdkMinorVersion } }
 
+    // HyMT 端侧 AI 翻译原生库（llama.cpp）。llama.cpp 由 CI 克隆到 src/main/cpp/llama.cpp，
+    // 没有该目录时 CMakeLists 自动出空壳，不影响构建。
+    if (file("src/main/cpp/llama.cpp/CMakeLists.txt").exists()) {
+        externalNativeBuild {
+            cmake {
+                path "src/main/cpp/CMakeLists.txt"
+                version "3.22.1"
+            }
+        }
+    }
+
     defaultConfig {
         ksp {
             arg("room.schemaLocation", "$projectDir/schemas".toString())
@@ -492,6 +503,9 @@ nimbus {
 }
 
 dependencies {
+    // HyMT 本机翻译桥：轻量 HTTP server（127.0.0.1:18911，OpenAI 兼容）
+    implementation 'org.nanohttpd:nanohttpd:2.3.1'
+
     // 2026-08-18: 内嵌 echdoh DoH 服务（监听 0.0.0.0:8443）
     implementation fileTree(dir: 'libs', include: ['*.aar'])
     implementation project('longfox')
