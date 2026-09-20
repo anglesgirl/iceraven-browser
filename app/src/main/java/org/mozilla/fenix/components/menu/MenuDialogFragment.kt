@@ -431,10 +431,8 @@ class MenuDialogFragment : BottomSheetDialogFragment() {
                     val saveToPdfUseCase = components.useCases.sessionUseCases.saveToPdf
                     val isTranslationEngineSupported =
                         browserStore.state.translationEngine.isEngineSupported ?: false
-                    val isTranslationSupported =
-                        isTranslationEngineSupported &&
-                            FxNimbus.features.translations.value().mainFlowBrowserMenuEnabled &&
-                            isTranslationsEnabled.value
+                    // 自带翻译已阉割（下载慢/功能差），翻译菜单项永久隐藏
+                    val isTranslationSupported = false
                     val isPdf = selectedTab?.content?.isPdf ?: false
                     val isWebCompatEnabled by remember {
                         store.stateFlow.map { it.isWebCompatEnabled }

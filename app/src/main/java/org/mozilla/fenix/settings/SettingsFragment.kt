@@ -189,10 +189,10 @@ class SettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFragment 
                 }
             }
 
+        // 自带翻译已阉割（下载慢/功能差），设置入口永久隐藏
         findPreference<Preference>(
             getPreferenceKey(R.string.pref_key_translation),
-        )?.isVisible = FxNimbus.features.translations.value().globalSettingsEnabled &&
-            components.core.store.state.translationEngine.isEngineSupported == true
+        )?.isVisible = false
 
         findPreference<Preference>(
             getPreferenceKey(R.string.pref_key_page_summaries),

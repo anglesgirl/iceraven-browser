@@ -166,7 +166,6 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler, SystemIns
         setupToolbarSwipeBehavior(settings, components)
 
         initBrowserToolbarComposableUpdates(view)
-        initTranslationsUpdates(context = context, rootView = view)
         initIPProtectionOnboarding(context, view)
 
         thumbnailsFeature.set(
