@@ -6,7 +6,7 @@
 const MICROSOFT_API = "https://edge.microsoft.com/translate/translatetext";
 const GOOGLE_LEGACY_API = "https://translate.googleapis.com/translate_a/single";
 const MYMEMORY_API = "https://api.mymemory.translated.net/get";
-const FETCH_TIMEOUT = 8000;
+const FETCH_TIMEOUT = 15000;
 
 const LANGS = {
   "zh": "zh-CN", "zh-CN": "zh-CN", "zh-TW": "zh-TW", "zh-Hans": "zh-CN", "zh-Hant": "zh-TW",
@@ -66,24 +66,83 @@ async function translateMyMemory(text, from, to) {
   return out;
 }
 
+// 降级链：Google gtx 走浏览器 ECH 通道（质量最好，CO3 主路径）→ Microsoft（国内直连稳）→ MyMemory 兜底
 const CHAIN = [
-  ["microsoft", translateMicrosoft],
   ["google", translateGoogle],
+  ["microsoft", translateMicrosoft],
   ["mymemory", translateMyMemory],
 ];
 
-async function translateFree(text, from, to) {
+const BATCH_CHARS = 1200;   // GET URL 长度限制（CO3 经验值）
+const CONCURRENCY = 3;
+
+// 翻译缓存：避免重复翻译同一段
+async function cacheGet(key) {
+  try {
+    const r = await browser.storage.local.get("tr_cache_" + key);
+    return r["tr_cache_" + key] || null;
+  } catch { return null; }
+}
+async function cacheSet(key, val) {
+  try { await browser.storage.local.set({ ["tr_cache_" + key]: val }); } catch {}
+}
+function djb2(s) {
+  let h = 5381;
+  for (let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) | 0;
+  return (h >>> 0).toString(36);
+}
+
+async function mapLimit(items, limit, fn) {
+  const out = new Array(items.length);
+  let i = 0;
+  const workers = Array.from({ length: Math.min(limit, items.length) }, async () => {
+    while (i < items.length) {
+      const idx = i++;
+      out[idx] = await fn(items[idx], idx);
+    }
+  });
+  await Promise.all(workers);
+  return out;
+}
+
+async function translateOneEngine(text, from, to) {
   let lastError = null;
   for (const [name, fn] of CHAIN) {
     try {
       const out = await fn(text, from, to);
-      return { text: out, engine: name };
+      if (out && out.trim()) return { text: out, engine: name };
+      throw new Error(name + " 返回空译文");
     } catch (e) {
       lastError = e;
       console.log("[HyMT] 引擎", name, "失败，降级：", e.message);
     }
   }
   throw lastError || new Error("全部翻译引擎失败");
+}
+
+// 长文按段落切批，3 路并发；空译文回退原文（CO3 坑：Google 短文本可能返回空串）
+async function translateFree(text, from, to) {
+  const cacheKey = djb2(from + "|" + to + "|" + text);
+  const cached = await cacheGet(cacheKey);
+  if (cached) return { text: cached, engine: "cache" };
+
+  if (text.length <= BATCH_CHARS) {
+    const r = await translateOneEngine(text, from, to);
+    await cacheSet(cacheKey, r.text);
+    return r;
+  }
+  // 长文：按双换行切段，凑批
+  const parts = [];
+  let buf = "";
+  for (const para of text.split(/\n{2,}/)) {
+    if ((buf + para).length > BATCH_CHARS && buf) { parts.push(buf); buf = ""; }
+    buf += (buf ? "\n\n" : "") + para;
+  }
+  if (buf) parts.push(buf);
+  const done = await mapLimit(parts, CONCURRENCY, p => translateOneEngine(p, from, to).then(r => r.text));
+  const out = done.join("\n\n");
+  await cacheSet(cacheKey, out);
+  return { text: out, engine: "batch" };
 }
 
 // AI 引擎：OpenAI 兼容（腾讯混元 / DeepSeek 等）

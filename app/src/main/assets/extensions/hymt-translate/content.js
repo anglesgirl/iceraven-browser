@@ -23,7 +23,7 @@
     try {
       const res = await browser.runtime.sendMessage({action:"translate", engine, from, to, text});
       if (res && res.ok) {
-        const engineName = res.engine === "microsoft" ? "微软" : res.engine === "google" ? "谷歌" : res.engine === "mymemory" ? "MyMemory" : "AI";
+        const engineName = res.engine === "microsoft" ? "微软" : res.engine === "google" ? "谷歌" : res.engine === "mymemory" ? "MyMemory" : res.engine === "cache" ? "缓存" : res.engine === "batch" ? "批量" : "AI";
         showPanel(engineName + " 翻译", res.translated, false);
       } else if (res && res.needConfig) {
         showPanel("AI 翻译", "未配置 AI API。请在扩展 storage 中设置 hymt_api_url / hymt_api_key（OpenAI 兼容格式，可接腾讯混元）。", true);
