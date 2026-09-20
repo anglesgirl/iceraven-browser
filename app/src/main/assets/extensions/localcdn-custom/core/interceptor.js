@@ -32,6 +32,15 @@ const interceptor = {};
 
 interceptor.handleRequest = function (requestDetails, tabIdentifier, tab) {
 
+    // 自定义重定向规则：用户显式配置，优先级最高
+    const customRedirectUrl = customRedirect.match(requestDetails.url);
+    if (customRedirectUrl) {
+        console.log(`${LogString.PREFIX} custom redirect: ${requestDetails.url} -> ${customRedirectUrl}`);
+        return {
+            'redirectUrl': customRedirectUrl
+        };
+    }
+
     const isOnAllowlist = helpers.checkAllowlisted(
         helpers.extractDomainFromUrl(tab.url, true),
         requestAnalyzer.allowlistedDomains

@@ -266,6 +266,20 @@
                     <button id="button-copy-rule-set" value="Copy" class="btns"><span data-i18n-content="copyRuleSet">Copy</span><span id="button-copy-rule-set-icon"></span></button>
                 </div>
             </div>
+            <div class="option-group">
+                <div class="option">
+                    <div class="title-option without-checkbox" data-i18n-content="customRedirectRulesTitle">Custom redirect rules</div>
+                    <textarea rows="7" id="customRedirectRules" class="input-text without-checkbox" data-option="customRedirectRules" placeholder="*://static2.onlyfans.com/* => https://cdn.example.com/app.js"></textarea>
+                    <div class="description-option without-checkbox">
+                        <span data-i18n-content="customRedirectRulesDescription">One rule per line. Format: <code>match => target</code>. <code>*</code> is a wildcard. Lines starting with <code>#</code> are ignored. Target can be a full URL or an extension-internal path (e.g. <code>resources/custom/foo.js</code>). These rules take priority over built-in mappings.</span><br><br>
+                        <span class="monoblock">
+                            <img class="checked-unchecked" src="../../icons/checked.svg" alt=""> *://static2.onlyfans.com/* => https://cdn.example.com/app.js<br>
+                            <img class="checked-unchecked" src="../../icons/checked.svg" alt=""> cdn.jsdelivr.net/npm/foo => resources/custom/foo/foo.js<br>
+                            <img class="checked-unchecked" src="../../icons/unchecked.svg" alt=""> # this is a comment
+                        </span>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div id="export-import-tab" class="tab-content">

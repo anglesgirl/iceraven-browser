@@ -526,5 +526,13 @@
     "permissionMoreInfo": {
         "message": "More info",
         "description": "More info"
+    },
+    "customRedirectRulesTitle": {
+        "message": "Custom redirect rules",
+        "description": "Custom redirect rules"
+    },
+    "customRedirectRulesDescription": {
+        "message": "One rule per line. Format: match => target. * is a wildcard. Lines starting with # are ignored. Target can be a full URL or an extension-internal path (e.g. resources/custom/foo.js). These rules take priority over built-in mappings.",
+        "description": "One rule per line. Format: match => target. * is a wildcard. Lines starting with # are ignored. Target can be a full URL or an extension-internal path (e.g. resources/custom/foo.js). These rules take priority over built-in mappings."
     }
 }

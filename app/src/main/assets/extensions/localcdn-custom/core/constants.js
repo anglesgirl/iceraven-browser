@@ -132,6 +132,7 @@ const Setting = {
     'BADGE_MISSING_RESOURCE_TEXT_COLOR': 'badgeMissingResourceTextColor',
     'HIDE_DONATION_BUTTON': 'hideDonationButton',
     'CHANGE_BADGE_COLOR_MISSING_RESOURCES': 'changeBadgeColorMissingResources',
+    'CUSTOM_REDIRECT_RULES': 'customRedirectRules',
 };
 
 const SettingDefaults = {
@@ -163,6 +164,7 @@ const SettingDefaults = {
     [Setting.BADGE_MISSING_RESOURCE_TEXT_COLOR]: BadgeSettingMissingResource.HEX_TEXT_COLOR,
     [Setting.HIDE_DONATION_BUTTON]: false,
     [Setting.CHANGE_BADGE_COLOR_MISSING_RESOURCES]: false,
+    [Setting.CUSTOM_REDIRECT_RULES]: [],
 };
 
 const WebRequest = {

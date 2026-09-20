@@ -526,5 +526,13 @@
     "permissionMoreInfo": {
         "message": "更多信息",
         "description": "More info"
+    },
+    "customRedirectRulesTitle": {
+        "message": "自定义重定向规则",
+        "description": "自定义重定向规则"
+    },
+    "customRedirectRulesDescription": {
+        "message": "每行一条规则。格式：匹配模式 => 目标。* 为通配符，# 开头为注释。目标可以是完整 URL 或扩展内路径（如 resources/custom/foo.js）。此规则优先于内置映射。",
+        "description": "每行一条规则。格式：匹配模式 => 目标。* 为通配符，# 开头为注释。目标可以是完整 URL 或扩展内路径（如 resources/custom/foo.js）。此规则优先于内置映射。"
     }
 }

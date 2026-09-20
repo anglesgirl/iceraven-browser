@@ -55,7 +55,7 @@ optionsAdvanced.preSelectBlockGoogleFonts = function (value) {
 
 optionsAdvanced.init = function (opt) {
     let blockMissing, blockGoogleFonts, allowedDomainsGoogleFonts, logging, domainsManipulateDOM,
-        negateHtmlFilterList, changeBadgeColorMissingResources;
+        negateHtmlFilterList, changeBadgeColorMissingResources, customRedirectRules;
 
     if (BrowserType.CHROMIUM) {
         document.getElementById('html-filter-div').style.display = 'none';
@@ -96,6 +96,10 @@ optionsAdvanced.init = function (opt) {
     changeBadgeColorMissingResources = options.getOptionElement(Setting.CHANGE_BADGE_COLOR_MISSING_RESOURCES);
     changeBadgeColorMissingResources.addEventListener('change', options.onOptionChanged);
     changeBadgeColorMissingResources.checked = opt[Setting.CHANGE_BADGE_COLOR_MISSING_RESOURCES];
+
+    customRedirectRules = options.getOptionElement(Setting.CUSTOM_REDIRECT_RULES);
+    customRedirectRules.addEventListener('keyup', options.onOptionChanged);
+    customRedirectRules.value = opt[Setting.CUSTOM_REDIRECT_RULES];
 
     document.getElementById('generate-ublock-rules').addEventListener('change', ruleGenerator.openRuleSet);
     document.getElementById('generate-umatrix-rules').addEventListener('change', ruleGenerator.openRuleSet);

@@ -80,7 +80,8 @@ options._renderOptionsPanel = function () {
         'enableLogging': options._optionValues.enableLogging,
         'domainsManipulateDOM': domainHtmlFilter,
         'negateHtmlFilterList': options._optionValues.negateHtmlFilterList,
-        'changeBadgeColorMissingResources': options._optionValues.changeBadgeColorMissingResources
+        'changeBadgeColorMissingResources': options._optionValues.changeBadgeColorMissingResources,
+        'customRedirectRules': options._serializeCustomRedirectRules(options._optionValues.customRedirectRules)
     };
 
     other = {
@@ -225,6 +226,44 @@ options._parseDomainAllowlist = function (domainAllowlist) {
     return allowlistedDomains;
 };
 
+options._serializeCustomRedirectRules = function (customRedirectRules) {
+    if (!Array.isArray(customRedirectRules) || customRedirectRules.length === 0) {
+        return '';
+    }
+    return customRedirectRules.map(function (rule) {
+        return `${rule.match} => ${rule.target}`;
+    }).join('\n');
+};
+
+options._parseCustomRedirectRules = function (text) {
+    let customRedirectRules = [];
+
+    String(text).split(/\r?\n/).forEach(function (line) {
+        let trimmed, separator, match, target;
+
+        trimmed = line.trim();
+        if (trimmed === '' || trimmed.startsWith('#')) {
+            return;
+        }
+        separator = trimmed.indexOf('=>');
+        if (separator === -1) {
+            return;
+        }
+        match = trimmed.slice(0, separator).trim();
+        target = trimmed.slice(separator + 2).trim();
+        if (match === '' || target === '') {
+            return;
+        }
+        customRedirectRules.push({
+            'match': match,
+            'target': target,
+            'enabled': true
+        });
+    });
+
+    return customRedirectRules;
+};
+
 
 /**
  * Event Handlers
@@ -269,6 +308,9 @@ options.onOptionChanged = function ({target}) {
         case Setting.DOMAINS_MANIPULATE_DOM:
         case Setting.ALLOWED_DOMAINS_GOOGLE_FONTS:
             optionValue = options._parseDomainAllowlist(optionValue);
+            break;
+        case Setting.CUSTOM_REDIRECT_RULES:
+            optionValue = options._parseCustomRedirectRules(optionValue);
             break;
         case Setting.BLOCK_GOOGLE_FONTS:
             optionsAdvanced._renderAdvancedSection(optionValue);

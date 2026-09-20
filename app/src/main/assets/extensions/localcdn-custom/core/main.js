@@ -78,6 +78,7 @@ main._initializeSettings = function () {
         interceptor.blockMissing = items.blockMissing;
         interceptor.blockGoogleFonts = items.blockGoogleFonts;
         requestAnalyzer.allowlistedDomains = items.allowlistedDomains;
+        customRedirect.load(items.customRedirectRules);
 
         wrappers.badgeDefaultTextColor = items.badgeDefaultTextColor;
         wrappers.badgeDefaultBackgroundColor = items.badgeDefaultBackgroundColor;
