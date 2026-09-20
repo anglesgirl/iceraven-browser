@@ -53,7 +53,7 @@ jobs:
 
       - name: Build forkRelease APK
         env:
-          GRADLE_OPTS: -Dorg.gradle.jvmargs="-Xmx7g -XX:MaxMetaspaceSize=4g -XX:+HeapDumpOnOutOfMemoryError"
+          GRADLE_OPTS: -Dorg.gradle.jvmargs="-Xmx7g -XX:MaxMetaspaceSize=4g -XX:+HeapDumpOnOutOfMemoryError --add-opens=java.base/java.lang.ref=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED"
         run: ./gradlew assembleForkRelease --no-daemon --stacktrace
 
       - name: Locate APK
