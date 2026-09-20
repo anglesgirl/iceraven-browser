@@ -16,6 +16,15 @@ jobs:
           submodules: recursive
           fetch-depth: 0
 
+      - name: Clone llama.cpp (Tencent STQ kernel, PR #19357) for HyMT
+        run: |
+          mkdir -p app/src/main/cpp
+          cd app/src/main/cpp
+          git clone --depth 1 https://github.com/ggml-org/llama.cpp.git llama.cpp
+          cd llama.cpp
+          git fetch origin pull/19357/head && git checkout FETCH_HEAD
+          echo "llama.cpp STQ kernel ready: $(git rev-parse --short HEAD)"
+
       - name: Setup JDK 17
         uses: actions/setup-java@v4
         with:
