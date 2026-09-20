@@ -1,0 +1,185 @@
+{
+  "shortBrandName": {
+    "message": "Immersive Translate"
+  },
+  "brandName": {
+    "message": "Immersive Translate: AI Web, PDF & Video Translator"
+  },
+  "brandDescription": {
+    "message": "Free Translate Website, Translate PDF & Epub eBook, Translate Video Subtitles in Bilingual"
+  },
+  "toggleTranslatePage": {
+    "message": "Translate to {targetLanguage}"
+  },
+  "toggleTranslateTheWholePage": {
+    "message": "Translate entire page/Display original text"
+  },
+  "toggleTranslateToThePageEndImmediately": {
+    "message": "Translate instantly to the bottom of the page/Display original text"
+  },
+  "toggleTranslateTheMainPage": {
+    "message": "Translate main page/Display original text"
+  },
+  "openOptionsPage": {
+    "message": "Open Settings Page"
+  },
+  "babelDOC": {
+    "message": "BabelDOC Preserve PDF Layout"
+  },
+  "translateLocalPdfFile": {
+    "message": "Translate local PDF File"
+  },
+  "openEbookViewer": {
+    "message": "Read local e-books"
+  },
+  "openEbookBuilder": {
+    "message": "Create Bilingual EPUB E-books"
+  },
+  "translateLocalHtmlFile": {
+    "message": "Translate HTML/txt File"
+  },
+  "translateLocalSubtitleFile": {
+    "message": "Translate Local Subtitle File"
+  },
+  "openAboutPage": {
+    "message": "About / Feedback/Sponsor"
+  },
+  "toggleMouseHoverTranslateDirectly": {
+    "message": "Temporarily enable or disable direct translation by mouse hover on the page"
+  },
+  "translateWithOpenAI": {
+    "message": "Temporarily translate the current page with OpenAI"
+  },
+  "translateWithDeepL": {
+    "message": "Temporarily translate the current page with DeepL"
+  },
+  "translateWithGoogle": {
+    "message": "Temporarily translate the current page with Google"
+  },
+  "translateWithBing": {
+    "message": "Temporarily translate the current page with Microsoft Translator"
+  },
+  "translateWithGemini": {
+    "message": "Temporarily translate the current page with Gemini"
+  },
+  "translateWithTransmart": {
+    "message": "Temporarily translate the current page with Tencent Translator"
+  },
+  "translateInputBox": {
+    "message": "Translate the content of the current input box"
+  },
+  "toggleSidePanel": {
+    "message": "Open/Close Side Panel"
+  },
+  "openSidePanel": {
+    "message": "Open Side Panel"
+  },
+  "closeSidePanel": {
+    "message": "Close Side Panel"
+  },
+  "toggleOnlyTransation": {
+    "message": "Switch to /translation-only mode"
+  },
+  "toggleTranslationMask": {
+    "message": "Toggle blur effect on translated text (learning mode) for the current page"
+  },
+  "toggleVideoSubtitlePreTranslation": {
+    "message": "Switch Video Subtitles with Immersive Translation Feature"
+  },
+  "brandDescriptionForSafari": {
+    "message": "Free Translate Website, Translate PDF & Epub eBook, Translate Video Subtitles in Bilingual"
+  },
+  "PdfProFile": {
+    "message": "AI-Driven PDF Pro Translation"
+  },
+  "textTranslate": {
+    "message": "Text Translation"
+  },
+  "translateWithClaude": {
+    "message": "Temporarily use Claude to translate the current page."
+  },
+  "toggleTranslatePageOfficialPage": {
+    "message": "Translate Webpage/Show Original Text"
+  },
+  "translateText": {
+    "message": "Translate \"{text}\""
+  },
+  "translateWithCustom1": {
+    "message": "Temporary use of custom translation services to translate the current page(1)"
+  },
+  "translateWithCustom2": {
+    "message": "Temporary use of custom translation services to translate the current page(2)"
+  },
+  "translateWithCustom3": {
+    "message": "Temporary use of custom translation services to translate the current page(3)"
+  },
+  "translateMangaMenuId": {
+    "message": "Translate image/restore image"
+  },
+  "openAiWritingModal": {
+    "message": "Open AI Write Modal"
+  },
+  "legacyShortcut_toggleOnlyTransation": {
+    "message": "[Deprecated] Switch to /translation-only mode"
+  },
+  "legacyShortcut_toggleTranslateToThePageEndImmediately": {
+    "message": "[Deprecated] Translate instantly to the bottom of the page/Display original text"
+  },
+  "legacyShortcut_toggleTranslateTheMainPage": {
+    "message": "[Deprecated] Translate main page/Display original text"
+  },
+  "legacyShortcut_toggleTranslationMask": {
+    "message": "[Deprecated] Toggle blur effect on translated text (learning mode) for the current page"
+  },
+  "legacyShortcut_toggleMouseHoverTranslateDirectly": {
+    "message": "[Deprecated] Temporarily enable or disable direct translation by mouse hover on the page"
+  },
+  "legacyShortcut_openAiWritingModal": {
+    "message": "[Deprecated] Open AI Write Modal"
+  },
+  "legacyShortcut_toggleVideoSubtitlePreTranslation": {
+    "message": "[Deprecated] Switch Video Subtitles with Immersive Translation Feature"
+  },
+  "legacyShortcut_translateWithOpenAI": {
+    "message": "[Deprecated] Temporarily translate the current page with OpenAI"
+  },
+  "legacyShortcut_translateWithDeepL": {
+    "message": "[Deprecated] Temporarily translate the current page with DeepL"
+  },
+  "legacyShortcut_translateWithGoogle": {
+    "message": "[Deprecated] Temporarily translate the current page with Google"
+  },
+  "legacyShortcut_translateWithTransmart": {
+    "message": "[Deprecated] Temporarily translate the current page with Tencent Translator"
+  },
+  "legacyShortcut_translateWithGemini": {
+    "message": "[Deprecated] Temporarily translate the current page with Gemini"
+  },
+  "legacyShortcut_translateWithBing": {
+    "message": "[Deprecated] Temporarily translate the current page with Microsoft Translator"
+  },
+  "legacyShortcut_translateWithClaude": {
+    "message": "[Deprecated] Temporarily use Claude to translate the current page."
+  },
+  "legacyShortcut_translateWithCustom1": {
+    "message": "[Deprecated] Temporary use of custom translation services to translate the current page(1)"
+  },
+  "legacyShortcut_translateWithCustom2": {
+    "message": "[Deprecated] Temporary use of custom translation services to translate the current page(2)"
+  },
+  "legacyShortcut_translateWithCustom3": {
+    "message": "[Deprecated] Temporary use of custom translation services to translate the current page(3)"
+  },
+  "legacyShortcut_toggleTranslatePage": {
+    "message": "[Deprecated] Translate Webpage/Show Original Text"
+  },
+  "legacyShortcut_toggleTranslateTheWholePage": {
+    "message": "[Deprecated] Translate entire page/Display original text"
+  },
+  "legacyShortcut_translateInputBox": {
+    "message": "[Deprecated] Translate the content of the current input box"
+  },
+  "legacyShortcut_toggleSidePanel": {
+    "message": "[Deprecated] Open/Close Side Panel"
+  }
+}
