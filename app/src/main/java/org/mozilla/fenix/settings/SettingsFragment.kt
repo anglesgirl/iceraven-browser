@@ -189,10 +189,17 @@ class SettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFragment 
                 }
             }
 
-        // 自带翻译已阉割（下载慢/功能差），设置入口永久隐藏
+        // HyMT 本机 AI 翻译：点击下载模型 / 查看状态
         findPreference<Preference>(
             getPreferenceKey(R.string.pref_key_translation),
-        )?.isVisible = false
+        )?.apply {
+            isVisible = true
+            updateHyMtSummary(this)
+            setOnPreferenceClickListener {
+                showHyMtDialog()
+                true
+            }
+        }
 
         findPreference<Preference>(
             getPreferenceKey(R.string.pref_key_page_summaries),
@@ -201,6 +208,77 @@ class SettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFragment 
         findPreference<Preference>(
             getPreferenceKey(R.string.pref_key_ai_controls),
         )?.isVisible = requireComponents.settings.aiControlsFeatureFlagEnabled
+    }
+
+    private fun updateHyMtSummary(pref: Preference) {
+        val ctx = requireContext()
+        val ready = org.mozilla.fenix.hymt.HymtManager.isReady(ctx)
+        val exists = org.mozilla.fenix.hymt.HymtManager.modelExists(ctx)
+        pref.summary = when {
+            ready -> "✅ 模型已加载（离线可用）。沉浸式翻译填 http://127.0.0.1:18911/v1/chat/completions"
+            exists -> "模型已下载，点击加载"
+            else -> "未下载模型（574MB/440MB，国内镜像）"
+        }
+    }
+
+    private fun showHyMtDialog() {
+        val ctx = requireContext()
+        val pref = findPreference<Preference>(getPreferenceKey(R.string.pref_key_translation))
+        val ready = org.mozilla.fenix.hymt.HymtManager.isReady(ctx)
+        val exists = org.mozilla.fenix.hymt.HymtManager.modelExists(ctx)
+        val items = mutableListOf<String>()
+        if (ready) items.add("✅ 已加载，点此重新加载模型")
+        if (exists && !ready) items.add("加载已下载的模型")
+        if (!exists) {
+            items.add("下载 2bit（574MB，质量优先）")
+            items.add("下载 1.25bit（440MB，省空间）")
+        }
+        items.add("取消")
+        android.app.AlertDialog.Builder(ctx)
+            .setTitle("HyMT 本机 AI 翻译")
+            .setItems(items.toTypedArray()) { _, which ->
+                when (items[which]) {
+                    "✅ 已加载，点此重新加载模型" -> {
+                        org.mozilla.fenix.hymt.HymtManager.init(ctx) { ok, msg ->
+                            requireActivity().runOnUiThread {
+                                android.widget.Toast.makeText(ctx, if (ok) "模型已加载" else "加载失败: $msg", android.widget.Toast.LENGTH_LONG).show()
+                                updateHyMtSummary(pref!!)
+                            }
+                        }
+                    }
+                    "加载已下载的模型" -> {
+                        org.mozilla.fenix.hymt.HymtManager.init(ctx) { ok, msg ->
+                            requireActivity().runOnUiThread {
+                                android.widget.Toast.makeText(ctx, if (ok) "模型已加载" else "加载失败: $msg", android.widget.Toast.LENGTH_LONG).show()
+                                updateHyMtSummary(pref!!)
+                            }
+                        }
+                    }
+                    "下载 2bit（574MB，质量优先）" -> {
+                        android.widget.Toast.makeText(ctx, "开始下载 2bit 模型...", android.widget.Toast.LENGTH_LONG).show()
+                        org.mozilla.fenix.hymt.HymtManager.downloadModel(ctx, "2bit") { p ->
+                            requireActivity().runOnUiThread {
+                                if (p >= 1f) {
+                                    android.widget.Toast.makeText(ctx, "下载完成，自动加载中...", android.widget.Toast.LENGTH_LONG).show()
+                                    updateHyMtSummary(pref!!)
+                                }
+                            }
+                        }
+                    }
+                    "下载 1.25bit（440MB，省空间）" -> {
+                        android.widget.Toast.makeText(ctx, "开始下载 1.25bit 模型...", android.widget.Toast.LENGTH_LONG).show()
+                        org.mozilla.fenix.hymt.HymtManager.downloadModel(ctx, "1.25bit") { p ->
+                            requireActivity().runOnUiThread {
+                                if (p >= 1f) {
+                                    android.widget.Toast.makeText(ctx, "下载完成，自动加载中...", android.widget.Toast.LENGTH_LONG).show()
+                                    updateHyMtSummary(pref!!)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            .show()
     }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {

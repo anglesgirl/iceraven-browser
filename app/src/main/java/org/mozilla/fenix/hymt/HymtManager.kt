@@ -90,54 +90,58 @@ object HymtManager {
         }
     }
 
-    /** 从 ModelScope 国内 CDN 下载模型到 filesDir/hymt/。onProgress(0~1)。 */
+    /**
+     * 用系统下载器（DownloadManager）下载模型到公共 Download 目录，
+     * 完成后自动移动到 filesDir/hymt/ 并加载。有通知栏进度、断点续传。
+     */
     fun downloadModel(context: Context, which: String = "2bit", onProgress: (Float) -> Unit = {}) {
-        io.execute {
-            try {
-                val urlStr = when (which) {
-                    "1.25bit" -> "https://modelscope.cn/models/AngelSlim/Hy-MT1.5-1.8B-1.25bit-GGUF/resolve/master/Hy-MT1.5-1.8B-1.25bit.gguf"
-                    else -> "https://modelscope.cn/models/AngelSlim/Hy-MT1.5-1.8B-2bit-GGUF/resolve/master/Hy-MT1.5-1.8B-2bit.gguf"
-                }
-                val fileName = if (which == "1.25bit") MODEL_125BIT else MODEL_2BIT
-                val dir = File(context.filesDir, MODEL_DIR)
-                dir.mkdirs()
-                val dest = File(dir, fileName)
-                val tmp = File(dir, fileName + ".tmp")
+        val urlStr = when (which) {
+            "1.25bit" -> "https://modelscope.cn/models/AngelSlim/Hy-MT1.5-1.8B-1.25bit-GGUF/resolve/master/Hy-MT1.5-1.8B-1.25bit.gguf"
+            else -> "https://modelscope.cn/models/AngelSlim/Hy-MT1.5-1.8B-2bit-GGUF/resolve/master/Hy-MT1.5-1.8B-2bit.gguf"
+        }
+        val fileName = if (which == "1.25bit") MODEL_125BIT else MODEL_2BIT
 
-                val conn = (java.net.URL(urlStr).openConnection() as java.net.HttpURLConnection).apply {
-                    connectTimeout = 15000
-                    readTimeout = 30000
-                    instanceFollowRedirects = true
-                }
-                conn.connect()
-                if (conn.responseCode !in 200..299) throw RuntimeException("HTTP ${conn.responseCode}")
-                val total = conn.contentLengthLong
-                conn.inputStream.use { input ->
-                    tmp.outputStream.use { output ->
-                        val buf = ByteArray(64 * 1024)
-                        var read: Long = 0
-                        var done = 0L
-                        while (true) {
-                            val n = input.read(buf)
-                            if (n < 0) break
-                            output.write(buf, 0, n)
-                            done += n
-                            if (total > 0) onProgress(done.toFloat() / total)
+        val dm = context.getSystemService(Context.DOWNLOAD_SERVICE) as android.app.DownloadManager
+        val req = android.app.DownloadManager.Request(android.net.Uri.parse(urlStr))
+            .setTitle("HyMT 模型 $which")
+            .setDescription("混元翻译模型，约${if (which == "1.25bit") "440" else "574"}MB")
+            .setNotificationVisibility(android.app.DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+            .setDestinationInExternalPublicDir(android.os.Environment.DIRECTORY_DOWNLOADS, fileName)
+            .setAllowedOverMetered(true)
+            .setAllowedOverRoaming(false)
+        val downloadId = dm.enqueue(req)
+        Log.i(TAG, "download queued id=$downloadId -> $fileName")
+
+        // 监听完成
+        val receiver = object : android.content.BroadcastReceiver() {
+            override fun onReceive(ctx: Context?, intent: android.content.Intent?) {
+                val id = intent?.getLongExtra(android.app.DownloadManager.EXTRA_DOWNLOAD_ID, -1) ?: -1
+                if (id != downloadId) return
+                ctx?.unregisterReceiver(this)
+                io.execute {
+                    try {
+                        val src = File(android.os.Environment.getExternalStoragePublicDirectory(
+                            android.os.Environment.DIRECTORY_DOWNLOADS), fileName)
+                        val dir = File(context.filesDir, MODEL_DIR)
+                        dir.mkdirs()
+                        val dest = File(dir, fileName)
+                        if (src.exists()) {
+                            if (dest.exists()) dest.delete()
+                            src.copyTo(dest, overwrite = true)
+                            src.delete()
+                            Log.i(TAG, "model moved to ${dest.absolutePath}")
                         }
-                        output.flush()
+                        onProgress(1f)
+                        val threads = Runtime.getRuntime().availableProcessors().coerceAtMost(6)
+                        HymtBridge.nativeInit(dest.absolutePath, threads)
+                        initialized.set(true)
+                        Log.i(TAG, "model auto-loaded")
+                    } catch (e: Throwable) {
+                        Log.e(TAG, "post-download failed", e)
                     }
                 }
-                conn.disconnect()
-                if (dest.exists()) dest.delete()
-                tmp.renameTo(dest)
-                Log.i(TAG, "model downloaded: ${dest.absolutePath} (${dest.length() / 1024 / 1024}MB)")
-                // 下载完成后自动加载
-                val threads = Runtime.getRuntime().availableProcessors().coerceAtMost(6)
-                HymtBridge.nativeInit(dest.absolutePath, threads)
-                initialized.set(true)
-            } catch (e: Throwable) {
-                Log.e(TAG, "download failed", e)
             }
         }
+        context.registerReceiver(receiver, android.content.IntentFilter(android.app.DownloadManager.ACTION_DOWNLOAD_COMPLETE))
     }
 }

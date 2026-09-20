@@ -86,8 +86,8 @@
         <androidx.preference.Preference
             android:key="@string/pref_key_translation"
             app:iconSpaceReserved="false"
-            app:isPreferenceVisible="false"
-            android:title="@string/preferences_translations" />
+            android:title="HyMT 本机 AI 翻译"
+            android:summary="下载混元翻译模型（离线/本地推理，沉浸式翻译调 http://127.0.0.1:18911）" />
 
         <androidx.preference.Preference
             android:key="@string/pref_key_page_summaries"
