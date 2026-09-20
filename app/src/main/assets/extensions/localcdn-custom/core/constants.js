@@ -433,6 +433,15 @@ const MathJax3Files = {
 
 };
 
+const MathJax4Files = {
+    'mml-chtml.js': true,
+    'mml-svg.js': true,
+    'tex-chtml.js': true,
+    'tex-mml-chtml.js': true,
+    'tex-mml-svg.js': true,
+    'tex-svg.js': true,
+};
+
 const ReqAnalyzer = {
     'BUNDLE_MATHJAX': 'MathJax (Bundle)',
     'BUNDLE_TINYMCE': 'TinyMCE (Bundle)',
@@ -472,7 +481,7 @@ const RedirectMap = {
     'resources/font-awesome/3.2.1/css/all.min.css': 'resources/font-awesome/3.2.1/css/font-awesome.min.css',
     'resources/font-awesome/3.2.1/css/all.css': 'resources/font-awesome/3.2.1/css/font-awesome.min.css',
     'resources/font-awesome/4.7.0/css/all.min.css': 'resources/font-awesome/4.7.0/css/font-awesome.min.css',
-    'resources/font-awesome/4.7.0/css/all.css': 'resources/font-awesome/4.7.0/css/font-awesome.min.css'
+    'resources/font-awesome/4.7.0/css/all.css': 'resources/font-awesome/4.7.0/css/font-awesome.min.css',
 };
 
 /**
@@ -725,7 +734,7 @@ const GoogleDomains = {
     'g.co': true,
     'android.com': true,
     'developer.android.com': true,
-    'research.google.com': true, 
+    'research.google.com': true,
 };
 
 // Supported charsets for TextDecoder()

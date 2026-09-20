@@ -292,10 +292,13 @@ requestAnalyzer._handleMathJax = function (channelPath, channelHost, initiator) 
     if (filename.startsWith('/npm/mathjax@3')) {
         filename = filename.replace('/npm/mathjax@3/', '');
     }
+    if (filename.startsWith('/npm/mathjax@4')) {
+        filename = filename.replace('/npm/mathjax@4/', '');
+    }
     if (filename === 'config/TeX-AMS_HTML.js') {
         filename = 'config/TeX-AMS_HTML-full.js';
     }
-    if (!MathJaxFiles[filename] && !MathJax3Files[filename]) {
+    if (!MathJaxFiles[filename] && !MathJax3Files[filename] && !MathJax4Files[filename]) {
         console.warn(`${LogString.PREFIX} ${LogString.MISSING_RESOURCE} ${channelHost + channelPath}`);
         log.append(initiator, channelHost + channelPath, '-', true);
         return false;

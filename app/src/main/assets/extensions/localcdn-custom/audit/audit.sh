@@ -707,6 +707,8 @@ function create_url() {
     elif [ "$folder" = "mathjax" ] || [ "$folder" = "tinymce" ]; then
         url=$(echo "$path" | cut -d"/" -f3-)
         url="$CLOUDFLARE/$url"
+    elif [ "$folder" = "mathjax-newcm-font" ]; then
+        url="$JSDELIVR/npm/@mathjax/$folder@$version/chtml/woff2/$subfile"
     elif [ "$folder" = "vanilla-lazyload" ]; then
         url="$JSDELIVR/npm/$folder@$version/dist/lazyload.min.js"
     elif [ "$folder" = "lightgallery" ] && [ "$version" != "1.10.0" ] && [ "$subfile" = "lightgallery.min.js" ];then
@@ -749,7 +751,7 @@ function create_url() {
         url="$JSDELIVR/npm/react-intl@$version/react-intl.iife.min.js"
     elif [ "$folder" = "in-view" ]; then
         url="$JSDELIVR/npm/in-view@$version/dist/in-view.min.js"
-    elif [ "$folder" = "knockout" ] && [ "$version" = "3.5.1" ];then
+    elif [ "$folder" = "knockout" ] && [ "$version" != "3.4.2" ];then
         url="$CLOUDFLARE/$folder/$version/knockout-latest.min.js"
     elif [ "$folder" = "vue-router" ] && [ "$version" = "3.6.5" ];then
         url="$CLOUDFLARE/$folder/$version/vue-router.min.js"
@@ -767,6 +769,8 @@ function create_url() {
         url="$CLOUDFLARE/$folder/$version/cjs/react.production.min.js"
     elif [ "$folder" = "react-dom" ] && [ "$version" != "16.14.0" ] && [ "$version" != "17.0.2" ] && [ "$version" != "18.3.1" ]; then
         url="$CLOUDFLARE/$folder/$version/cjs/react-dom.production.min.js"
+    elif [ "$folder" = "animejs" ] && [ "$version" != "3.2.2" ];then
+        url="$CLOUDFLARE/$folder/$version/anime.umd.min.js"
     # --------------------------------------------------------------------------
     else
         if [ "$subfile" = "$jfile" ]; then

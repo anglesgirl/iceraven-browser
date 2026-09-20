@@ -742,6 +742,10 @@ const resources = {
     'mathJax': {
         'path': 'resources/mathjax/{version}/'
     },
+    // MathJax-Newcm font for MathJax v4 (@mathjax/mathjax-newcm-font)
+    'mathJaxNewcmFont': {
+        'path': 'resources/mathjax-newcm-font/{version}/chtml/woff2/'
+    },
     // magnific-popup.js [Deprecated]
     'magnificPopupJS': {
         'path': 'resources/magnific-popup.js/{version}/jquery.magnific-popup.min.jsm'

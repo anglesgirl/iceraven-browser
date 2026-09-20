@@ -76,7 +76,7 @@
         "description": "Enable logging"
     },
     "loggingDescription": {
-        "message": "יש לפתוח „מסוף דפדפן” ( Ctrl+Shift+J ) כדי לצפות במשאבים החסרים.",
+        "message": "ניתן לפתוח את תיעוד היומן באמצעות הסימן שבתפריט. תיעוד היומן ימחק בעת סגירת הדפדפן או השבתת תיעוד היומן.",
         "description": "You can open the log with the icon in the menu. The log will be deleted when you close the browser or disable logging."
     },
     "featureBreaksWebsitesDescription": {
@@ -300,7 +300,7 @@
         "description": "What will be synchronized when I select »sync« as storage type?"
     },
     "helpBrowserCompatibilityTitle": {
-        "message": "",
+        "message": "תאימות דפדפנים",
         "description": "Browser compatibility"
     },
     "helpIntroductionDescription": {
@@ -320,19 +320,19 @@
         "description": "Wiki pages"
     },
     "helpHtmlFilterDescription": {
-        "message": "",
+        "message": "LocalCDN הוא תוסף לדפדפן המחקה רשתות אספקת תוכן כדי לשפר את פרטיותך ברשת. הוא מעכב בקשות, מוצא ספריות/מסגרות מקומיות נתמכות, ומזריק אותן אל תוך אתר האינטרנט. הרגישו חופשי להשתמש בכלי הבדיקה הבא כדי לבדוק אם אתם מוגנים כראוי. בשביל עוד מידע, קראו את המדריך או את עמודי הויקי שלנו.",
         "description": "In most cases LocalCDN can easily replace embedded frameworks and improves privacy. In some cases the website may try to prevent this by setting certain options in the HTML source code. LocalCDN reads the HTML source code before it is displayed in the browser and removes these part (red)."
     },
     "helpHtmlFilterBefore": {
-        "message": "",
+        "message": "סנן ה־HTML מסיר את התוים האדומים מהדוגמה הבאה:",
         "description": "The HTML filter removes the red characters from this example:"
     },
     "helpHtmlFilterAfter": {
-        "message": "",
+        "message": "ואז התוצאה תיראה כך:",
         "description": "The result then looks like this:"
     },
     "helpHtmlFilterWhyTitle": {
-        "message": "",
+        "message": "למה זה הכרחי להסיר תכונות crossorigin ו־integrity?",
         "description": "Why is it necessary to remove crossorigin and integrity attributes?"
     },
     "helpHtmlFilterCrossorigin": {
@@ -340,47 +340,47 @@
         "description": "The crossorigin attribute prevents the replacement because the destination does not match the requested one."
     },
     "helpHtmlFilterIntegrity": {
-        "message": "",
+        "message": "כדי לשמור מקום באחסון ולהגיש עוד מסגרות, LocalCDN משדרגת את המסגרת. תג העקביות (integrity) הוא ערך הגיבוב (hash) של קובץ. אם הבדיקה נכשלת, הדפדפן לא יכלול מסגרת. בדיקת העקביות תיכשל מכיון שערכי הגיבוב עבור, למשל, jQuery 1.10.1 ועבור jQuery 1.12.4 הם שונים.",
         "description": "To save disk space and to deliver more frameworks LocalCDN upgrades a framework. An integrity tag is the hash value of a file. If the check fails, the browser won‘t include a framework. The integrity check will fail because the hash values for e.g. jQuery 1.10.1 and jQuery 1.12.4 are different."
     },
     "helpHtmlFilterErrors": {
-        "message": "",
+        "message": "למרבה הצער, לפעמים קורה שאז תוים מיוחדים אינם מוצגים בצורה הנכונה. במקרה הזה ניתן לכבות את ההגדרה שוב, כדי להציג את סימני ההבחן בצורה הנכונה.",
         "description": "Unfortunately, it sometimes happens that special characters are then displayed incorrectly. In this case you can deactivate the setting again, to display the umlauts correctly."
     },
     "helpRuleGeneratorDescription": {
-        "message": "",
+        "message": "אם ברצונכם להפנות באופן אוטומטי את כל התחברויות ה־CDN הנתמכות אל LocalCDN, ניתן להוסיף את הכללים האלה לחוסם הפרסומות שלכם כדי לאפשר את הפניות אלה. אם אינכם רוצים להוסיף את אותם הכללים, אתם חייבים לאפשר כל התחברות אל CDN ידנית עבור כל אתר.",
         "description": "If you want to automatically redirect all supported CDN connections to LocalCDN, you can add these rules to your adblocker to allow these redirections. If you do not want to add these rules, you must allow each CDN connection individually for each website."
     },
     "helpRuleGeneratorUblockTitle": {
-        "message": "",
+        "message": "בשביל uBlock Origin בלבד:",
         "description": "Only uBlock Origin:"
     },
     "helpRuleGeneratorUblockDescription": {
-        "message": "",
+        "message": "כללים אלה רלונטיים בלבד במצב „בינוני” או „קשה”, מכיון שהוא חוסם כל משאב צד שלישי. הם אינם הכרחיים במצב „ברירת־מחדל”, „קל”, או „קל מאוד”. בשביל מידע נוסף, נא בקרו בויקיפדיית uBlockOrigin.",
         "description": "These rules are only relevant in »medium« or »hard« mode, because it blocks all 3rd-party resources. They are not necessary in »default«, »easy« or »very-easy« mode. For more information, please visit the uBlock Origin Wiki."
     },
     "helpRuleGeneratorUblockTableIcon": {
-        "message": "",
+        "message": "סמל",
         "description": "Icon"
     },
     "helpRuleGeneratorUblockTableMode": {
-        "message": "",
+        "message": "מצב",
         "description": "Mode"
     },
     "helpRuleGeneratorUblockTableUseful": {
-        "message": "",
+        "message": "הכללים שימושיים",
         "description": "Rules useful"
     },
     "helpRuleGeneratorUblockTableDefaultEasy": {
-        "message": "",
+        "message": "ברירת־מחדל/קל",
         "description": "Default/Easy"
     },
     "helpRuleGeneratorUblockTableMedium": {
-        "message": "",
+        "message": "בינוני",
         "description": "Medium"
     },
     "helpRuleGeneratorUblockTableHard": {
-        "message": "",
+        "message": "קשה",
         "description": "Hard"
     },
     "helpWebsiteIssuesDescription": {

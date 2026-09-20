@@ -692,6 +692,8 @@ mappings.cdn = {
             'lunr@{version}/lunr.': resources.lunrJS,
             'markdown-it@{version}/dist/markdown-it.': resources.markdownIt,
             'mathjax@{version}/es5/': resources.mathJax,
+            'mathjax@{version}/': resources.mathJax,
+            '@mathjax/mathjax-newcm-font@{version}/chtml/woff2/': resources.mathJaxNewcmFont,
             'moment@{version}/moment.': resources.moment,
             'moment@{version}/moment.min.': resources.moment,
             'mootools@{version}/lib/mootools-core-{version}-server.': resources.mootools,
