@@ -54,7 +54,7 @@ object HymtLocalServer {
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "serve error", e)
-                json(Response.Status.INTERNAL_SERVER_ERROR, JSONObject().put("error", JSONObject().put("message", e.message ?: "internal error")))
+                json(Response.Status.INTERNAL_ERROR, JSONObject().put("error", JSONObject().put("message", e.message ?: "internal error")))
             }
         }
 
@@ -100,7 +100,7 @@ object HymtLocalServer {
             }
             val out = HymtManager.translate(text, 512)
             if (out.isNullOrEmpty()) {
-                return json(Response.Status.INTERNAL_SERVER_ERROR,
+                return json(Response.Status.INTERNAL_ERROR,
                     JSONObject().put("error", JSONObject().put("message", "empty translation")))
             }
             val choice = JSONObject()

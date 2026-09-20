@@ -9,7 +9,6 @@ import android.util.Log
 internal object HymtBridge {
     private const val TAG = "HyMT"
 
-    @JvmField
     var isLoaded = false
         private set
 
