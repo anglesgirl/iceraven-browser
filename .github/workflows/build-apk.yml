@@ -62,6 +62,11 @@ jobs:
       - name: Sign APKs with debug key
         run: |
           set -e
+          mkdir -p ~/.android
+          keytool -genkeypair -v -keystore ~/.android/debug.keystore \
+            -storepass android -alias androiddebugkey -keypass android \
+            -dname "CN=Android Debug,O=Android,C=US" \
+            -keyalg RSA -keysize 2048 -validity 10000
           BT=$(ls /usr/local/lib/android/sdk/build-tools/ | tail -1)
           ZIPALIGN=/usr/local/lib/android/sdk/build-tools/$BT/zipalign
           APKSIGNER=/usr/local/lib/android/sdk/build-tools/$BT/apksigner
