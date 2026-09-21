@@ -116,7 +116,7 @@ object HymtManager {
                 if (conn.responseCode !in 200..299) throw RuntimeException("HTTP ${conn.responseCode}")
                 val total = conn.contentLengthLong
                 conn.inputStream.use { input ->
-                    tmp.outputStream.use { output ->
+                    tmp.outputStream().use { output ->
                         val buf = ByteArray(64 * 1024)
                         var done = 0L
                         while (true) {
