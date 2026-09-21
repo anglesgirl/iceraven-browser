@@ -140,20 +140,18 @@ object HymtManager {
     ) {
         io.execute {
             try {
-                var dest: File? = null
+                val dir = File(context.filesDir, MODEL_DIR)
+                dir.mkdirs()
+                val dest = File(dir, fileName)
                 // 从 DownloadManager 查真实文件 URI
-                val query = android.app.DownloadManager.Query().setFilterById(downloadId)
-                val cursor = dm.query(query)
+                val cursor = dm.query(android.app.DownloadManager.Query().setFilterById(downloadId))
                 if (cursor != null && cursor.moveToFirst()) {
                     val idx = cursor.getColumnIndex(android.app.DownloadManager.COLUMN_LOCAL_URI)
                     if (idx >= 0) {
                         val uri = android.net.Uri.parse(cursor.getString(idx))
-                        val dir = File(context.filesDir, MODEL_DIR)
-                        dir.mkdirs()
-                        dest = File(dir, fileName)
-                        if (dest!!.exists()) dest!!.delete()
+                        if (dest.exists()) dest.delete()
                         context.contentResolver.openInputStream(uri).use { input ->
-                            dest!!.outputStream().use { output ->
+                            dest.outputStream().use { output ->
                                 input?.copyTo(output, bufferSize = 64 * 1024)
                             }
                         }
@@ -161,36 +159,33 @@ object HymtManager {
                     cursor.close()
                 }
                 // fallback: 公共 Download 目录
-                if (dest == null || !dest!!.exists()) {
+                if (!dest.exists()) {
                     val src = File(android.os.Environment.getExternalStoragePublicDirectory(
                         android.os.Environment.DIRECTORY_DOWNLOADS), fileName)
                     if (src.exists()) {
-                        val dir = File(context.filesDir, MODEL_DIR)
-                        dir.mkdirs()
-                        dest = File(dir, fileName)
-                        if (dest!!.exists()) dest!!.delete()
-                        src.copyTo(dest!!, overwrite = true)
+                        if (dest.exists()) dest.delete()
+                        src.copyTo(dest, overwrite = true)
                         src.delete()
                     }
                 }
-                if (dest == null || !dest!!.exists()) {
+                if (!dest.exists()) {
                     Log.e(TAG, "model file not found after download")
                     return@execute
                 }
                 // 校验 GGUF 头
-                dest!!.inputStream().use { f ->
+                dest.inputStream().use { f ->
                     val head = ByteArray(4)
                     f.read(head)
                     if (String(head) != "GGUF") {
                         Log.e(TAG, "bad GGUF magic: ${String(head)}, corrupt")
-                        dest!!.delete()
+                        dest.delete()
                         return@execute
                     }
                 }
-                Log.i(TAG, "model ready: ${dest!!.absolutePath} (${dest!!.length()/1024/1024}MB)")
+                Log.i(TAG, "model ready: ${dest.absolutePath} (${dest.length()/1024/1024}MB)")
                 onProgress(1f)
                 val threads = Runtime.getRuntime().availableProcessors().coerceAtMost(6)
-                HymtBridge.nativeInit(dest!!.absolutePath, threads)
+                HymtBridge.nativeInit(dest.absolutePath, threads)
                 initialized.set(true)
                 Log.i(TAG, "model auto-loaded")
             } catch (e: Throwable) {
