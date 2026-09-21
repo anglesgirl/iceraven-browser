@@ -142,7 +142,8 @@ object HymtManager {
             try {
                 var dest: File? = null
                 // 从 DownloadManager 查真实文件 URI
-                val cursor = dm.query(android.app.DownloadManager.RequestFilterById(downloadId))
+                val query = android.app.DownloadManager.Query().setFilterById(downloadId)
+                val cursor = dm.query(query)
                 if (cursor != null && cursor.moveToFirst()) {
                     val idx = cursor.getColumnIndex(android.app.DownloadManager.COLUMN_LOCAL_URI)
                     if (idx >= 0) {
@@ -152,7 +153,7 @@ object HymtManager {
                         dest = File(dir, fileName)
                         if (dest!!.exists()) dest!!.delete()
                         context.contentResolver.openInputStream(uri).use { input ->
-                            dest!!.outputStream.use { output ->
+                            dest!!.outputStream().use { output ->
                                 input?.copyTo(output, bufferSize = 64 * 1024)
                             }
                         }
