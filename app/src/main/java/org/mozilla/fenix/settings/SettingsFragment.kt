@@ -215,10 +215,33 @@ class SettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFragment 
         val ready = org.mozilla.fenix.hymt.HymtManager.isReady(ctx)
         val exists = org.mozilla.fenix.hymt.HymtManager.modelExists(ctx)
         pref.summary = when {
-            ready -> "✅ 模型已加载（离线可用）。沉浸式翻译填 http://127.0.0.1:18911/v1/chat/completions"
+            ready -> "✅ 模型已加载。API: http://127.0.0.1:18911/v1/chat/completions  模型: hymt"
             exists -> "模型已下载，点击加载"
-            else -> "未下载模型（574MB/440MB，国内镜像）"
+            else -> "未下载模型（574MB/440MB，国内镜像）。沉浸式翻译选 openai-custom 端点=127.0.0.1:18911"
         }
+    }
+
+    private fun applyToImmersiveTranslate(ctx: android.content.Context) {
+        val info = "本机AI翻译已就绪\n\n" +
+            "API地址: http://127.0.0.1:18911/v1/chat/completions\n" +
+            "模型: hymt\n" +
+            "API密钥: 任意（如 local）\n\n" +
+            "已复制到剪贴板，请到沉浸式翻译设置 → 翻译服务 → OpenAI 自定义 粘贴。"
+        val cm = ctx.getSystemService(android.content.Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
+        cm.setPrimaryClip(android.content.ClipData.newPlainText("hymt-api",
+            "API: http://127.0.0.1:18911/v1/chat/completions\n模型: hymt\n密钥: local"))
+        android.widget.Toast.makeText(ctx, info, android.widget.Toast.LENGTH_LONG).show()
+    }
+
+    private fun showHyMtReadyDialog(ctx: android.content.Context, pref: Preference?) {
+        android.app.AlertDialog.Builder(ctx)
+            .setTitle("模型已经就绪")
+            .setMessage("本机 HyMT 翻译模型已加载。\n\n是否现在应用到沉浸式翻译？\n（将复制 API 配置到剪贴板，你在扩展设置里粘贴即可）")
+            .setPositiveButton("应用到沉浸式翻译") { _, _ ->
+                applyToImmersiveTranslate(ctx)
+            }
+            .setNegativeButton("取消", null)
+            .show()
     }
 
     private fun showHyMtDialog() {
@@ -227,18 +250,19 @@ class SettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFragment 
         val ready = org.mozilla.fenix.hymt.HymtManager.isReady(ctx)
         val exists = org.mozilla.fenix.hymt.HymtManager.modelExists(ctx)
         val items = mutableListOf<String>()
-        if (ready) items.add("✅ 已加载，点此重新加载模型")
+        if (ready) items.add("✅ 重新加载模型")
         if (exists && !ready) items.add("加载已下载的模型")
         if (!exists) {
             items.add("下载 2bit（574MB，质量优先）")
             items.add("下载 1.25bit（440MB，省空间）")
         }
+        if (ready) items.add("应用到沉浸式翻译")
         items.add("取消")
         android.app.AlertDialog.Builder(ctx)
             .setTitle("HyMT 本机 AI 翻译")
             .setItems(items.toTypedArray()) { _, which ->
                 when (items[which]) {
-                    "✅ 已加载，点此重新加载模型" -> {
+                    "✅ 重新加载模型" -> {
                         org.mozilla.fenix.hymt.HymtManager.init(ctx) { ok, msg ->
                             requireActivity().runOnUiThread {
                                 android.widget.Toast.makeText(ctx, if (ok) "模型已加载" else "加载失败: $msg", android.widget.Toast.LENGTH_LONG).show()
@@ -254,24 +278,33 @@ class SettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFragment 
                             }
                         }
                     }
+                    "应用到沉浸式翻译" -> applyToImmersiveTranslate(ctx)
                     "下载 2bit（574MB，质量优先）" -> {
-                        android.widget.Toast.makeText(ctx, "开始下载 2bit 模型...", android.widget.Toast.LENGTH_LONG).show()
+                        android.widget.Toast.makeText(ctx, "开始下载 2bit 模型（应用内下载）...", android.widget.Toast.LENGTH_LONG).show()
                         org.mozilla.fenix.hymt.HymtManager.downloadModel(ctx, "2bit") { p ->
                             requireActivity().runOnUiThread {
-                                if (p >= 1f) {
-                                    android.widget.Toast.makeText(ctx, "下载完成，自动加载中...", android.widget.Toast.LENGTH_LONG).show()
-                                    updateHyMtSummary(pref!!)
+                                when {
+                                    p >= 1f -> {
+                                        android.widget.Toast.makeText(ctx, "下载完成，已加载", android.widget.Toast.LENGTH_LONG).show()
+                                        updateHyMtSummary(pref!!)
+                                        showHyMtReadyDialog(ctx, pref)
+                                    }
+                                    p < 0f -> android.widget.Toast.makeText(ctx, "下载失败", android.widget.Toast.LENGTH_LONG).show()
                                 }
                             }
                         }
                     }
                     "下载 1.25bit（440MB，省空间）" -> {
-                        android.widget.Toast.makeText(ctx, "开始下载 1.25bit 模型...", android.widget.Toast.LENGTH_LONG).show()
+                        android.widget.Toast.makeText(ctx, "开始下载 1.25bit 模型（应用内下载）...", android.widget.Toast.LENGTH_LONG).show()
                         org.mozilla.fenix.hymt.HymtManager.downloadModel(ctx, "1.25bit") { p ->
                             requireActivity().runOnUiThread {
-                                if (p >= 1f) {
-                                    android.widget.Toast.makeText(ctx, "下载完成，自动加载中...", android.widget.Toast.LENGTH_LONG).show()
-                                    updateHyMtSummary(pref!!)
+                                when {
+                                    p >= 1f -> {
+                                        android.widget.Toast.makeText(ctx, "下载完成，已加载", android.widget.Toast.LENGTH_LONG).show()
+                                        updateHyMtSummary(pref!!)
+                                        showHyMtReadyDialog(ctx, pref)
+                                    }
+                                    p < 0f -> android.widget.Toast.makeText(ctx, "下载失败", android.widget.Toast.LENGTH_LONG).show()
                                 }
                             }
                         }

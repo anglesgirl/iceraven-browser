@@ -91,8 +91,8 @@ object HymtManager {
     }
 
     /**
-     * 用系统下载器（DownloadManager）下载模型。
-     * 下完后通过 DownloadManager.query() 拿真实文件 URI，复制到 filesDir/hymt/ 并加载。
+     * 直接在 app 进程里下载模型到 filesDir/hymt/（不触发系统下载通知）。
+     * onProgress(0~1)，完成后校验 GGUF 头并自动加载。
      */
     fun downloadModel(context: Context, which: String = "2bit", onProgress: (Float) -> Unit = {}) {
         val urlStr = when (which) {
@@ -100,85 +100,49 @@ object HymtManager {
             else -> "https://modelscope.cn/models/AngelSlim/Hy-MT1.5-1.8B-2bit-GGUF/resolve/master/Hy-MT1.5-1.8B-2bit.gguf"
         }
         val fileName = if (which == "1.25bit") MODEL_125BIT else MODEL_2BIT
-
-        val dm = context.getSystemService(Context.DOWNLOAD_SERVICE) as android.app.DownloadManager
-        val req = android.app.DownloadManager.Request(android.net.Uri.parse(urlStr))
-            .setTitle("HyMT 模型 $which")
-            .setDescription("混元翻译模型，约${if (which == "1.25bit") "440" else "574"}MB")
-            .setNotificationVisibility(android.app.DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-            .setDestinationInExternalPublicDir(android.os.Environment.DIRECTORY_DOWNLOADS, fileName)
-            .setAllowedOverMetered(true)
-            .setAllowedOverRoaming(false)
-        val downloadId = dm.enqueue(req)
-        Log.i(TAG, "download queued id=$downloadId -> $fileName")
-
-        val receiver = object : android.content.BroadcastReceiver() {
-            override fun onReceive(ctx: Context?, intent: android.content.Intent?) {
-                val id = intent?.getLongExtra(android.app.DownloadManager.EXTRA_DOWNLOAD_ID, -1) ?: -1
-                if (id != downloadId) return
-                try { ctx?.unregisterReceiver(this) } catch (_: Throwable) {}
-                finalizeDownload(ctx ?: context, dm, downloadId, fileName, onProgress)
-            }
-        }
-        try {
-            androidx.core.content.ContextCompat.registerReceiver(
-                context, receiver,
-                android.content.IntentFilter(android.app.DownloadManager.ACTION_DOWNLOAD_COMPLETE),
-                androidx.core.content.ContextCompat.RECEIVER_EXPORTED
-            )
-        } catch (e: Throwable) {
-            context.registerReceiver(receiver, android.content.IntentFilter(android.app.DownloadManager.ACTION_DOWNLOAD_COMPLETE))
-        }
-    }
-
-    private fun finalizeDownload(
-        context: Context,
-        dm: android.app.DownloadManager,
-        downloadId: Long,
-        fileName: String,
-        onProgress: (Float) -> Unit
-    ) {
+        val dir = File(context.filesDir, MODEL_DIR)
+        dir.mkdirs()
+        val dest = File(dir, fileName)
+        val tmp = File(dir, "$fileName.part")
         io.execute {
             try {
-                val dir = File(context.filesDir, MODEL_DIR)
-                dir.mkdirs()
-                val dest = File(dir, fileName)
-                // 从 DownloadManager 查真实文件 URI
-                val cursor = dm.query(android.app.DownloadManager.Query().setFilterById(downloadId))
-                if (cursor != null && cursor.moveToFirst()) {
-                    val idx = cursor.getColumnIndex(android.app.DownloadManager.COLUMN_LOCAL_URI)
-                    if (idx >= 0) {
-                        val uri = android.net.Uri.parse(cursor.getString(idx))
-                        if (dest.exists()) dest.delete()
-                        context.contentResolver.openInputStream(uri).use { input ->
-                            dest.outputStream().use { output ->
-                                input?.copyTo(output, bufferSize = 64 * 1024)
-                            }
+                if (tmp.exists()) tmp.delete()
+                val conn = (java.net.URL(urlStr).openConnection() as java.net.HttpURLConnection).apply {
+                    connectTimeout = 15000
+                    readTimeout = 30000
+                    instanceFollowRedirects = true
+                }
+                conn.connect()
+                if (conn.responseCode !in 200..299) throw RuntimeException("HTTP ${conn.responseCode}")
+                val total = conn.contentLengthLong
+                conn.inputStream.use { input ->
+                    tmp.outputStream.use { output ->
+                        val buf = ByteArray(64 * 1024)
+                        var done = 0L
+                        while (true) {
+                            val n = input.read(buf)
+                            if (n < 0) break
+                            output.write(buf, 0, n)
+                            done += n
+                            if (total > 0) onProgress(done.toFloat() / total)
                         }
-                    }
-                    cursor.close()
-                }
-                // fallback: 公共 Download 目录
-                if (!dest.exists()) {
-                    val src = File(android.os.Environment.getExternalStoragePublicDirectory(
-                        android.os.Environment.DIRECTORY_DOWNLOADS), fileName)
-                    if (src.exists()) {
-                        if (dest.exists()) dest.delete()
-                        src.copyTo(dest, overwrite = true)
-                        src.delete()
+                        output.flush()
                     }
                 }
-                if (!dest.exists()) {
-                    Log.e(TAG, "model file not found after download")
-                    return@execute
+                conn.disconnect()
+                if (dest.exists()) dest.delete()
+                if (!tmp.renameTo(dest)) {
+                    tmp.copyTo(dest, overwrite = true)
+                    tmp.delete()
                 }
                 // 校验 GGUF 头
                 dest.inputStream().use { f ->
                     val head = ByteArray(4)
                     f.read(head)
                     if (String(head) != "GGUF") {
-                        Log.e(TAG, "bad GGUF magic: ${String(head)}, corrupt")
+                        Log.e(TAG, "bad GGUF magic: ${String(head)}")
                         dest.delete()
+                        onProgress(-1f)
                         return@execute
                     }
                 }
@@ -189,7 +153,8 @@ object HymtManager {
                 initialized.set(true)
                 Log.i(TAG, "model auto-loaded")
             } catch (e: Throwable) {
-                Log.e(TAG, "finalize failed", e)
+                Log.e(TAG, "download failed", e)
+                onProgress(-1f)
             }
         }
     }
