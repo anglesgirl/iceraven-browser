@@ -83,5 +83,6 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: iceraven-forkRelease-apk
-          path: gradle/build/app/outputs/apk/forkRelease/
+          name: iceraven-arm64
+          path: gradle/build/app/outputs/apk/forkRelease/app-arm64-v8a-forkRelease.apk
+          if-no-files-found: error
